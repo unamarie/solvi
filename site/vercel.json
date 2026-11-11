@@ -1,0 +1,15 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)\\.vcf",
+      "headers": [
+        { "key": "Content-Type", "value": "text/vcard; charset=utf-8" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"Una-Marie-S-Goksoyr.vcf\"" }
+      ]
+    },
+    {
+      "source": "/cv/(.*)\\.pdf",
+      "headers": [{ "key": "Content-Type", "value": "application/pdf" }]
+    }
+  ]
+}
