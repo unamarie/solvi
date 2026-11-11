@@ -8,29 +8,29 @@ It builds:
 - one pipeline per domain, plus a nightly pipeline that runs everything
 - a reporting workspace with the Direct Lake semantic model "Solvi" (20 tables, 38 measures)
 
-## 0. Account and trial (once, about 30 minutes)
+## 0. Account and capacity (once)
 
-Fabric needs a work account. A Gmail address won't work.
+Fabric needs a work account (a Gmail address won't work) and a Fabric capacity.
 
-1. Buy **Microsoft 365 Business Basic** for `unadata.dev`, and set up `una@unadata.dev` as your sign-in. You need a card.
-2. Add the DNS records Microsoft asks for in Vercel, under Domains > unadata.dev > DNS.
-3. Go to [app.fabric.microsoft.com](https://app.fabric.microsoft.com) and sign in as `una@unadata.dev`.
-4. Select your account picture (top right), then **Start trial** and **Activate**. Keep the default region.
-
-The trial lasts 60 days. It doesn't include the Fabric data agent, so that step needs a small paid capacity later (F2, paused when not in use).
+1. Microsoft 365 Business Basic for `unadata.dev`, with `una@unadata.dev` as your sign-in.
+2. A capacity. The free 60 day trial only works on tenants that are at least 90 days old. Until then, use a small paid one:
+   - In portal.azure.com, signed in as `una@unadata.dev`, create a pay-as-you-go subscription.
+   - Add a budget alert under Cost Management.
+   - Create **Microsoft Fabric** capacity **solvifabric**, size F2, region Norway East.
+   - It costs a few kroner an hour while running and nothing while paused. Pause it with `py fabric/solvifabric.py pause`.
 
 ## 1. Build it
 
 From the repo root, in PowerShell:
 
 ```
-pip install azure-identity requests nbformat
-python generator/generate.py
-python notebooks/buildnotebooks.py
-python fabric/solvifabric.py all
+py -m pip install azure-identity requests nbformat
+py generator/generate.py
+py notebooks/buildnotebooks.py
+py fabric/solvifabric.py all
 ```
 
-A browser window opens once. Sign in as `una@unadata.dev`. The whole run takes about 30 to 45 minutes, mostly waiting for notebooks.
+The script prints a short code. Open microsoft.com/devicelogin, type the code and sign in as `una@unadata.dev`. It remembers the login after that. The whole run takes about 30 to 45 minutes, mostly waiting for notebooks.
 
 You can also run one step at a time. Each step is safe to run again.
 
@@ -39,6 +39,9 @@ You can also run one step at a time. Each step is safe to run again.
 | `setup` | Workspaces, lakehouses, CSV upload, notebooks |
 | `run` | For each domain in order: shortcuts, then bronze, silver, gold. `run hseq` runs one domain. |
 | `pipelines` | **Run Core**, **Run Sales** and so on in each workspace, and **Run all** in Solvi Core |
+| `pause` | Pauses the **solvifabric** capacity in Azure, so it stops costing money |
+| `resume` | Starts it again |
+| `check` | Shows your capacities and which one each Solvi workspace uses |
 | `model` | The **Reporting** lakehouse with shortcuts to the gold tables, then the semantic model |
 
 ## 2. Check it
