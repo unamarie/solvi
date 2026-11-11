@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+ref table dim_date
+ref table dim_customer
+ref table dim_site
+ref table dim_product
+ref table dim_installation
+ref table dim_crew
+ref table dim_supplier
+ref table dim_seller
+ref table dim_compliance_requirement
+ref table fact_job_risk
+ref table fact_job_risk_factor
+ref table fact_hse_event
+ref table fact_hse_action
+ref table fact_production_daily
+ref table fact_service_visit
+ref table fact_compliance_item
+ref table fact_inspection_deviation
+ref table fact_audit_readiness
+ref table fact_proposal
+ref table fact_proposal_line

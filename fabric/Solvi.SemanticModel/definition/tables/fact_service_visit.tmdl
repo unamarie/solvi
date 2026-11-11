@@ -1,0 +1,56 @@
+table fact_service_visit
+	lineageTag: d3eec279-f270-5511-9c87-36260e850475
+
+	measure 'Service visits' = COUNTROWS ( fact_service_visit )
+		formatString: #,0
+		displayFolder: Service
+		lineageTag: 9bc263b0-eecf-5457-8079-06c5edf8ad6a
+
+	measure 'Service cost' = SUM ( fact_service_visit[cost_nok] )
+		formatString: #,0 "kr"
+		displayFolder: Service
+		lineageTag: 1ebafa05-368e-5f5b-9b6b-a347fb8ff7a1
+
+	column visit_id
+		dataType: string
+		lineageTag: 7d7d4c2c-a4ed-5a4f-88af-e77ffbf9fc34
+		summarizeBy: none
+		sourceColumn: visit_id
+
+	column installation_id
+		dataType: string
+		lineageTag: a9cfd42c-5a2d-56a0-92e4-c9a02155456c
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column visit_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: ddd11574-86a0-5a34-9e8c-665bea60038e
+		summarizeBy: none
+		sourceColumn: visit_date
+
+	column visit_type
+		dataType: string
+		lineageTag: 046df8ef-d1a5-5d1d-ace9-827ad068d599
+		summarizeBy: none
+		sourceColumn: visit_type
+
+	column hours
+		dataType: double
+		lineageTag: 9729cf7f-345d-5a67-bb12-e7a6cf70de3b
+		summarizeBy: none
+		sourceColumn: hours
+
+	column cost_nok
+		dataType: decimal
+		lineageTag: db6f6032-e1c4-5c4a-b7e8-3e1a73a13b7d
+		summarizeBy: none
+		sourceColumn: cost_nok
+
+	partition fact_service_visit = entity
+		mode: directLake
+		source
+			entityName: fact_service_visit
+			schemaName: dbo
+			expressionSource: DatabaseQuery

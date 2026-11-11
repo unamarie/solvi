@@ -1,0 +1,129 @@
+table fact_proposal
+	lineageTag: 566e3674-908a-5d23-9f49-f5dd2c843fdb
+
+	measure Proposals = COUNTROWS ( fact_proposal )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 9d765374-ab66-58c0-8c7c-1fe19654301a
+
+	measure 'Won proposals' = CALCULATE ( COUNTROWS ( fact_proposal ), fact_proposal[status] = "Won" )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: c38de1e2-538d-51b5-96c0-de3283a1dfb1
+
+	measure 'Win rate' = DIVIDE ( [Won proposals], CALCULATE ( COUNTROWS ( fact_proposal ), fact_proposal[status] IN { "Won", "Lost", "Expired" } ) )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 5a825573-fabb-5037-9ae8-bec0f7990cef
+
+	measure 'Proposal value' = SUM ( fact_proposal[proposal_total_nok] )
+		formatString: #,0 "kr"
+		displayFolder: Sales
+		lineageTag: 3de8a3ac-b8d2-56ba-b1d5-7d657396197c
+
+	measure 'Median days to first follow-up' = MEDIAN ( fact_proposal[days_to_first_followup] )
+		formatString: #,0.0
+		displayFolder: Sales
+		lineageTag: 633ec31c-2aca-55a9-9813-5cf90ebd0f17
+
+	column proposal_id
+		dataType: string
+		lineageTag: b71a23dc-0976-5722-9ae0-dc2d459ec003
+		summarizeBy: none
+		sourceColumn: proposal_id
+
+	column customer_id
+		dataType: string
+		lineageTag: 58f36290-ee48-5d24-b9e5-a0c6e04f3e48
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column seller_id
+		dataType: string
+		lineageTag: 9f82149d-efcf-5f6e-ad78-c7ea2450b14e
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column created_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: c3841722-0f14-50ca-8115-03850161c784
+		summarizeBy: none
+		sourceColumn: created_date
+
+	column sent_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 1571a7b1-76ea-5f1e-9f56-35a9273d99b5
+		summarizeBy: none
+		sourceColumn: sent_date
+
+	column valid_until
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: af64f39c-6453-5ccd-8c22-9df054a535a2
+		summarizeBy: none
+		sourceColumn: valid_until
+
+	column status
+		dataType: string
+		lineageTag: 3bd228be-712a-5a35-9ba1-c039a91ca454
+		summarizeBy: none
+		sourceColumn: status
+
+	column decided_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: bc647ffd-8c42-5a39-ba46-b41fa32bd8b9
+		summarizeBy: none
+		sourceColumn: decided_date
+
+	column loss_reason
+		dataType: string
+		lineageTag: e4a9a30f-9b35-519e-839b-57343193299e
+		summarizeBy: none
+		sourceColumn: loss_reason
+
+	column proposed_kwp
+		dataType: double
+		lineageTag: 45921c33-1d26-58d7-8e87-11bb08fd9350
+		summarizeBy: none
+		sourceColumn: proposed_kwp
+
+	column proposal_total_nok
+		dataType: decimal
+		lineageTag: 85b03c01-a8a7-56cf-a5c8-388090e07256
+		summarizeBy: none
+		sourceColumn: proposal_total_nok
+
+	column first_followup_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: cb700b48-3055-5c15-8173-d1d33794d590
+		summarizeBy: none
+		sourceColumn: first_followup_date
+
+	column days_to_first_followup
+		dataType: int64
+		lineageTag: c1c2295d-4887-5701-bf4f-6d290e12fb99
+		summarizeBy: none
+		sourceColumn: days_to_first_followup
+
+	column age_days
+		dataType: int64
+		lineageTag: 06aee275-33f2-52a3-8de5-2bb28f1a89dd
+		summarizeBy: none
+		sourceColumn: age_days
+
+	column is_signed
+		dataType: int64
+		lineageTag: c5a1b115-2889-5314-ab51-428baf3197c8
+		summarizeBy: none
+		sourceColumn: is_signed
+
+	partition fact_proposal = entity
+		mode: directLake
+		source
+			entityName: fact_proposal
+			schemaName: dbo
+			expressionSource: DatabaseQuery

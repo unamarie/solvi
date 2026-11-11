@@ -7,3 +7,4 @@ print/
 # private notes, kept on this computer only
 FAIR.md
 IDEAS.md
+fabric/__pycache__/
