@@ -1,0 +1,129 @@
+table Proposal
+	lineageTag: f671ad1a-9f03-5f76-830e-5b5e7b39f1b2
+
+	measure Proposals = COUNTROWS ( 'Proposal' )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 20bab7b9-4f4f-57c8-9df7-496e8fd5c5e3
+
+	measure 'Won proposals' = CALCULATE ( COUNTROWS ( 'Proposal' ), 'Proposal'[Status] = "Won" )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 09df17d0-41e1-51e0-8a2c-3731e6731014
+
+	measure 'Win rate' = DIVIDE ( [Won proposals], CALCULATE ( COUNTROWS ( 'Proposal' ), 'Proposal'[Status] IN { "Won", "Lost", "Expired" } ) )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 03fea1a6-194e-5273-92eb-48c33b6866a1
+
+	measure 'Proposal value' = SUM ( 'Proposal'[Proposal total NOK] )
+		formatString: #,0 "kr"
+		displayFolder: Sales
+		lineageTag: 8e4a4a58-bd9d-55d4-af03-639077673564
+
+	measure 'Median days to first follow-up' = MEDIAN ( 'Proposal'[Days to first followup] )
+		formatString: #,0.0
+		displayFolder: Sales
+		lineageTag: 147c05e5-5e3a-5b65-9079-6d314dfc63a7
+
+	column 'Proposal ID'
+		dataType: string
+		lineageTag: 04c04ca8-3327-5248-8967-1803940d605b
+		summarizeBy: none
+		sourceColumn: proposal_id
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: 001619e3-8625-5f80-9650-ec66b3c43706
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column 'Seller ID'
+		dataType: string
+		lineageTag: 77bcaeb8-fa96-5a42-a1ae-9b8ebc3c9c0c
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column 'Created date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 35939633-967c-5bf3-bc84-44a2f0bb4f15
+		summarizeBy: none
+		sourceColumn: created_date
+
+	column 'Sent date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 371fb836-a0e9-5f60-a8d7-2c7bf4d56ff5
+		summarizeBy: none
+		sourceColumn: sent_date
+
+	column 'Valid until'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3b4d4601-20be-5dcb-804e-d6ed68bd54a9
+		summarizeBy: none
+		sourceColumn: valid_until
+
+	column Status
+		dataType: string
+		lineageTag: 0e6ab127-be77-575e-9d4f-ff1a535f8c18
+		summarizeBy: none
+		sourceColumn: status
+
+	column 'Decided date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 9eacc6aa-9653-5672-b238-292bf10c6aa9
+		summarizeBy: none
+		sourceColumn: decided_date
+
+	column 'Loss reason'
+		dataType: string
+		lineageTag: 0dfa736a-fb74-5a9a-8017-322f689ba37a
+		summarizeBy: none
+		sourceColumn: loss_reason
+
+	column 'Proposed kWp'
+		dataType: double
+		lineageTag: a50b97bf-ce34-5bab-8459-2fac03169054
+		summarizeBy: none
+		sourceColumn: proposed_kwp
+
+	column 'Proposal total NOK'
+		dataType: decimal
+		lineageTag: 93c0b7b4-9428-5362-8fe7-69dc9b57e8f7
+		summarizeBy: none
+		sourceColumn: proposal_total_nok
+
+	column 'First followup date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3ee1d042-2f84-56d7-b4ff-386e7e68d47e
+		summarizeBy: none
+		sourceColumn: first_followup_date
+
+	column 'Days to first followup'
+		dataType: int64
+		lineageTag: d7d4185f-3643-5b94-8080-cc36a6403637
+		summarizeBy: none
+		sourceColumn: days_to_first_followup
+
+	column 'Age days'
+		dataType: int64
+		lineageTag: 396ce286-0753-5c01-bc55-c85abdad8e6f
+		summarizeBy: none
+		sourceColumn: age_days
+
+	column 'Is signed'
+		dataType: int64
+		lineageTag: d619e847-dddd-5a0b-9770-50ed56defed2
+		summarizeBy: none
+		sourceColumn: is_signed
+
+	partition Proposal = entity
+		mode: directLake
+		source
+			entityName: factproposal
+			schemaName: dbo
+			expressionSource: DatabaseQuery

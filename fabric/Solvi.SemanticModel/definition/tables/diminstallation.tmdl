@@ -1,0 +1,95 @@
+table Installation
+	lineageTag: 9a95dcf3-0216-5e9b-a726-49b5e0a514f2
+
+	column 'Site ID'
+		dataType: string
+		lineageTag: 88f333f3-56be-575d-a196-efdaf68bed1c
+		summarizeBy: none
+		sourceColumn: site_id
+
+	column 'Installation ID'
+		dataType: string
+		lineageTag: ba4c56d4-7d1c-5c1c-b1f8-cebc1d482729
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 6c791161-13e1-55a7-8f91-fc32df7187bf
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: 16dc329d-f920-551c-b86a-015b3584685b
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column 'Installed date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 94fa77b0-d073-5ff3-a8ef-a7a33f9aa516
+		summarizeBy: none
+		sourceColumn: installed_date
+
+	column 'Grid connected date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: f6e63d4c-7b8a-5744-b654-be209b54c367
+		summarizeBy: none
+		sourceColumn: grid_connected_date
+
+	column kWp
+		dataType: double
+		lineageTag: 73fad875-ccd7-5b50-8c92-7f8b763f21af
+		summarizeBy: none
+		sourceColumn: kwp
+
+	column 'Battery kWh'
+		dataType: double
+		lineageTag: bec0fb4a-57e2-5fa3-9357-39fcbf1ea718
+		summarizeBy: none
+		sourceColumn: battery_kwh
+
+	column Orientation
+		dataType: string
+		lineageTag: fbecf152-ce93-5da0-beae-c371a80b7d06
+		summarizeBy: none
+		sourceColumn: orientation
+
+	column 'Tilt deg'
+		dataType: int64
+		lineageTag: 4980dc63-317e-517b-a7d5-72b0cee1763f
+		summarizeBy: none
+		sourceColumn: tilt_deg
+
+	column Municipality
+		dataType: string
+		lineageTag: e4e82881-e4f8-5262-ad69-36b0b841a534
+		summarizeBy: none
+		sourceColumn: municipality
+
+	column Country
+		dataType: string
+		lineageTag: f093e074-c328-5784-8068-c1fd67b36980
+		summarizeBy: none
+		sourceColumn: country
+
+	column 'Station ID'
+		dataType: string
+		lineageTag: da8ecdb1-3f9b-53b1-9753-ef35bc291c67
+		summarizeBy: none
+		sourceColumn: station_id
+
+	column 'Has battery'
+		dataType: boolean
+		lineageTag: edccd4a7-721d-59f0-81bf-a3d138c0ba5c
+		summarizeBy: none
+		sourceColumn: has_battery
+
+	partition Installation = entity
+		mode: directLake
+		source
+			entityName: diminstallation
+			schemaName: dbo
+			expressionSource: DatabaseQuery

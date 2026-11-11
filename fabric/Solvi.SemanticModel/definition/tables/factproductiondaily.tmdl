@@ -1,0 +1,72 @@
+table Production
+	lineageTag: f9b55823-5dee-56d7-8715-6721fe633a5a
+
+	measure 'Production kWh' = SUM ( 'Production'[kWh] )
+		formatString: #,0 "kWh"
+		displayFolder: Production
+		lineageTag: b59bb7d7-357d-5190-86c1-855cf029d65a
+
+	measure 'Expected kWh' = SUM ( 'Production'[Expected kWh] )
+		formatString: #,0 "kWh"
+		displayFolder: Production
+		lineageTag: 4bcf91cc-702a-5963-9f15-20446bcc0e75
+
+	measure 'Performance ratio' = DIVIDE ( [Production kWh], [Expected kWh] )
+		formatString: 0.0%
+		displayFolder: Production
+		lineageTag: a9b5808c-51c7-5828-b3fb-5cc324233f4e
+
+	measure 'Underperforming installations' = CALCULATE ( DISTINCTCOUNT ( 'Production'[Installation ID] ), 'Production'[Underperforming] = TRUE () )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: b06495de-8a1c-5f16-a284-d4cb2d5c8b45
+
+	column 'Installation ID'
+		dataType: string
+		lineageTag: f0ab5388-1721-5e05-97f9-5fc2089e4416
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column Date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 76ed1cc0-3224-51f8-a7b6-722d125d5bb2
+		summarizeBy: none
+		sourceColumn: date
+
+	column kWh
+		dataType: double
+		lineageTag: f30ee04b-a466-58df-890d-96ed20c1d763
+		summarizeBy: none
+		sourceColumn: kwh
+
+	column 'Expected kWh'
+		dataType: double
+		lineageTag: 1dd8da30-06a9-5e8c-b9de-6a51bb878430
+		summarizeBy: none
+		sourceColumn: expected_kwh
+
+	column 'Snow on panels'
+		dataType: boolean
+		lineageTag: 408f295c-089f-542c-814c-7430056c71f4
+		summarizeBy: none
+		sourceColumn: snow_on_panels
+
+	column 'Ratio 7d'
+		dataType: double
+		lineageTag: e3c77cd9-63af-55e6-8ba6-33ade78eea5d
+		summarizeBy: none
+		sourceColumn: ratio_7d
+
+	column Underperforming
+		dataType: boolean
+		lineageTag: 15623b33-9745-556d-a0a4-a42632978477
+		summarizeBy: none
+		sourceColumn: underperforming
+
+	partition Production = entity
+		mode: directLake
+		source
+			entityName: factproductiondaily
+			schemaName: dbo
+			expressionSource: DatabaseQuery

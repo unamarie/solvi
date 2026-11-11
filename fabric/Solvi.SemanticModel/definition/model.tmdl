@@ -6,23 +6,23 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-ref table dim_date
-ref table dim_customer
-ref table dim_site
-ref table dim_product
-ref table dim_installation
-ref table dim_crew
-ref table dim_supplier
-ref table dim_seller
-ref table dim_compliance_requirement
-ref table fact_job_risk
-ref table fact_job_risk_factor
-ref table fact_hse_event
-ref table fact_hse_action
-ref table fact_production_daily
-ref table fact_service_visit
-ref table fact_compliance_item
-ref table fact_inspection_deviation
-ref table fact_audit_readiness
-ref table fact_proposal
-ref table fact_proposal_line
+ref table Date
+ref table Customer
+ref table Site
+ref table Product
+ref table Installation
+ref table Crew
+ref table Supplier
+ref table Seller
+ref table 'Compliance requirement'
+ref table 'Battery job'
+ref table 'Risk factor'
+ref table 'HSE event'
+ref table 'HSE action'
+ref table Production
+ref table 'Service visit'
+ref table 'Compliance item'
+ref table Deviation
+ref table 'Audit readiness'
+ref table Proposal
+ref table 'Proposal line'

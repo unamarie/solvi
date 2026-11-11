@@ -1,0 +1,80 @@
+table Deviation
+	lineageTag: 79355c87-7021-5a6d-a3e6-1cee72115436
+
+	measure 'Open deviations' = CALCULATE ( COUNTROWS ( 'Deviation' ), 'Deviation'[Is open] = TRUE () )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 2d3e520e-51ef-5c08-8108-d8f5b086ec41
+
+	measure 'Open high deviations' = CALCULATE ( [Open deviations], 'Deviation'[Severity] = "High" )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 8eefcea8-29b5-5edf-81cb-3f273ff24a9d
+
+	measure 'Average days open' = AVERAGE ( 'Deviation'[Days open] )
+		formatString: #,0.0
+		displayFolder: Compliance
+		lineageTag: 2f7a3cc9-aa76-5db3-80f4-4489f6925c00
+
+	column 'Deviation ID'
+		dataType: string
+		lineageTag: fdc46602-171e-5f77-8b5d-7ecc10f6294f
+		summarizeBy: none
+		sourceColumn: deviation_id
+
+	column 'Installation ID'
+		dataType: string
+		lineageTag: 2b727df9-e1e8-5652-984f-67e70462593e
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column 'Found date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 8ef03586-c167-5ed8-960d-f9f1c6252250
+		summarizeBy: none
+		sourceColumn: found_date
+
+	column Source
+		dataType: string
+		lineageTag: e0a7cdd3-5229-5e08-a30f-26dca77fe2e6
+		summarizeBy: none
+		sourceColumn: source
+
+	column Category
+		dataType: string
+		lineageTag: d226efab-18eb-5d32-b5dd-b378bf34be94
+		summarizeBy: none
+		sourceColumn: category
+
+	column Severity
+		dataType: string
+		lineageTag: 66bc0a24-943f-522b-a467-52b17969bd7e
+		summarizeBy: none
+		sourceColumn: severity
+
+	column 'Closed date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 8fc61ad0-2d79-5000-925d-4f52e589b86e
+		summarizeBy: none
+		sourceColumn: closed_date
+
+	column 'Is open'
+		dataType: boolean
+		lineageTag: 40f9b76c-6127-56c0-8fb4-0c112a515282
+		summarizeBy: none
+		sourceColumn: is_open
+
+	column 'Days open'
+		dataType: int64
+		lineageTag: b20f6996-0159-5a9c-9a22-2bed3f401288
+		summarizeBy: none
+		sourceColumn: days_open
+
+	partition Deviation = entity
+		mode: directLake
+		source
+			entityName: factinspectiondeviation
+			schemaName: dbo
+			expressionSource: DatabaseQuery

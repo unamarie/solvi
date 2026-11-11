@@ -1,0 +1,39 @@
+table 'Compliance requirement'
+	lineageTag: 1a9da867-b6e6-51a1-9a4a-64d3e1fc84a0
+
+	column 'Requirement ID'
+		dataType: string
+		lineageTag: 1a53cce6-703c-5718-8e0b-3e509cfd442d
+		summarizeBy: none
+		sourceColumn: requirement_id
+
+	column 'Requirement name'
+		dataType: string
+		lineageTag: b98a6a69-d8fd-5946-9566-dd5ba8e89fda
+		summarizeBy: none
+		sourceColumn: requirement_name
+
+	column 'Applies to'
+		dataType: string
+		lineageTag: a2a0c9e4-a988-52d4-b8ec-90f01fd3783b
+		summarizeBy: none
+		sourceColumn: applies_to
+
+	column 'Due days'
+		dataType: int64
+		lineageTag: 03171b2f-1864-5f6c-a61c-a39890f41c0b
+		summarizeBy: none
+		sourceColumn: due_days
+
+	column Recurring
+		dataType: int64
+		lineageTag: f07423e2-e492-52fb-8e75-ddce4697d95f
+		summarizeBy: none
+		sourceColumn: recurring
+
+	partition 'Compliance requirement' = entity
+		mode: directLake
+		source
+			entityName: dimcompliancerequirement
+			schemaName: dbo
+			expressionSource: DatabaseQuery

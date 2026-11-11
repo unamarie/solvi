@@ -1,0 +1,27 @@
+table Seller
+	lineageTag: 63c0ef88-4cc1-550c-b6db-731ec85dc676
+
+	column 'Seller ID'
+		dataType: string
+		lineageTag: 52c672f3-3e61-5df9-a826-ba515948bcde
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column 'Seller name'
+		dataType: string
+		lineageTag: 004f2541-3799-5c6e-8ec6-dbe032a2470c
+		summarizeBy: none
+		sourceColumn: seller_name
+
+	column 'Sales area'
+		dataType: string
+		lineageTag: 4ee533ca-b916-5c2c-975c-14e17a1707a1
+		summarizeBy: none
+		sourceColumn: sales_area
+
+	partition Seller = entity
+		mode: directLake
+		source
+			entityName: dimseller
+			schemaName: dbo
+			expressionSource: DatabaseQuery

@@ -1,0 +1,33 @@
+table Supplier
+	lineageTag: baa1ff16-58c0-5606-8f8b-34033c3173b9
+
+	column 'Supplier ID'
+		dataType: string
+		lineageTag: 23db047d-1aae-59c4-8003-dc2d97f1dae2
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+	column 'Supplier name'
+		dataType: string
+		lineageTag: 9e5d53d5-4016-50c6-a862-d56be23b8d70
+		summarizeBy: none
+		sourceColumn: supplier_name
+
+	column 'Supplier type'
+		dataType: string
+		lineageTag: 2b54233e-d688-5d84-9f61-aab73d018a14
+		summarizeBy: none
+		sourceColumn: supplier_type
+
+	column Country
+		dataType: string
+		lineageTag: 41e5b3c2-ba0f-5889-a743-5c6267d48d2c
+		summarizeBy: none
+		sourceColumn: country
+
+	partition Supplier = entity
+		mode: directLake
+		source
+			entityName: dimsupplier
+			schemaName: dbo
+			expressionSource: DatabaseQuery

@@ -1,0 +1,127 @@
+table 'Proposal line'
+	lineageTag: 595f9c30-eac2-571a-9204-20cf898fbeaf
+
+	measure 'Proposed line value' = SUM ( 'Proposal line'[Line total NOK] )
+		formatString: #,0 "kr"
+		displayFolder: Sales
+		lineageTag: 56124cb8-1a6e-52d2-86c4-db5bb841b3f9
+
+	measure 'Ordered value' = SUM ( 'Proposal line'[Ordered value NOK] )
+		formatString: #,0 "kr"
+		displayFolder: Sales
+		lineageTag: 7300abd2-4e43-5e44-874e-031c8d77186a
+
+	measure 'Change from proposal' = SUM ( 'Proposal line'[Changed value NOK] )
+		formatString: #,0 "kr"
+		displayFolder: Sales
+		lineageTag: 407b13e7-4037-5de6-98bf-399e47ebdb6e
+
+	column 'Proposal ID'
+		dataType: string
+		lineageTag: 4e092318-1fb1-5234-896e-2681c653347f
+		summarizeBy: none
+		sourceColumn: proposal_id
+
+	column 'Line no'
+		dataType: int64
+		lineageTag: 754a95ae-f197-54bd-a3d0-313865e0134d
+		summarizeBy: none
+		sourceColumn: line_no
+
+	column 'Product code'
+		dataType: string
+		lineageTag: 9c773b13-e306-5dc5-9b63-20fd911b934f
+		summarizeBy: none
+		sourceColumn: product_code
+
+	column Qty
+		dataType: double
+		lineageTag: fdfbc718-2554-5612-b257-f528863c20e5
+		summarizeBy: none
+		sourceColumn: qty
+
+	column 'Unit price NOK'
+		dataType: decimal
+		lineageTag: 0b1abc00-5e0c-529b-9a63-797280abbe1c
+		summarizeBy: none
+		sourceColumn: unit_price_nok
+
+	column 'Line total NOK'
+		dataType: decimal
+		lineageTag: aeae55ac-b33e-5b9b-9ddb-203a04b0c89a
+		summarizeBy: none
+		sourceColumn: line_total_nok
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: 67e0d51d-c26c-50d3-a1dd-3d285e9fbd39
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column 'Seller ID'
+		dataType: string
+		lineageTag: 806af84e-6b8f-575a-b52d-32b2da39bcf0
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column 'Created date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 85dc5272-0b79-5b03-9d65-6d95e9a3db40
+		summarizeBy: none
+		sourceColumn: created_date
+
+	column Status
+		dataType: string
+		lineageTag: 7b6838e3-79af-5e5b-80a0-63bb46831c7f
+		summarizeBy: none
+		sourceColumn: status
+
+	column 'Loss reason'
+		dataType: string
+		lineageTag: 1b7e7682-7f15-53bb-bfc9-e09007796a94
+		summarizeBy: none
+		sourceColumn: loss_reason
+
+	column 'Order status'
+		dataType: string
+		lineageTag: 86f33e39-e80b-5425-9213-ad93988b21be
+		summarizeBy: none
+		sourceColumn: order_status
+
+	column 'Ordered product'
+		dataType: string
+		lineageTag: 8a5161c7-2a25-57b9-b30b-d75e9638594a
+		summarizeBy: none
+		sourceColumn: ordered_product
+
+	column 'Ordered qty'
+		dataType: double
+		lineageTag: afdbc287-76ef-5eb6-9549-c3a223d4ff3d
+		summarizeBy: none
+		sourceColumn: ordered_qty
+
+	column 'Ordered value NOK'
+		dataType: decimal
+		lineageTag: 93176196-7a4e-5ff4-ba74-7d2f82fd2ec5
+		summarizeBy: none
+		sourceColumn: ordered_value_nok
+
+	column Outcome
+		dataType: string
+		lineageTag: 79e13254-e43a-5e35-83ed-052e12de731e
+		summarizeBy: none
+		sourceColumn: outcome
+
+	column 'Changed value NOK'
+		dataType: decimal
+		lineageTag: a0de2f5e-fb37-5a5f-913c-8300406a4eb0
+		summarizeBy: none
+		sourceColumn: changed_value_nok
+
+	partition 'Proposal line' = entity
+		mode: directLake
+		source
+			entityName: factproposalline
+			schemaName: dbo
+			expressionSource: DatabaseQuery

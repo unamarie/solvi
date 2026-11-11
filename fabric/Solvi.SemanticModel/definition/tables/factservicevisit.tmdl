@@ -1,0 +1,56 @@
+table 'Service visit'
+	lineageTag: 88cce34e-e691-5c4d-9213-19c0243d1e1c
+
+	measure 'Service visits' = COUNTROWS ( 'Service visit' )
+		formatString: #,0
+		displayFolder: Service
+		lineageTag: ed84c296-16f1-51af-84d0-0c1aa80b8429
+
+	measure 'Service cost' = SUM ( 'Service visit'[Cost NOK] )
+		formatString: #,0 "kr"
+		displayFolder: Service
+		lineageTag: 2246e70b-c8d0-56c7-8fa5-0800dd172d31
+
+	column 'Visit ID'
+		dataType: string
+		lineageTag: fa961a92-f24b-5763-a5ae-b83412ea9ce9
+		summarizeBy: none
+		sourceColumn: visit_id
+
+	column 'Installation ID'
+		dataType: string
+		lineageTag: 9dbf2340-31fe-537e-85ca-bca54a8ba3a9
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column 'Visit date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: b4431afc-f98c-5a6b-b308-202aeb176eb9
+		summarizeBy: none
+		sourceColumn: visit_date
+
+	column 'Visit type'
+		dataType: string
+		lineageTag: bd882006-cf6b-5e63-a172-201ad3a14b41
+		summarizeBy: none
+		sourceColumn: visit_type
+
+	column Hours
+		dataType: double
+		lineageTag: fefd2f58-7dc1-5ef8-9fba-32a77cfcc38b
+		summarizeBy: none
+		sourceColumn: hours
+
+	column 'Cost NOK'
+		dataType: decimal
+		lineageTag: 32a057d2-3e79-53cf-81fe-59ca26d64332
+		summarizeBy: none
+		sourceColumn: cost_nok
+
+	partition 'Service visit' = entity
+		mode: directLake
+		source
+			entityName: factservicevisit
+			schemaName: dbo
+			expressionSource: DatabaseQuery
