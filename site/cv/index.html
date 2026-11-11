@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>CV · Una Marie S. Goksøyr</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="CV for Una Marie S. Goksøyr. Engineer in quality, data, safety and systems.">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="CV · Una Marie S. Goksøyr">
+<meta property="og:description" content="Engineer in quality, data, safety and systems. Twenty years from the workshop floor to quality management and data platforms.">
+<meta property="og:url" content="https://unadata.dev/cv/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: a document page - one readable column, dates in a narrow left rail; prints to two A4 pages */
+:root{
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --sun2:#f85e0a;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --sun2:#fa7a32; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --sun2:#fa7a32; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.doc{max-width:860px;margin:0 auto;padding-block:20px 56px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;margin-bottom:18px}
+.top a{color:var(--indigo)}
+.btn{display:inline-block;font-family:var(--pixel);font-weight:600;font-size:1rem;padding:9px 16px;border-radius:3px;text-decoration:none;background:var(--prussian);color:var(--surface)}
+a:focus-visible{outline:2px solid var(--sun2);outline-offset:2px}
+.sheet{background:var(--surface);border:1px solid var(--line);padding:40px 44px}
+header.cv{border-bottom:3px solid var(--prussian);padding-bottom:16px;margin-bottom:6px}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);margin:0;line-height:1.1}
+.role{font-family:var(--pixel);font-size:1.1rem;color:var(--indigo);margin-top:4px}
+.contact{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:10px;font-size:.95rem}
+.contact a{color:var(--ink)}
+h2{font-family:var(--pixel);font-weight:600;font-size:1.15rem;color:var(--indigo);margin:26px 0 10px}
+p{margin:0}
+.profile{font-size:1.04rem;max-width:68ch}
+.item{display:grid;grid-template-columns:140px minmax(0,1fr);gap:4px 18px;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.when{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.what h3{font-size:1.04rem;margin:0}
+.what .org{color:var(--muted);font-size:.95rem}
+.what ul{margin:6px 0 0;padding-left:18px}
+.what li{margin:2px 0}
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 28px}
+.skills b{display:block}
+.small{font-size:.92rem;color:var(--muted)}
+.foot{margin-top:24px;color:var(--muted);font-size:.9rem}
+@media (max-width:640px){.sheet{padding:22px 18px}.item{grid-template-columns:minmax(0,1fr)}.skills{grid-template-columns:minmax(0,1fr)}}
+@page{size:A4;margin:12mm 13mm 11mm}
+@media print{
+  :root{--paper:#fff;--surface:#fff;--ink:#0a1236;--muted:#55575c;--line:#e6ded6;--prussian:#0a1236;--indigo:#006690;color-scheme:light}
+  body{font-size:9.2pt;line-height:1.38;background:#fff} .band{padding:0} .top{display:none} .doc{padding:0;max-width:none}
+  .sheet{border:0;padding:0} header.cv{padding-bottom:8pt} h1{font-size:21pt} .role{font-size:11pt} .contact{margin-top:5pt;font-size:9pt}
+  h2{margin:10pt 0 3pt;font-size:11pt;break-after:avoid} .profile{font-size:9.6pt;max-width:none}
+  .item{padding:4pt 0;break-inside:avoid;grid-template-columns:27mm minmax(0,1fr);gap:1pt 10pt}
+  .what h3{font-size:9.8pt} .what .org,.when,.small{font-size:8.6pt} .what ul{margin-top:2pt} .what li{margin:0}
+  .skills{gap:5pt 16pt} .foot{margin-top:8pt}
+  .contact a{text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<div class="band">
+<div class="doc">
+  <div class="top">
+    <a href="../index.html">← unadata.dev</a>
+    <a class="btn" href="Una-Marie-S-Goksoyr-CV.pdf" download>Download PDF</a>
+  </div>
+  <article class="sheet">
+    <header class="cv">
+      <h1>Una Marie S. Goksøyr</h1>
+      <div class="role">Engineer · Quality · Data · Safety · Systems</div>
+      <div class="contact">
+        <a href="mailto:unamsg@gmail.com">unamsg@gmail.com</a>
+        <a href="tel:+4791591205">+47 915 91 205</a>
+        <span>Ulsteinvik, Norway</span>
+        <a href="https://unadata.dev">unadata.dev</a>
+        <a href="https://www.linkedin.com/in/una-marie-goksoyr/">linkedin.com/in/una-marie-goksoyr</a>
+      </div>
+    </header>
+
+    <h2>Profile</h2>
+    <p class="profile">Engineer with twenty years from the workshop floor to quality management and data platforms. I build the systems behind decisions people can trust: data models with checks built in, quality and safety systems that work in practice, and small apps people actually use. I start with the problem and the people who need the answer, and I choose the tool after that.</p>
+
+    <h2>Experience</h2>
+    <div class="item"><div class="when">Aug 2025 – now</div><div class="what">
+      <h3>Quality Assurance and Data Analytics Manager</h3><div class="org">Jets Group · Hareid</div>
+      <ul>
+        <li>Built a data platform in Microsoft Fabric that connects ERP and CRM data, including history from an earlier system, so the business works from one version of the truth</li>
+        <li>Data models, ETL pipelines and Power BI reporting, with quality checks before data is published</li>
+        <li>Internal apps that streamline documentation and automate reporting</li>
+        <li>CSRD/ESRS gap analysis, risk assessments and ESG reporting</li>
+        <li>Leadership responsibility for quality assurance, data governance and data quality</li>
+      </ul></div></div>
+    <div class="item"><div class="when">Jan 2021 – Aug 2025</div><div class="what">
+      <h3>Quality Manager, Operations</h3><div class="org">Jets Vacuum AS · Hareid</div>
+      <ul>
+        <li>Ran the quality management system in operations: internal audits, nonconformities and supplier follow-up</li>
+        <li>Process and risk management, continuous improvement and training</li>
+      </ul></div></div>
+    <div class="item"><div class="when">Jun 2020 – Jan 2021</div><div class="what">
+      <h3>HSE Advisor</h3><div class="org">Norwegian Coastal Administration (Kystverket) · Ålesund</div>
+      <ul><li>Internal audits, nonconformity handling, QA systems, training and management support. Support for vessel crews and inspection teams.</li></ul></div></div>
+    <div class="item"><div class="when">Aug 2018 – Jun 2020</div><div class="what">
+      <h3>Quality Specialist / Junior Engineer</h3><div class="org">Mesta · Oslo and Ålesund</div>
+      <ul><li>Central role in renewing the quality and environmental management system: simpler, standardised, process- and risk-based. Quality, HSE, contracts and reporting.</li></ul></div></div>
+    <div class="item"><div class="when">Jan 2017 – Jun 2018</div><div class="what">
+      <h3>QHSE Coordinator</h3><div class="org">Rolls-Royce Marine · Trondheim · contract</div>
+      <ul><li>ISO implementation, compliance, audits and documentation</li></ul></div></div>
+    <div class="item"><div class="when">2011 – 2017</div><div class="what">
+      <h3>Earlier roles</h3>
+      <p class="small">Teaching assistant in safety management, NTNU (2017) · QHSE project engineer, NCC Construction (2017) · Mechanical engineer, CAD and technical drawings (2014) · CNC operator, Rolls-Royce Marine propeller production: quality control, Lean and machine programming (2011–2013)</p></div></div>
+
+    <h2>Selected projects</h2>
+    <div class="item"><div class="when">2026</div><div class="what">
+      <h3>Solvi · portfolio project</h3><div class="org">unadata.dev/solvi · fictional company, generated data</div>
+      <ul><li>A data platform for a fictional solar and battery installer, split into six domains with owners and quality gates. Includes a battery risk model built on leading indicators, compliance tracking, and apps for safety, service and sales.</li></ul></div></div>
+    <div class="item"><div class="when">2026</div><div class="what">
+      <h3>Freya Hundepensjonat · client project</h3><div class="org">freyahundepensjonat.no</div>
+      <ul><li>Booking and operations app for a dog boarding kennel, with separate interfaces for dog owners, the owner and staff. Next.js, Supabase, Vercel and automated tests.</li></ul></div></div>
+
+    <h2>Education</h2>
+    <div class="item"><div class="when">2016 – 2018</div><div class="what">
+      <h3>MSc in Safety, Health and Environment</h3><div class="org">NTNU, Industrial Economics and Technology Management</div>
+      <p class="small">Specialisation in safety management. Quality management, risk management, societal safety and systems thinking.</p></div></div>
+    <div class="item"><div class="when">2013 – 2016</div><div class="what">
+      <h3>BSc Mechanical Engineering</h3><div class="org">NTNU</div>
+      <p class="small">Operations and maintenance engineering. Thesis on maintenance management. Programming and industrial automation.</p></div></div>
+    <div class="item"><div class="when">2006 – 2010</div><div class="what">
+      <h3>Technical education and trade certificate in CNC machining</h3><div class="org">Ulstein VGS and Rolls-Royce Marine</div>
+      <p class="small">University preparatory studies combined with industrial production.</p></div></div>
+
+    <h2>Skills</h2>
+    <div class="skills">
+      <div><b>Data and analytics</b>Microsoft Fabric, Power BI (daily), SQL, Python and PySpark, ETL/ELT, data modelling, data governance and data quality</div>
+      <div><b>Systems</b>Systems engineering, management systems, ERP and CRM data, architecture and documentation, Git</div>
+      <div><b>Quality and safety</b>Quality management, ISO, internal audits, risk management, nonconformity handling, leading indicators, ESG and CSRD</div>
+      <div><b>Apps</b>Next.js, Supabase, Vercel, automated testing</div>
+    </div>
+
+    <h2>Languages and courses</h2>
+    <p>Norwegian (native), English (fluent). Courses in data science, Python and C programming, quality management and auditing, GDPR, ethics and contracts.</p>
+
+    <p class="foot">References available on request.</p>
+  </article>
+</div>
+</div>
+
+<button id="theme-toggle" type="button" aria-label="Switch light or dark mode">
+<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+</button>
+<style>
+#theme-toggle{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:50;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(10,18,54,.18);padding:0}
+#theme-toggle:hover{color:var(--stamp,#f85e0a)}
+#theme-toggle:focus-visible{outline:2px solid #f85e0a;outline-offset:2px}
+#theme-toggle .i-sun{display:none}
+:root[data-theme="dark"] #theme-toggle .i-sun{display:block}:root[data-theme="dark"] #theme-toggle .i-moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #theme-toggle .i-sun{display:block}:root:not([data-theme="light"]) #theme-toggle .i-moon{display:none}}
+@media print{#theme-toggle{display:none}}
+</style>
+<script>
+(function(){var b=document.getElementById("theme-toggle"),r=document.documentElement;
+function dark(){var t=r.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+b.addEventListener("click",function(){var t=dark()?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Solvi demo report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Interactive demo report for Solvi, a fictional solar and battery installer. All data is generated.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="Solvi – working example">
+<meta property="og:description" content="Interactive apps for a fictional solar and battery installer: battery risk, compliance, production, proposals and customer history.">
+<meta property="og:url" content="https://unadata.dev/solvi/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Data that holds. Una Marie S. Goksøyr, unadata.dev">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: report shell — sticky filter bar, tab per question, KPI row then charts then the list to act on */
+:root{
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --wave:#97c4c2; --foam:#fbfaf6; --seal:#b23a2a; --ochre:#b8862f; --sun2:#f85e0a;
+  --good:#2f7a55; --bad:#b23a2a;
+  --display:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --ochre:#d8a64e;
+  --good:#6cc196; --bad:#e46a54; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --ochre:#d8a64e;
+  --good:#6cc196; --bad:#e46a54; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sky)}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1200px;margin:0 auto}
+a{color:var(--indigo)}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--seal);outline-offset:2px}
+h1,h2{font-family:var(--display);font-weight:700;margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(1.6rem,4vw,2.4rem)} h2{font-size:1.05rem;font-family:var(--body);font-weight:600}
+.label{font-family:var(--pixel);font-size:1rem;color:var(--indigo)}
+
+header{background:var(--sky);padding-block:20px 0}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-end}
+.back{font-size:.9rem;text-decoration:none}
+.fict{font-family:var(--pixel);font-size:.9rem;color:var(--seal);border:1px solid var(--seal);padding:3px 8px;border-radius:2px}
+.tabs{display:flex;gap:4px;margin-top:18px;overflow-x:auto}
+.tabs a{font-family:var(--pixel);font-size:1.02rem;padding:10px 16px;text-decoration:none;color:var(--ink);font-weight:500;white-space:nowrap;border-bottom:3px solid transparent}
+.tabs a[aria-current="page"]{border-color:var(--prussian);color:var(--prussian);background:var(--paper)}
+
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);padding-block:10px}
+.filters .wrap{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.filters label{display:flex;gap:8px;align-items:center;font-size:.85rem;color:var(--muted)}
+select{font:inherit;font-size:.9rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:6px 8px;border-radius:2px;min-width:0}
+.hint{font-size:.8rem;color:var(--muted)}
+
+main .wrap{padding-block:22px 48px;display:flex;flex-direction:column;gap:18px}
+.view[hidden]{display:none}
+.view{display:flex;flex-direction:column;gap:18px}
+.q{font-family:var(--display);font-size:clamp(1.25rem,2.6vw,1.55rem);font-weight:700;color:var(--prussian);margin:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--prussian);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--display);font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .s{font-size:.8rem;color:var(--muted)}
+.kpi.seal{border-top-color:var(--seal)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .sub{font-size:.8rem;color:var(--muted)}
+.chart{position:relative;height:280px}
+.chart.tall{height:340px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--body);font-weight:700;font-size:.8rem;color:var(--muted);padding:7px 8px;border-bottom:2px solid var(--prussian);white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.r{text-align:right}
+td.issue{white-space:normal;min-width:180px} td.issue .chip{display:inline-block;margin-bottom:2px}
+.chip{font-family:var(--body);font-weight:700;font-size:.75rem;padding:2px 7px;border-radius:2px;border:1px solid currentColor}
+.chip.none{color:var(--seal)} .chip.ok{color:var(--good)} .chip.plan{color:var(--ochre)}
+.bar{display:inline-block;height:8px;background:var(--seal);vertical-align:middle;margin-right:6px}
+.for{margin:-10px 0 0;font-size:.88rem;color:var(--ink)} .for span{font-family:var(--pixel);font-size:.9rem;color:var(--indigo);margin-right:4px}
+#h-search{font:inherit;font-size:1rem;color:var(--ink);background:var(--paper);border:1.5px solid var(--prussian);padding:10px 12px;border-radius:3px;width:100%;margin-top:6px}
+.results{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.results .sub{width:100%}
+.hit{font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:2px;max-width:100%}
+.hit span{font-size:.8rem;color:var(--muted)} .hit.on{border-color:var(--prussian);box-shadow:inset 0 0 0 1px var(--prussian)}
+.hhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
+.kpis.small .v{font-size:1.3rem}
+.stackd{display:flex;flex-direction:column;gap:18px}
+.owner{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+.story{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--seal);padding:14px 18px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.story p{margin:6px 0 0;max-width:70ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.kpi.muted{border-top-color:var(--line);opacity:.75}
+.chip.lvl-red{color:var(--seal)} .chip.lvl-yellow{color:var(--ochre)} .chip.lvl-green{color:var(--good)}
+@media (max-width:760px){.story{grid-template-columns:minmax(0,1fr)}}
+.insight{border-left:3px solid var(--seal);padding:6px 12px;background:var(--surface);font-size:.92rem}
+footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;color:var(--muted)}
+@media (max-width:760px){.tabs{flex-wrap:wrap;gap:0} .tabs a{padding:8px 10px;font-size:.92rem} .grid{grid-template-columns:minmax(0,1fr)} .chart{height:240px} .kpi .v{font-size:1.5rem}}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap">
+    <div class="top">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <a class="back" href="../index.html">← All Solvi apps</a>
+        <h1 id="app-title">Solvi</h1>
+        <p class="owner" id="app-owner"></p>
+      </div>
+      <span class="fict">Fictional company · generated data</span>
+    </div>
+    <nav class="tabs" aria-label="Report pages">
+      <a href="#production" data-view="production">Production</a>
+      <a href="#risk" data-view="risk">Battery risk</a>
+      <a href="#compliance" data-view="compliance">Compliance</a>
+      <a href="#proposals" data-view="proposals">Proposals</a>
+      <a href="#followup" data-view="followup">Follow-up</a>
+      <a href="#history" data-view="history">Customer history</a>
+    </nav>
+  </div>
+</header>
+
+<div class="filters band">
+  <div class="wrap">
+    <label for="f-year">Year <select id="f-year"></select></label>
+    <label for="f-country">Country <select id="f-country"></select></label>
+    <label for="f-segment">Segment <select id="f-segment"></select></label>
+    <span class="hint" id="f-hint"></span>
+  </div>
+</div>
+
+<main class="band">
+<div class="wrap">
+
+<section class="view" id="v-proposals" aria-label="Proposals">
+  <p class="q">What changes between the signed proposal and the installed system?</p>
+  <p class="for"><span>For</span> sales lead and project planning · <span>Used</span> monthly, to plan better systems from the start</p>
+  <div class="kpis" id="k-proposals"></div>
+  <div class="grid">
+    <div class="card"><h2>Proposals by month</h2><span class="sub">Signed, declined and still open, by the month the proposal was made</span><div class="chart"><canvas id="c-monthly"></canvas></div></div>
+    <div class="card"><h2>Why customers say no</h2><span class="sub">Reason given when a proposal is declined</span><div class="chart"><canvas id="c-reasons"></canvas></div></div>
+  </div>
+  <div class="card"><h2>What changes after signing</h2><span class="sub">Signed proposals only, valued at the signed price. Components dropped after a site survey, systems downsized to fit the roof, or contracts cancelled.</span><div class="chart"><canvas id="c-cat"></canvas></div></div>
+  <p class="insight" id="i-proposals"></p>
+</section>
+
+<section class="view" id="v-followup" aria-label="Follow-up" hidden>
+  <p class="q">Which customers are waiting to hear from us?</p>
+  <p class="for"><span>For</span> sellers · <span>Used</span> every morning, a short list to work through</p>
+  <div class="kpis" id="k-follow"></div>
+  <div class="grid">
+    <div class="card"><h2>Share signed, by days to first contact</h2><span class="sub">Decided proposals. Association, not proof of cause.</span><div class="chart"><canvas id="c-fu"></canvas></div></div>
+    <div class="card"><h2>Open proposals waiting for a call</h2><span class="sub">Sent 3+ days ago, no completed follow-up. Highest value first.</span><div class="tablewrap" id="t-open"></div></div>
+  </div>
+  <p class="insight" id="i-follow"></p>
+</section>
+
+<section class="view" id="v-production" aria-label="Production" hidden>
+  <p class="q">Is it broken, or was it just a cloudy week?</p>
+  <p class="for"><span>For</span> service team · <span>Used</span> weekly, to plan service visits before customers call</p>
+  <div class="kpis" id="k-prod"></div>
+  <div class="card"><h2>Actual vs. expected production by month</h2><span class="sub">MWh. Expected = installed kWp × measured irradiation × reference performance. Days with snow on the panels are not counted as missing output.</span><div class="chart tall"><canvas id="c-prod"></canvas></div></div>
+  <div class="grid">
+    <div class="card"><h2>Yield by location, 2025</h2><span class="sub">Median kWh per installed kWp, installations connected before 2025</span><div class="chart tall"><canvas id="c-yield"></canvas></div></div>
+    <div class="card"><h2>Installations to check</h2><span class="sub">Last 60 days: days where the 7-day output was under 70 % of expected</span><div class="tablewrap" id="t-under"></div></div>
+  </div>
+  <p class="insight" id="i-prod"></p>
+</section>
+
+<section class="view" id="v-risk" aria-label="Battery risk" hidden>
+  <p class="q">Will the next battery job be safe?</p>
+  <p class="for"><span>For</span> quality and HSE, project planning · <span>Used</span> before every battery job, and in the monthly review</p>
+  <div class="story" id="r-story"></div>
+  <div class="kpis" id="k-risk"></div>
+  <div class="grid">
+    <div class="card"><h2>Do the risk factors predict trouble?</h2><span class="sub">Near misses and incidents per 100 battery jobs, by the risk level the job had. Before and after actions became required.</span><div class="chart"><canvas id="c-rlevel"></canvas></div></div>
+    <div class="card"><h2>Leading or lagging?</h2><span class="sub">Bars: share of jobs that were red, a warning you can act on. Line: days since the last incident, which looked fine right up to March.</span><div class="chart"><canvas id="c-rlead"></canvas></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Risk factors found most often</h2><span class="sub">Number of battery jobs where each factor was present</span><div class="chart tall"><canvas id="c-rfact"></canvas></div></div>
+    <div class="card"><h2>Where in the chain</h2><span class="sub">Share of red jobs and events by battery supplier and by who did the work</span><div class="tablewrap" id="t-chain"></div></div>
+  </div>
+  <div class="card"><h2>Before work starts: the next two weeks</h2><span class="sub">Planned battery jobs, scored on what is known today: delivery, crew, site and the weather forecast</span><div class="tablewrap" id="t-plan"></div></div>
+  <p class="insight" id="i-risk"></p>
+</section>
+
+<section class="view" id="v-compliance" aria-label="Compliance" hidden>
+  <p class="q">Is every installation audit-ready?</p>
+  <p class="for"><span>For</span> quality and compliance · <span>Used</span> before audits and in monthly follow-up</p>
+  <div class="kpis" id="k-comp"></div>
+  <div class="grid">
+    <div class="card"><h2>Paperwork on time, by quarter due</h2><span class="sub">Share of required documents and inspections submitted by their due date. A digital handover checklist was introduced in March 2025.</span><div class="chart"><canvas id="c-ontime"></canvas></div></div>
+    <div class="card"><h2>What is overdue</h2><span class="sub">Items past their due date with nothing submitted, by requirement</span><div class="chart"><canvas id="c-overdue"></canvas></div></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Open deviations by age</h2><span class="sub">Findings from handover checks and annual inspections that are not closed yet</span><div class="chart"><canvas id="c-dev"></canvas></div></div>
+    <div class="card"><h2>Installations that are not audit-ready</h2><span class="sub">Something overdue, or a high-severity deviation still open. Worst first.</span><div class="tablewrap" id="t-audit"></div></div>
+  </div>
+  <p class="insight" id="i-comp"></p>
+</section>
+
+<section class="view" id="v-history" aria-label="Customer history" hidden>
+  <p class="q">What has this customer bought from us, ever?</p>
+  <p class="for"><span>For</span> sellers and customer service · <span>Used</span> before a call or a visit, instead of logging in to the old system</p>
+  <div class="kpis" id="k-hist"></div>
+  <div class="card">
+    <h2>Find a customer</h2>
+    <span class="sub">Search by current number (C1…), old number (K-…), name or municipality. Both ERP systems in one place.</span>
+    <input id="h-search" type="search" placeholder="Try C100012, K-40015 or Bergen" autocomplete="off">
+    <div id="h-results" class="results"></div>
+  </div>
+  <div id="h-detail" class="stackd"></div>
+  <p class="insight">Solvi changed ERP on 1 January 2023. The old system's history was loaded once into a frozen archive and mapped to the new customer and product numbers. Lines that could not be mapped keep their old numbers and are shown, not hidden.</p>
+</section>
+
+</div>
+</main>
+
+<footer class="band"><div class="wrap">Solvi is a fictional company. Customers, proposals, installations and production are generated by a script; locations and weather patterns are real places used for realism. Built by Una Marie S. Goksøyr. The same checked data serves five user groups; this lightweight web version mirrors the logic of the Microsoft Fabric pipeline.</div></footer>
+
+<script>window.SOLVI_APP = {"title": "Solvi \u00b7 Service", "owner": "For the service team \u00b7 data from the assets and core domains", "views": ["production"]};</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<!-- Template: build_site.py writes this to site/solvi/<app>/index.html, so ../data.js is site/solvi/data.js. -->
+<script src="../data.js"></script>
+<script>
+(function(){
+const D = window.SOLVI;
+const $ = id => document.getElementById(id);
+const tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const nf = new Intl.NumberFormat("en-GB");
+const mNOK = v => "NOK " + (v/1e6).toLocaleString("en-GB",{maximumFractionDigits: v >= 1e8 ? 0 : 1}) + "M";
+const pct = v => isFinite(v) ? (v*100).toFixed(1) + " %" : "–";
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+// ---------- filters
+const F = {year:"All", country:"All", segment:"All"};
+function fill(id, vals){ $(id).innerHTML = ["All", ...vals].map(v => `<option>${v}</option>`).join(""); }
+fill("f-year", D.years); fill("f-country", D.countries); fill("f-segment", D.segments);
+try { const s = JSON.parse(localStorage.getItem("solvi-filters") || "{}"); Object.assign(F, s); } catch(e){}
+for (const k of ["year","country","segment"]) {
+  const el = $("f-" + k); if ([...el.options].some(o => o.value == F[k])) el.value = F[k]; else F[k] = "All";
+  el.addEventListener("change", () => { F[k] = el.value; try{ localStorage.setItem("solvi-filters", JSON.stringify(F)); }catch(e){} render(); });
+}
+const ok = (y, c, s) => (F.year === "All" || String(y) === String(F.year)) && (F.country === "All" || c === F.country) && (F.segment === "All" || s === F.segment);
+
+// ---------- charts
+const charts = {};
+function chart(id, cfg){
+  if (charts[id]) charts[id].destroy();
+  const ink = tok("--ink"), muted = tok("--muted"), line = tok("--line");
+  Chart.defaults.font.family = tok("--body"); Chart.defaults.color = muted;
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, animation:{duration:250},
+    plugins:{legend:{labels:{color:ink, boxWidth:12, boxHeight:12}}, tooltip:{}},
+  }, cfg.options || {});
+  const sc = cfg.options.scales || {};
+  for (const a of Object.values(sc)) { a.grid = Object.assign({color:line}, a.grid||{}); a.ticks = Object.assign({color:muted}, a.ticks||{}); a.border = {color:line}; }
+  charts[id] = new Chart($(id), cfg);
+}
+
+// ---------- views
+function kpis(el, items){
+  $(el).innerHTML = items.map(([label, v, sub, cls]) => `<div class="kpi ${cls||""}"><span class="label">${label}</span><span class="v">${v}</span><span class="s">${sub||""}</span></div>`).join("");
+}
+
+function renderProposals(){
+  const rows = D.qo.filter(r => ok(r[0], r[1], r[2]));
+  const s = i => rows.reduce((a, r) => a + r[i], 0);
+  const proposals = s(3), decided = s(4), won = s(5), proposed = s(6), wonQ = s(7), ordered = s(8);
+  const lostAfter = s(9) + s(10) + s(11);
+  kpis("k-proposals", [
+    ["Proposals", nf.format(proposals), F.year === "All" ? "2023 – Oct 2026" : F.year],
+    ["Signed", pct(won/decided), nf.format(won) + " of " + nf.format(decided) + " decided"],
+    ["Proposed value", mNOK(proposed), "all proposals"],
+    ["Installed as signed", pct(ordered/wonQ), "value delivered ÷ value signed"],
+    ["Changed after signing", mNOK(lostAfter), "dropped, downsized or cancelled", "seal"],
+  ]);
+  // monthly
+  const months = {}; D.monthly.forEach(r => { const y = r[0].slice(0,4); if (!ok(y, r[1], r[2])) return; const m = months[r[0]] ||= [0,0,0]; m[0]+=r[3]; m[1]+=r[4]; m[2]+=r[5]; });
+  const keys = Object.keys(months).sort();
+  const lab = keys.map(k => new Date(k + "-01").toLocaleDateString("en-GB",{month:"short", year:"2-digit"}));
+  chart("c-monthly", {type:"bar", data:{labels:lab, datasets:[
+      {label:"Signed", data:keys.map(k=>months[k][0]), backgroundColor:tok("--prussian"), stack:"s"},
+      {label:"Declined or expired", data:keys.map(k=>months[k][1]), backgroundColor:tok("--wave"), stack:"s"},
+      {label:"Open", data:keys.map(k=>months[k][2]), backgroundColor:tok("--ochre"), stack:"s"}]},
+    options:{scales:{x:{stacked:true, grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12}}, y:{stacked:true, beginAtZero:true}}}});
+  // reasons
+  const rs = {}; D.reasons.forEach(r => { if (ok(r[0], r[1], r[2])) rs[r[3]] = (rs[r[3]]||0) + r[4]; });
+  const rk = Object.keys(rs).sort((a,b) => rs[b]-rs[a]);
+  chart("c-reasons", {type:"bar", data:{labels:rk, datasets:[{label:"Declined proposals", data:rk.map(k=>rs[k]), backgroundColor:tok("--indigo")}]},
+    options:{indexAxis:"y", plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}, y:{grid:{display:false}}}}});
+  // lost after yes by category
+  const cats = {}, outs = ["Component dropped","System downsized","Contract cancelled"];
+  D.cat.forEach(r => { if (!ok(r[0], r[1], r[2])) return; const c = cats[r[3]] ||= {}; c[r[4]] = (c[r[4]]||0) + r[5]; });
+  const ck = Object.keys(cats).sort((a,b) => outs.reduce((t,o)=>t+(cats[b][o]||0),0) - outs.reduce((t,o)=>t+(cats[a][o]||0),0));
+  const col = {"Component dropped":tok("--seal"), "System downsized":tok("--ochre"), "Contract cancelled":tok("--wave")};
+  chart("c-cat", {type:"bar", data:{labels:ck, datasets:outs.map(o => ({label:o, data:ck.map(c => Math.round((cats[c][o]||0)/1000)), backgroundColor:col[o], stack:"s"}))},
+    options:{indexAxis:"y", scales:{x:{stacked:true, title:{display:true, text:"NOK thousand", color:tok("--muted")}}, y:{stacked:true, grid:{display:false}}},
+      plugins:{tooltip:{callbacks:{label:c => c.dataset.label + ": NOK " + nf.format(c.raw) + "k"}}}}});
+  const top = ck[0];
+  $("i-proposals").textContent = proposals ? `${pct(ordered/wonQ)} of the signed value is installed. Most changes after signing are in ${top ? top.toLowerCase() : "–"}, often found at the site survey. A better survey before the proposal means fewer surprises after it.` : "No proposals for this selection.";
+}
+
+function renderFollow(){
+  const b = {}; D.fu.forEach(r => { if (!ok(r[0], r[1], r[2])) return; const x = b[r[3]] ||= [0,0]; x[0]+=r[4]; x[1]+=r[5]; });
+  const order = ["0–3 days","4–7 days","8–14 days","15+ days","No follow-up"].filter(k => b[k]);
+  const fuDec = order.filter(k=>k!=="No follow-up").reduce((a,k)=>a+b[k][0],0), fuWon = order.filter(k=>k!=="No follow-up").reduce((a,k)=>a+b[k][1],0);
+  const no = b["No follow-up"] || [0,0];
+  const open = D.open.filter(r => ok(r[7], r[3], r[1]));
+  kpis("k-follow", [
+    ["Signed, followed up", pct(fuWon/fuDec), nf.format(fuDec) + " decided proposals"],
+    ["Signed, no follow-up", pct(no[1]/no[0]), nf.format(no[0]) + " decided proposals"],
+    ["Waiting for a call", nf.format(open.length), "open proposals, 3+ days old", "seal"],
+    ["Value waiting", mNOK(open.reduce((a,r)=>a+r[5],0)), "at proposal price", "seal"],
+  ]);
+  chart("c-fu", {type:"bar", data:{labels:order, datasets:[{label:"Signed", data:order.map(k=>+(b[k][1]/b[k][0]*100).toFixed(1)),
+      backgroundColor:order.map(k => k === "No follow-up" ? tok("--wave") : tok("--prussian"))}]},
+    options:{plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => c.raw + " % of " + nf.format(b[order[c.dataIndex]][0]) + " proposals"}}},
+      scales:{y:{beginAtZero:true, max:60, ticks:{callback:v => v + " %"}}, x:{grid:{display:false}}}}});
+  const rows = open.slice(0, 12);
+  $("t-open").innerHTML = rows.length ? `<table><thead><tr><th>Proposal</th><th>Segment</th><th>Location</th><th class="r">Age</th><th class="r">Value</th><th>Status</th></tr></thead><tbody>` +
+    rows.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="r">${r[4]} d</td><td class="r">${nf.format(r[5])}</td><td><span class="chip ${r[6]==="Planned"?"plan":"none"}">${r[6]==="Planned"?"Call planned":"No call yet"}</span></td></tr>`).join("") +
+    `</tbody></table>` : `<p class="sub">No open proposals waiting for this selection.</p>`;
+  const lift = (fuWon/fuDec - no[1]/no[0]) * 100;
+  $("i-follow").textContent = fuDec && no[0] ? `Proposals that got a follow-up were won ${lift.toFixed(0)} percentage points more often. The waiting list is where to start: the biggest proposals that nobody has called yet.` : "Not enough decided proposals for this selection.";
+}
+
+function renderProd(){
+  const c = F.country;
+  const pk = c === "All" ? Object.values(D.prod_kpi).reduce((a,x)=>({installs:a.installs+x.installs, kwp:a.kwp+x.kwp, mwh12:a.mwh12+x.mwh12}), {installs:0,kwp:0,mwh12:0}) : (D.prod_kpi[c] || {installs:0,kwp:0,mwh12:0});
+  const m = {}; D.prod_m.forEach(r => { if (c !== "All" && r[1] !== c) return; const x = m[r[0]] ||= [0,0]; x[0]+=r[2]; x[1]+=r[3]; });
+  const keys = Object.keys(m).sort(), last12 = keys.slice(-12);
+  const a12 = last12.reduce((t,k)=>t+m[k][0],0), e12 = last12.reduce((t,k)=>t+m[k][1],0);
+  const under = D.under.filter(r => c === "All" || r[2] === c);
+  kpis("k-prod", [
+    ["Installations", nf.format(pk.installs), "grid connected"],
+    ["Installed capacity", (pk.kwp/1000).toFixed(1) + " MWp", "solar panels"],
+    ["Production, 12 months", nf.format(Math.round(a12)) + " MWh", "Nov 2025 – Oct 2026"],
+    ["Of expected output", pct(a12/e12), "after weather and snow"],
+    ["To check", nf.format(under.length), "installations flagged, last 60 days", "seal"],
+  ]);
+  chart("c-prod", {type:"line", data:{labels:keys.map(k => new Date(k+"-01").toLocaleDateString("en-GB",{month:"short", year:"2-digit"})), datasets:[
+      {label:"Expected", data:keys.map(k=>+m[k][1].toFixed(1)), borderColor:tok("--wave"), backgroundColor:tok("--wave"), borderDash:[6,4], pointRadius:0, tension:.3},
+      {label:"Actual", data:keys.map(k=>+m[k][0].toFixed(1)), borderColor:tok("--prussian"), backgroundColor:tok("--prussian"), pointRadius:0, borderWidth:2.5, tension:.3}]},
+    options:{interaction:{mode:"index", intersect:false}, scales:{y:{beginAtZero:true, ticks:{callback:v => nf.format(v)}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12}}}}});
+  const y = D.yield.filter(r => c === "All" || r[1] === c).sort((a,b)=>b[2]-a[2]);
+  chart("c-yield", {type:"bar", data:{labels:y.map(r=>r[0]), datasets:[{label:"kWh/kWp", data:y.map(r=>r[2]), backgroundColor:tok("--indigo")}]},
+    options:{indexAxis:"y", plugins:{legend:{display:false}, tooltip:{callbacks:{label:c2 => c2.raw + " kWh/kWp, " + y[c2.dataIndex][3] + " installations"}}}, scales:{x:{beginAtZero:true}, y:{grid:{display:false}}}}});
+  const mx = Math.max(1, ...under.map(r=>r[5]));
+  $("t-under").innerHTML = under.length ? `<table><thead><tr><th>Installation</th><th>Location</th><th class="r">kWp</th><th class="r">Latest 7-day</th><th>Days flagged</th><th>Now</th></tr></thead><tbody>` +
+    [...under].sort((x,y)=>((x[4]??0)>=0.7)-((y[4]??0)>=0.7) || y[5]-x[5]).slice(0, 12).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="r">${r[3].toFixed(1)}</td><td class="r">${r[4]==null?"–":Math.round(r[4]*100)+" %"}</td><td><span class="bar" style="width:${Math.round(r[5]/mx*60)}px"></span>${r[5]}</td><td><span class="chip ${r[4]!=null&&r[4]>=0.7?"ok":"none"}">${r[4]!=null&&r[4]>=0.7?"Recovered":"Still low"}</span></td></tr>`).join("") +
+    `</tbody></table>` : `<p class="sub">No flagged installations for this selection.</p>`;
+  $("i-prod").textContent = `Weather explains most of the dips: a grey month in Bergen is expected to produce less. The installations in the list stayed under 70 % of what their own weather allowed. Those still low point to a fault worth a service call; recovered ones show what a repair looks like in the data.`;
+}
+
+function renderComp(){
+  const tot = D.audit_tot.filter(r => ok(r[0], r[1], r[2])).reduce((a,r)=>[a[0]+r[3], a[1]+r[4]], [0,0]);
+  const items = D.comp_items.filter(r => ok(r[0], r[1], r[2]));
+  const byQ = {}, over = {};
+  let due = 0, onTime = 0, overdue = 0;
+  items.forEach(r => { const q = byQ[r[4]] ||= [0,0]; if (r[5] === "Not yet due") return; q[0]+=r[6]; due+=r[6];
+    if (r[5] === "On time") { q[1]+=r[6]; onTime+=r[6]; } if (r[5] === "Overdue") { over[r[3]] = (over[r[3]]||0) + r[6]; overdue+=r[6]; } });
+  const dev = D.dev.filter(r => ok(r[0], r[1], r[2]));
+  const openDev = dev.filter(r => r[4]), openN = openDev.reduce((a,r)=>a+r[6],0);
+  const hiClosed = dev.filter(r => !r[4] && r[3] === "High"), hiDays = hiClosed.reduce((a,r)=>a+r[7],0), hiN = hiClosed.reduce((a,r)=>a+r[6],0);
+  kpis("k-comp", [
+    ["Audit-ready", pct(tot[1]/tot[0]), nf.format(tot[1]) + " of " + nf.format(tot[0]) + " installations"],
+    ["Paperwork on time", pct(onTime/due), nf.format(due) + " items due so far"],
+    ["Overdue items", nf.format(overdue), "due, nothing submitted", "seal"],
+    ["Open deviations", nf.format(openN), "from checks and inspections", "seal"],
+    ["High severity, time to close", hiN ? Math.round(hiDays/hiN) + " days" : "–", "average, closed findings"],
+  ]);
+  const qk = Object.keys(byQ).filter(k => byQ[k][0] >= 25).sort();
+  chart("c-ontime", {type:"line", data:{labels:qk.map(k => k.replace("-", " ")), datasets:[{label:"On time", data:qk.map(k => +(byQ[k][1]/byQ[k][0]*100).toFixed(1)),
+      borderColor:tok("--prussian"), backgroundColor:tok("--prussian"), pointRadius:3, borderWidth:2.5, tension:.25}]},
+    options:{plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => c.raw + " % of " + nf.format(byQ[qk[c.dataIndex]][0]) + " items"}}},
+      scales:{y:{min:50, max:100, ticks:{callback:v => v + " %"}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:innerWidth < 600 ? 5 : 10}}}}});
+  const ok2 = Object.keys(over).sort((a,b)=>over[b]-over[a]);
+  chart("c-overdue", {type:"bar", data:{labels:ok2, datasets:[{label:"Overdue items", data:ok2.map(k=>over[k]), backgroundColor:tok("--seal")}]},
+    options:{indexAxis:"y", plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, ticks:{precision:0}}, y:{grid:{display:false}}}}});
+  const ages = ["0–30 d","31–90 d","91–180 d","180+ d"], sevs = ["High","Medium","Low"];
+  const sc = {High:tok("--seal"), Medium:tok("--ochre"), Low:tok("--wave")};
+  chart("c-dev", {type:"bar", data:{labels:ages, datasets:sevs.map(sv => ({label:sv, stack:"s", backgroundColor:sc[sv],
+      data:ages.map(a => openDev.filter(r => r[3] === sv && r[5] === a).reduce((t,r)=>t+r[6],0))}))},
+    options:{scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true, ticks:{precision:0}}}}});
+  const list = D.audit_list.filter(r => ok(r[4], r[2], r[3]));
+  $("t-audit").innerHTML = list.length ? `<table><thead><tr><th>Installation</th><th>Location</th><th>Issue</th><th class="r">Days overdue</th></tr></thead><tbody>` +
+    list.slice(0, 12).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="issue">${r[7] ? `<span class="chip none">High deviation open</span> ` : ""}${esc(r[8])}</td><td class="r">${r[6] || "–"}</td></tr>`).join("") +
+    `</tbody></table>` : `<p class="sub">Every installation in this selection is audit-ready.</p>`;
+  const pre = qk.filter(k => k < "2025-Q2"), post = qk.filter(k => k >= "2025-Q2");
+  const rate = ks => { const a = ks.reduce((t,k)=>[t[0]+byQ[k][0], t[1]+byQ[k][1]], [0,0]); return a[0] ? a[1]/a[0] : NaN; };
+  $("i-comp").textContent = pre.length && post.length
+    ? `On-time paperwork went from ${pct(rate(pre))} before the handover checklist to ${pct(rate(post))} after it. The not-audit-ready list is what an auditor would ask about first.`
+    : `The not-audit-ready list is what an auditor would ask about first.`;
+}
+
+let histSel = null;
+function renderHist(){
+  const A = window.SOLVI_ARCHIVE;
+  if (!A) {
+    $("k-hist").innerHTML = '<p class="sub">Loading the archive…</p>';
+    if (!document.getElementById("archive-js")) { const sc = document.createElement("script"); sc.id = "archive-js"; sc.src = "../archive.js"; sc.onload = renderHist; document.body.appendChild(sc); }
+    return;
+  }
+  kpis("k-hist", [
+    ["Old ERP lines", nf.format(A.lines_legacy), "2013–2022, frozen"],
+    ["Current ERP lines", nf.format(A.lines_current), "2023 onwards"],
+    ["Lines linked to a customer", A.pct_cust_mapped.toFixed(1) + " %", "the rest left before the switch"],
+    ["Old items mapped", A.pct_item_mapped.toFixed(1) + " %", "discontinued items keep old numbers"],
+  ]);
+  const inp = $("h-search");
+  if (!inp.dataset.bound) { inp.dataset.bound = "1"; inp.addEventListener("input", () => { histSel = null; listHist(); }); }
+  listHist();
+}
+function listHist(){
+  const A = window.SOLVI_ARCHIVE, q = $("h-search").value.trim().toLowerCase();
+  const life = c => c[6].reduce((t,o)=>t+o[5],0);
+  let hits;
+  if (!q) hits = A.customers.filter(c => c[6].some(o=>o[1]==="L") && c[6].some(o=>o[1]==="C")).sort((a,b)=>life(b)-life(a)).slice(0,6);
+  else hits = A.customers.filter(c => [c[0],c[1],c[2],c[3]].some(x => String(x).toLowerCase().includes(q))).slice(0,20);
+  $("h-results").innerHTML = (q ? "" : '<p class="sub">Customers with history in both systems:</p>') + (hits.length ? hits.map(c =>
+    `<button class="hit${histSel===c[0]?" on":""}" data-k="${esc(c[0])}"><b>${esc(c[2])}</b><span>${esc(c[0])}${c[1] && c[1]!==c[0] ? " · old " + esc(c[1]) : ""} · ${esc(c[3])}</span></button>`).join("") : '<p class="sub">No customers match.</p>');
+  $("h-results").querySelectorAll(".hit").forEach(b => b.addEventListener("click", () => { histSel = b.dataset.k; listHist(); showHist(); }));
+  if (!histSel && hits.length) { histSel = hits[0][0]; $("h-results").querySelector(".hit").classList.add("on"); }
+  showHist();
+}
+function showHist(){
+  const A = window.SOLVI_ARCHIVE, c = A.customers.find(x => x[0] === histSel);
+  if (!c) { $("h-detail").innerHTML = ""; return; }
+  const os = c[6], total = os.reduce((t,o)=>t+o[5],0), first = os[0][0], last = os[os.length-1][0];
+  const years = {}; os.forEach(o => { const y = o[0].slice(0,4); const v = years[y] ||= [0,0]; v[o[1]==="L"?0:1] += o[5]; });
+  const yk = []; for (let y = +first.slice(0,4); y <= 2026; y++) yk.push(String(y));
+  $("h-detail").innerHTML = `<div class="card"><div class="hhead"><div><h2>${esc(c[2])}</h2><span class="sub">${esc(c[0])}${c[1] && c[1]!==c[0] ? " · old number " + esc(c[1]) : ""} · ${esc(c[3])}${c[4] ? " · " + esc(c[4]) : ""}</span></div>${c[5] ? "" : '<span class="chip none">Not in current system</span>'}</div>
+    <div class="kpis small"><div class="kpi"><span class="label">Customer since</span><span class="v">${first.slice(0,4)}</span></div>
+    <div class="kpi"><span class="label">Lifetime value</span><span class="v">${mNOK(total)}</span></div>
+    <div class="kpi"><span class="label">Last purchase</span><span class="v">${new Date(last).toLocaleDateString("en-GB",{month:"short",year:"numeric"})}</span></div>
+    <div class="kpi"><span class="label">Orders</span><span class="v">${os.length}</span></div></div>
+    <div class="chart" style="height:220px"><canvas id="c-hist"></canvas></div>
+    <div class="tablewrap"><table><thead><tr><th>Date</th><th>System</th><th>Order</th><th>Main item</th><th class="r">Lines</th><th class="r">NOK</th></tr></thead><tbody>${
+      [...os].reverse().map(o => `<tr><td>${o[0]}</td><td><span class="chip ${o[1]==="L"?"plan":"ok"}">${o[1]==="L"?"Old ERP":"Current"}</span></td><td>${esc(o[2])}</td><td>${esc(o[3])}</td><td class="r">${o[4]}</td><td class="r">${nf.format(o[5])}</td></tr>`).join("")
+    }</tbody></table></div></div>`;
+  chart("c-hist", {type:"bar", data:{labels:yk, datasets:[
+      {label:"Old ERP", data:yk.map(y => years[y] ? years[y][0] : 0), backgroundColor:tok("--ochre"), stack:"s"},
+      {label:"Current ERP", data:yk.map(y => years[y] ? years[y][1] : 0), backgroundColor:tok("--prussian"), stack:"s"}]},
+    options:{scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true, ticks:{callback:v => nf.format(v/1000) + "k"}}},
+      plugins:{tooltip:{callbacks:{label:c2 => c2.dataset.label + ": NOK " + nf.format(c2.raw)}}}}});
+}
+
+function renderRisk(){
+  const R = D.risk, rules = R.rules, rd = R.rule_date;
+  const jobs = R.jobs.filter(j => (F.year === "All" || j[0].slice(0,4) === String(F.year)) && (F.country === "All" || j[1] === F.country));
+  const inc = R.incident;
+  $("r-story").innerHTML = `<div><span class="label">What happened</span><p><b>${new Date(inc.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}:</b> ${esc(inc.text)}</p>
+    <p>The battery came from ${esc(inc.supplier)} and was installed by a subcontractor crew. When the job was reconstructed, ${inc.factors.length} risk factors had been present on the day. None of them was tracked. The board in the office said <i>days without incident</i>.</p>
+    <p>Management asked for action. Quality's answer: stop counting incidents and start acting on the conditions that cause them, across the whole chain. From 1 April 2026, every red or yellow job needs an action before work starts.</p></div>
+    <div class="chips">${inc.factors.map(f => `<span class="chip none" title="${esc(rules[f][1])}">${esc(rules[f][0])}</span>`).join("")}</div>`;
+  const ev = j => j[8] + j[9];
+  const nm = jobs.reduce((t,j)=>t+j[8],0), incs = jobs.reduce((t,j)=>t+j[9],0), gc = jobs.reduce((t,j)=>t+j[10],0);
+  const red = jobs.filter(j => j[2] === "Red").length;
+  const lastInc = R.events.filter(e => e[1] === "Incident").map(e => e[0]).sort().pop();
+  const since = lastInc ? Math.round((new Date(D.generated) - new Date(lastInc)) / 864e5) : null;
+  kpis("k-risk", [
+    ["Battery jobs", nf.format(jobs.length), F.year === "All" ? "2023 – Oct 2026" : F.year],
+    ["Red jobs", pct(red / jobs.length), nf.format(red) + " jobs with a stop factor or high score", "seal"],
+    ["Near misses", nf.format(nm), (jobs.length ? (nm / jobs.length * 100).toFixed(1) : "–") + " per 100 jobs"],
+    ["Good catches", nf.format(gc), "damage stopped at goods receipt"],
+    ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: says nothing about tomorrow", "muted"],
+  ]);
+  // events per 100 jobs by level, before/after
+  const lv = ["Green","Yellow","Red"], per = (arr) => lv.map(l => { const a = arr.filter(j => j[2] === l); return a.length ? +(a.reduce((t,j)=>t+ev(j),0) / a.length * 100).toFixed(1) : 0; });
+  const before = jobs.filter(j => j[0] < rd), after = jobs.filter(j => j[0] >= rd);
+  chart("c-rlevel", {type:"bar", data:{labels:lv, datasets:[
+      {label:"Before 1 April 2026", data:per(before), backgroundColor:tok("--wave")},
+      {label:"After: action required", data:per(after), backgroundColor:tok("--prussian")}]},
+    options:{plugins:{tooltip:{callbacks:{label:c => c.dataset.label + ": " + c.raw + " per 100 jobs"}}}, scales:{y:{beginAtZero:true, title:{display:true, text:"events per 100 jobs", color:tok("--muted")}}, x:{grid:{display:false}}}}});
+  // leading vs lagging by month
+  const months = {}; jobs.forEach(j => { const m = j[0].slice(0,7); const x = months[m] ||= [0,0]; x[0]++; if (j[2] === "Red") x[1]++; });
+  const mk = Object.keys(months).sort();
+  const incDates = R.events.filter(e => e[1] === "Incident").map(e => e[0]);
+  const start = R.jobs.length ? R.jobs[0][0] : "2023-01-01";
+  const lag = mk.map(m => { const end = m + "-28"; const prev = incDates.filter(d => d <= end).sort().pop() || start; return Math.max(0, Math.round((new Date(end) - new Date(prev)) / 864e5)); });
+  chart("c-rlead", {data:{labels:mk.map(k => new Date(k + "-01").toLocaleDateString("en-GB",{month:"short", year:"2-digit"})), datasets:[
+      {type:"bar", label:"Red jobs, % of month", data:mk.map(m => +(months[m][1] / months[m][0] * 100).toFixed(0)), backgroundColor:tok("--seal"), yAxisID:"y"},
+      {type:"line", label:"Days since last incident", data:lag, borderColor:tok("--muted"), backgroundColor:tok("--muted"), borderDash:[5,4], pointRadius:0, yAxisID:"y2"}]},
+    options:{scales:{y:{beginAtZero:true, max:100, ticks:{callback:v => v + " %"}}, y2:{position:"right", beginAtZero:true, grid:{display:false}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:innerWidth < 600 ? 5 : 10}}}}});
+  // factor frequency
+  const cnt = {}; jobs.forEach(j => j[4].forEach(f => cnt[f] = (cnt[f]||0) + 1));
+  const fk = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a]).slice(0, 10);
+  const catCol = {Supply:tok("--ochre"), Chain:tok("--sun2"), People:tok("--indigo"), Handling:tok("--seal"), Site:tok("--prussian"), Planning:tok("--wave")};
+  chart("c-rfact", {type:"bar", data:{labels:fk.map(f => rules[f][0]), datasets:[{label:"Jobs", data:fk.map(f => cnt[f]), backgroundColor:fk.map(f => catCol[rules[f][1]] || tok("--wave"))}]},
+    options:{indexAxis:"y", plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => rules[fk[c.dataIndex]][1] + ": " + c.raw + " jobs"}}},
+      scales:{x:{beginAtZero:true}, y:{grid:{display:false}, ticks:{autoSkip:false, font:{size:11}, callback:function(v){ const t = this.getLabelForValue(v); return t.length > 34 ? t.slice(0, 33) + "…" : t; }}}}}});
+  // chain table
+  const groups = {};
+  jobs.forEach(j => { [[R.suppliers[j[6]] || j[6], "Battery supplier"], [j[7] ? (R.suppliers[j[7]] || j[7]) : "Own crews", "Installed by"]].forEach(([k, kind]) => {
+    const g = groups[kind + "|" + k] ||= {kind, name:k, n:0, red:0, ev:0}; g.n++; if (j[2] === "Red") g.red++; g.ev += ev(j); }); });
+  const rows = Object.values(groups).sort((a,b) => a.kind.localeCompare(b.kind) || b.red/b.n - a.red/a.n);
+  $("t-chain").innerHTML = `<table><thead><tr><th></th><th>Name</th><th class="r">Jobs</th><th class="r">Red</th><th class="r">Events per 100</th></tr></thead><tbody>` +
+    rows.map(g => `<tr><td>${esc(g.kind)}</td><td>${esc(g.name)}</td><td class="r">${g.n}</td><td class="r">${pct(g.red/g.n)}</td><td class="r">${(g.ev/g.n*100).toFixed(1)}</td></tr>`).join("") + `</tbody></table>`;
+  // planned jobs
+  const pl = R.planned.filter(p => F.country === "All" || p[3] === F.country).sort((a,b) => ({Red:0,Yellow:1,Green:2}[a[7]] - {Red:0,Yellow:1,Green:2}[b[7]]) || a[1].localeCompare(b[1]));
+  const actionFor = p => { const stops = p[9].filter(f => rules[f][3]); return p[7] === "Red" ? (stops.length ? "Stop until fixed: " + stops.map(f => rules[f][0].toLowerCase()).join("; ") : "Safety sign-off before start")
+    : p[7] === "Yellow" ? "Supervisor check and toolbox talk" : "Proceed"; };
+  $("t-plan").innerHTML = pl.length ? `<table><thead><tr><th>Date</th><th>Location</th><th>Crew</th><th>Level</th><th>Factors</th><th>Required before start</th></tr></thead><tbody>` +
+    pl.slice(0, 14).map(p => `<tr><td>${new Date(p[1]).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</td><td>${esc(p[2])}<br><span class="sub">${esc(p[6])}</span></td><td>${esc(p[4])}</td>
+      <td><span class="chip lvl-${p[7].toLowerCase()}">${p[7]}</span></td><td class="issue">${p[9].map(f => esc(rules[f][0])).join("; ") || "–"}</td><td class="issue">${esc(actionFor(p))}</td></tr>`).join("") + `</tbody></table>`
+    : '<p class="sub">No planned battery jobs for this selection.</p>';
+  const b = per(before), a = per(after);
+  $("i-risk").textContent = before.length && after.length ? `Before the change, red jobs had ${b[2]} events per 100 jobs against ${b[0]} for green ones, so the factors do predict trouble. With an action required before start, red jobs dropped to ${a[2]}. Days since last incident would have shown none of this.` : "Not enough jobs in this selection to compare before and after.";
+}
+
+// ---------- routing
+const APP = window.SOLVI_APP || {title:"Solvi", owner:"", views:["production","risk","compliance","proposals","followup","history"]};
+const ALL = ["production","risk","compliance","proposals","followup","history"];
+const VIEWS = APP.views;
+$("app-title").textContent = APP.title; $("app-owner").textContent = APP.owner;
+document.title = APP.title;
+document.querySelectorAll(".tabs a").forEach(a => { if (!VIEWS.includes(a.dataset.view)) a.remove(); });
+if (VIEWS.length < 2) document.querySelector(".tabs").hidden = true;
+function current(){ const h = location.hash.slice(1); return VIEWS.includes(h) ? h : VIEWS[0]; }
+function render(){
+  const v = current();
+  ALL.forEach(x => { $("v-" + x).hidden = x !== v; });
+  document.querySelectorAll(".tabs a").forEach(a => { if (a.dataset.view === v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  const prod = v === "production", hist = v === "history", risk = v === "risk";
+  $("f-year").disabled = prod || hist; $("f-segment").disabled = prod || hist || risk; $("f-country").disabled = hist;
+  $("f-hint").textContent = prod ? "Production uses country only." : risk ? "Year = job year." : (v === "compliance" ? "Year = installation year." : (hist ? "Search ignores the filters." : ""));
+  if (v === "proposals") renderProposals(); else if (v === "followup") renderFollow(); else if (v === "production") renderProd();
+  else if (v === "risk") renderRisk(); else if (v === "compliance") renderComp(); else renderHist();
+}
+addEventListener("hashchange", render);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+new MutationObserver(render).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+if (window.Chart) render(); else addEventListener("load", render);
+})();
+</script>
+
+<button id="theme-toggle" type="button" aria-label="Switch light or dark mode">
+<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+</button>
+<style>
+#theme-toggle{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:50;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(10,18,54,.18);padding:0}
+#theme-toggle:hover{color:var(--stamp,#f85e0a)}
+#theme-toggle:focus-visible{outline:2px solid #f85e0a;outline-offset:2px}
+#theme-toggle .i-sun{display:none}
+:root[data-theme="dark"] #theme-toggle .i-sun{display:block}:root[data-theme="dark"] #theme-toggle .i-moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #theme-toggle .i-sun{display:block}:root:not([data-theme="light"]) #theme-toggle .i-moon{display:none}}
+@media print{#theme-toggle{display:none}}
+</style>
+<script>
+(function(){var b=document.getElementById("theme-toggle"),r=document.documentElement;
+function dark(){var t=r.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+b.addEventListener("click",function(){var t=dark()?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}});})();
+</script>
+</body>
+</html>

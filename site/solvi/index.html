@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Solvi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Solvi, a fictional solar and battery installer: one data platform split into domains, with an app for each group of users.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="Solvi – a fictional solar company, built as six data domains">
+<meta property="og:description" content="One data platform split by domain, with an app for each group of users: safety, service and sales. Fictional company, generated data.">
+<meta property="og:url" content="https://unadata.dev/solvi/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Data that holds. Una Marie S. Goksøyr, unadata.dev">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a front door for the fictional company - domain map first, then one card per app */
+:root{
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --wave:#97c4c2; --foam:#fbfaf6; --seal:#b23a2a; --sun2:#f85e0a; --ochre:#b8862f;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --sun2:#fa7a32; --ochre:#d8a64e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --sun2:#fa7a32; --ochre:#d8a64e; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1100px;margin:0 auto}
+a{color:var(--indigo)}
+a:focus-visible{outline:2px solid var(--seal);outline-offset:2px}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(2rem,5vw,3rem)} h2{font-size:clamp(1.3rem,3vw,1.7rem)} h3{font-size:1.15rem}
+p{margin:0;max-width:68ch}
+.label{font-family:var(--pixel);font-size:1rem;color:var(--indigo)}
+header{background:var(--sky);padding-block:22px 30px}
+header .wrap{display:flex;flex-direction:column;gap:10px}
+.fict{font-family:var(--pixel);font-size:.9rem;color:var(--seal);border:1px solid var(--seal);padding:3px 8px;border-radius:2px;align-self:flex-start}
+main .wrap{padding-block:32px 56px;display:flex;flex-direction:column;gap:44px}
+.map{background:var(--surface);border:1px solid var(--line);padding:16px;overflow-x:auto}
+.map svg{display:block;width:100%;min-width:680px;height:auto}
+.map text{font-family:var(--body);fill:var(--ink);font-size:13px}
+.map .sub{fill:var(--muted);font-size:11px}
+.map .dom{fill:var(--paper);stroke:var(--line);stroke-width:1.4}
+.map .core{fill:var(--foam);stroke:var(--prussian);stroke-width:2}
+.map .app{fill:var(--surface);stroke:var(--sun2);stroke-width:1.6}
+.map .link{stroke:var(--wave);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.map .feed{stroke:var(--sun2);stroke-width:1.8;fill:none}
+.apps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.appcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--prussian);padding:18px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.appcard:hover{border-color:var(--prussian)}
+.appcard.new{border-top-color:var(--seal)}
+.appcard .q{font-style:italic;color:var(--muted)}
+.appcard .go{font-family:var(--pixel);color:var(--indigo);margin-top:auto}
+.views{display:flex;flex-wrap:wrap;gap:6px}
+.views span{font-size:.8rem;border:1px solid var(--line);padding:2px 8px;border-radius:2px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.cols>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cols p{color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+.tablewrap{overflow-x:auto}
+th{text-align:left;font-weight:700;font-size:.82rem;color:var(--muted);padding:7px 8px;border-bottom:2px solid var(--prussian)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td code{font-family:var(--mono);font-size:.82rem}
+footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;color:var(--muted)}
+@media (max-width:860px){.apps,.cols{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap">
+    <a href="../index.html">← Una Marie S. Goksøyr</a>
+    <span class="label">Portfolio project</span>
+    <h1>Solvi</h1>
+    <p>Solvi is a fictional Nordic solar and battery installer. Its data is split the way the company works: each part of the business owns its own data, shares what others need, and gets an app made for the people who use it.</p>
+    <span class="fict">Fictional company · generated data</span>
+  </div>
+</header>
+
+<main class="band">
+<div class="wrap">
+
+<section aria-labelledby="apps-h" style="display:flex;flex-direction:column;gap:16px">
+  <span class="label">Apps</span>
+  <h2 id="apps-h">Pick the app for your job</h2>
+  <div class="apps">
+    <a class="appcard new" href="quality/index.html">
+      <span class="label">Quality and HSE</span>
+      <h3>Safety and quality</h3>
+      <p class="q">Will the next battery job be safe? Are we audit-ready?</p>
+      <p>Risk factors across the whole chain, scored before work starts. Paperwork, inspections and open deviations.</p>
+      <div class="views"><span>Battery risk</span><span>Compliance</span></div>
+      <span class="go">Open →</span>
+    </a>
+    <a class="appcard" href="service/index.html">
+      <span class="label">Service team</span>
+      <h3>Service</h3>
+      <p class="q">Is it broken, or was it just a cloudy week?</p>
+      <p>Every installation's production against what its own weather allowed. A list of systems to check before the customer calls.</p>
+      <div class="views"><span>Production</span></div>
+      <span class="go">Open →</span>
+    </a>
+    <a class="appcard" href="sales/index.html">
+      <span class="label">Sales and customer service</span>
+      <h3>Sales</h3>
+      <p class="q">What changes after signing? Who is waiting? What has this customer bought?</p>
+      <p>Proposals, follow-up, and one search across the old and the new ERP.</p>
+      <div class="views"><span>Proposals</span><span>Follow-up</span><span>Customer history</span></div>
+      <span class="go">Open →</span>
+    </a>
+  </div>
+</section>
+
+<section aria-labelledby="map-h" style="display:flex;flex-direction:column;gap:16px">
+  <span class="label">How the data is organised</span>
+  <h2 id="map-h">Six domains, one shared core</h2>
+  <p>Each domain has an owner, its own workspace and its own lakehouse. Shared master data lives once, in the core. Other domains read it through shortcuts instead of copying it, so a customer or a site is the same everywhere. Every domain runs its own quality gate before it publishes anything.</p>
+  <div class="map" role="img" aria-label="Domain map: a shared core in the middle, five domains around it, and three apps fed by them">
+    <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg">
+<path class="link" d="M200 190 C260 190, 260 48, 330 48"/>
+<path class="link" d="M200 190 C260 190, 260 120, 330 120"/>
+<path class="link" d="M200 190 C260 190, 260 192, 330 192"/>
+<path class="link" d="M200 190 C260 190, 260 264, 330 264"/>
+<path class="link" d="M200 190 C260 190, 260 336, 330 336"/>
+<path class="feed" d="M500 48 C590 48, 610 48, 690 48"/>
+<path class="feed" d="M500 120 C590 120, 610 200, 690 200"/>
+<path class="feed" d="M500 192 C590 192, 610 200, 690 200"/>
+<path class="feed" d="M500 264 C590 264, 610 200, 690 200"/>
+<path class="feed" d="M500 336 C590 336, 610 200, 690 200"/>
+<path class="feed" d="M500 264 C590 264, 610 336, 690 336"/>
+<rect x="30" y="130" width="170" height="120" rx="4" class="core"/><text x="115" y="170" text-anchor="middle" font-weight="700">Core</text><text x="115" y="190" text-anchor="middle" class="sub">customers, sites,</text><text x="115" y="205" text-anchor="middle" class="sub">products, weather,</text><text x="115" y="220" text-anchor="middle" class="sub">calendar</text>
+<rect x="330" y="20" width="170" height="56" rx="4" class="dom"/><text x="415" y="44" text-anchor="middle" font-weight="700">Sales</text><text x="415" y="62" text-anchor="middle" class="sub">owner: sales lead</text>
+<rect x="330" y="92" width="170" height="56" rx="4" class="dom"/><text x="415" y="116" text-anchor="middle" font-weight="700">Supply</text><text x="415" y="134" text-anchor="middle" class="sub">owner: purchasing</text>
+<rect x="330" y="164" width="170" height="56" rx="4" class="dom"/><text x="415" y="188" text-anchor="middle" font-weight="700">Delivery</text><text x="415" y="206" text-anchor="middle" class="sub">owner: project planning</text>
+<rect x="330" y="236" width="170" height="56" rx="4" class="dom"/><text x="415" y="260" text-anchor="middle" font-weight="700">Assets</text><text x="415" y="278" text-anchor="middle" class="sub">owner: service manager</text>
+<rect x="330" y="308" width="170" height="56" rx="4" class="dom"/><text x="415" y="332" text-anchor="middle" font-weight="700">HSEQ</text><text x="415" y="350" text-anchor="middle" class="sub">owner: quality and HSE</text>
+<rect x="690" y="24" width="190" height="48" rx="4" class="app"/><text x="785" y="53" text-anchor="middle">Sales app</text>
+<rect x="690" y="176" width="190" height="48" rx="4" class="app"/><text x="785" y="205" text-anchor="middle">Safety and quality app</text>
+<rect x="690" y="312" width="190" height="48" rx="4" class="app"/><text x="785" y="341" text-anchor="middle">Service app</text>
+<text x="30" y="372" class="sub">dashed: shortcut to shared core data · solid: feeds an app</text></svg>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Domain</th><th>Owner</th><th>Owns</th><th>Reads from others</th></tr></thead>
+    <tbody>
+      <tr><td>Core</td><td>Data platform</td><td>Customers, sites, products, weather and forecasts, calendar</td><td>Nothing</td></tr>
+      <tr><td>Sales</td><td>Sales lead</td><td>Proposals, contracts, follow-up, invoices, old ERP archive</td><td>Core</td></tr>
+      <tr><td>Supply</td><td>Purchasing</td><td>Suppliers, subcontractor prequalification, battery deliveries</td><td>Sales (contract numbers)</td></tr>
+      <tr><td>Delivery</td><td>Project planning</td><td>Crews, certifications, jobs</td><td>Supply, sales</td></tr>
+      <tr><td>Assets</td><td>Service manager</td><td>Installations, production, service visits</td><td>Core, sales</td></tr>
+      <tr><td>HSEQ</td><td>Quality and HSE</td><td>Risk rules, events, actions, compliance, deviations</td><td>Assets, delivery, supply, core, sales</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="cols" aria-label="Why it is built this way">
+  <div><h3>Why not one big model?</h3><p>When everything sits in one place, nobody owns anything, and one change can break five reports. With domains, the people who know the data are responsible for it, and the rules for sharing are explicit.</p></div>
+  <div><h3>Why shortcuts, not copies?</h3><p>A copied customer table is out of date the day after. A shortcut always points to the owner's version, so every app sees the same customer, site and product.</p></div>
+  <div><h3>Why a gate in every domain?</h3><p>Errors are cheapest where they start. Each domain checks its own data, including links to other domains, before it publishes anything others depend on.</p></div>
+  <div><h3>Why risk rules as data?</h3><p>The risk factors, weights and stop rules are a table owned by quality. They can be tuned after the next near miss without changing any code.</p></div>
+</section>
+
+</div>
+</main>
+<footer class="band"><div class="wrap">Solvi is fictional. All customers, suppliers, jobs and events are generated by a script; places and weather patterns are real for realism. Built by Una Marie S. Goksøyr.</div></footer>
+
+<button id="theme-toggle" type="button" aria-label="Switch light or dark mode">
+<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+</button>
+<style>
+#theme-toggle{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:50;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(10,18,54,.18);padding:0}
+#theme-toggle:hover{color:var(--stamp,#f85e0a)}
+#theme-toggle:focus-visible{outline:2px solid #f85e0a;outline-offset:2px}
+#theme-toggle .i-sun{display:none}
+:root[data-theme="dark"] #theme-toggle .i-sun{display:block}:root[data-theme="dark"] #theme-toggle .i-moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #theme-toggle .i-sun{display:block}:root:not([data-theme="light"]) #theme-toggle .i-moon{display:none}}
+@media print{#theme-toggle{display:none}}
+</style>
+<script>
+(function(){var b=document.getElementById("theme-toggle"),r=document.documentElement;
+function dark(){var t=r.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+b.addEventListener("click",function(){var t=dark()?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+data/
+__pycache__/
+*.pyc
+.DS_Store
+print/
+
+# private notes, kept on this computer only
+CLAUDE.md
+FAIR.md
+IDEAS.md

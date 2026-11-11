@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Hi · Una Marie S. Goksøyr</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Una Marie S. Goksøyr. Data that holds. Save my contact, see my CV and a working example.">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="Una Marie S. Goksøyr · Data that holds">
+<meta property="og:description" content="Save my contact, read my CV, and try a working example.">
+<meta property="og:url" content="https://unadata.dev/hi/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: a phone-sized card - what someone sees right after scanning the QR code; one big action, then four links */
+:root{
+  --stamp:#f85e0a;
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --wave:#97c4c2; --foam:#fbfaf6; --sun1:#f0aa2a; --sun2:#f85e0a; --sun3:#f85e0a;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:440px;margin:0 auto;padding-block:28px 40px;display:flex;flex-direction:column;gap:16px;position:relative}
+.seal{position:absolute;right:0;top:24px;width:58px;height:58px;border-radius:5px;background:var(--stamp);
+  display:grid;place-items:center;font-family:var(--pixel);font-weight:600;font-size:.95rem;line-height:1.05;text-align:center;color:#fdfee8;transform:rotate(-4deg)}
+.met{font-family:var(--pixel);color:var(--indigo);font-size:1.05rem;margin:0;padding-right:72px}
+h1{font-size:2.2rem;line-height:1.05;margin:0;max-width:11ch}
+.tag{font-family:var(--pixel);font-weight:600;font-size:1.5rem;color:var(--prussian);margin:0}
+.role{color:var(--muted);margin:0}
+.save{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--prussian);color:var(--surface);text-decoration:none;
+  font-family:var(--pixel);font-weight:600;font-size:1.3rem;padding:16px;border-radius:6px;margin-top:6px}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.links a{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 12px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.links b{font-family:var(--pixel);font-weight:600;font-size:1.05rem;color:var(--indigo)}
+.links span{font-size:.85rem;color:var(--muted)}
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:.98rem}
+.contact a{color:var(--ink)}
+a:focus-visible{outline:2px solid var(--sun2);outline-offset:2px}
+svg.wave{display:block;width:100%;height:60px;margin-top:8px}
+.small{font-size:.8rem;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+
+<main>
+  <div class="seal" aria-hidden="true">UNA<br>DATA</div>
+  <p class="met" id="met" hidden>Nice to meet you at Fabelaktig fredag!</p>
+  <h1>Una Marie S. Goksøyr</h1>
+  <p class="tag">Data that holds.</p>
+  <p class="role">Engineer in quality, data, safety and systems. Twenty years from the workshop floor to data platforms.</p>
+
+  <a class="save" href="../una-marie-goksoyr.vcf" download="Una-Marie-S-Goksoyr.vcf">Save my contact</a>
+
+  <div class="links">
+    <a href="../cv/index.html"><b>CV</b><span>Experience and skills</span></a>
+    <a href="../solvi/index.html"><b>Working example</b><span>Solvi: safety, service, sales</span></a>
+    <a href="https://www.linkedin.com/in/una-marie-goksoyr/"><b>LinkedIn</b><span>Connect with me</span></a>
+    <a href="../play/index.html"><b>Quality Gate</b><span>A 90s game about data</span></a>
+  </div>
+
+  <div class="contact">
+    <a href="mailto:unamsg@gmail.com">unamsg@gmail.com</a>
+    <a href="tel:+4791591205">+47 915 91 205</a>
+    <a href="../index.html">unadata.dev</a>
+  </div>
+
+  <svg class="wave" viewBox="0 0 440 60" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 60 L0 30 C60 14,110 14,160 28 S260 44,320 26 S400 12,440 24 L440 60 Z" fill="var(--wave)"/>
+    <path d="M0 60 L0 42 C70 30,120 32,180 42 S290 54,350 40 S420 32,440 38 L440 60 Z" fill="var(--indigo)"/>
+    <path d="M0 60 L0 52 C80 46,140 48,200 54 S320 58,380 50 S430 48,440 50 L440 60 Z" fill="var(--prussian)"/>
+  </svg>
+  <p class="small">Demo data on this site is fictional.</p>
+</main>
+<script>
+try { if (/(^|[?&])ref=fair\b/.test(location.search)) document.getElementById("met").hidden = false; } catch (e) {}
+</script>
+
+<button id="theme-toggle" type="button" aria-label="Switch light or dark mode">
+<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+</button>
+<style>
+#theme-toggle{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:50;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(10,18,54,.18);padding:0}
+#theme-toggle:hover{color:var(--stamp,#f85e0a)}
+#theme-toggle:focus-visible{outline:2px solid #f85e0a;outline-offset:2px}
+#theme-toggle .i-sun{display:none}
+:root[data-theme="dark"] #theme-toggle .i-sun{display:block}:root[data-theme="dark"] #theme-toggle .i-moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #theme-toggle .i-sun{display:block}:root:not([data-theme="light"]) #theme-toggle .i-moon{display:none}}
+@media print{#theme-toggle{display:none}}
+</style>
+<script>
+(function(){var b=document.getElementById("theme-toggle"),r=document.documentElement;
+function dark(){var t=r.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+b.addEventListener("click",function(){var t=dark()?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<title>Quality Gate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Quality Gate: a small 90s-style game about data quality. Catch the good records, let the junk sink.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="Quality Gate – a 90s-style game about data quality">
+<meta property="og:description" content="Catch the good records, let the nulls, duplicates and old boots sink. Every bad record costs trust.">
+<meta property="og:url" content="https://unadata.dev/play/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Data that holds. Una Marie S. Goksøyr, unadata.dev">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: one centred arcade cabinet; the canvas is the page */
+:root{
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --sun2:#f85e0a;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --sun2:#fa7a32; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --sun2:#fa7a32; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:980px;margin:0 auto;padding-block:20px 40px;display:flex;flex-direction:column;gap:16px}
+a{color:var(--indigo)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--sun2);outline-offset:2px}
+h1{font-family:var(--pixel);font-weight:600;font-size:clamp(1.8rem,5vw,2.6rem);margin:0;line-height:1.1}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px}
+.lede{margin:0;max-width:60ch;color:var(--muted)}
+.cabinet{background:#0b1622;border:4px solid var(--prussian);border-radius:6px;padding:10px;box-shadow:0 6px 0 #071019}
+canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;aspect-ratio:320/200;max-width:100%;touch-action:none;outline:none}
+.pad{display:flex;gap:10px;justify-content:space-between;margin-top:10px}
+.pad button,.tools button{font-family:var(--pixel);font-size:1.15rem;background:#16304a;color:#e8f0f6;border:2px solid #006690;border-radius:4px;padding:12px 0;flex:1;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+.pad button:active{background:#006690}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{flex:none;padding:6px 12px;font-size:.95rem}
+.help{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 24px;font-size:.95rem}
+.help b{font-family:var(--pixel);font-weight:600;color:var(--indigo)}
+footer{color:var(--muted);font-size:.85rem}
+@media (hover:hover) and (pointer:fine){.pad{display:none}}
+</style>
+
+<div class="band">
+<div class="wrap">
+  <div class="top">
+    <div>
+      <a href="../index.html">← Una Marie S. Goksøyr</a>
+      <h1>Quality Gate</h1>
+    </div>
+    <div class="tools"><button id="b-sound" type="button" aria-pressed="true">Sound: on</button><button id="b-pause" type="button">Pause</button></div>
+  </div>
+  <p class="lede">A small game about data quality, in the spirit of the 90s games I grew up with. Catch the good records, let the junk sink. Every bad record you let pass costs the company's trust in its numbers.</p>
+
+  <div class="cabinet">
+    <canvas id="game" width="320" height="200" tabindex="0" aria-label="Quality Gate game. Use left and right arrow keys to move the boat, space to start."></canvas>
+    <div class="pad" aria-hidden="true"><button id="b-left" type="button">◀</button><button id="b-start" type="button">Start</button><button id="b-right" type="button">▶</button></div>
+  </div>
+
+  <div class="help">
+    <div><b>Move</b><br>Arrow keys or A / D. On a phone, hold the buttons or touch the left and right side of the screen.</div>
+    <div><b>Catch</b><br>Fish are valid records. Golden fish are rare and worth extra. A checklist turns on the quality gate for a few seconds.</div>
+    <div><b>Avoid</b><br>Empty crates (missing values), double fish (duplicates) and old boots (junk). Let them sink.</div>
+    <div><b>Trust</b><br>Starts at 100. Bad records cost 25, lost fish cost 5. At zero, nobody trusts the report.</div>
+  </div>
+  <footer>An original game made for this site. P pauses, M toggles sound.</footer>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const cv = document.getElementById("game"), g = cv.getContext("2d");
+const W = 320, H = 200, WATER = 166;
+g.imageSmoothingEnabled = false;
+
+// ---------- palette (woodblock sea + sunrise)
+const C = { skyTop:"#f8d2b8", skyMid:"#f7e6da", skyLow:"#f6f6f3", sun:"#f85e0a", sun2:"#fa8a3c", mount:"#6f8aa3", snow:"#f2f5f6",
+  sea1:"#97c4c2", sea2:"#006690", sea3:"#0a1236", sea4:"#0a1236", foam:"#fbfaf6", ink:"#0a1236", hull:"#7a4a2a", hull2:"#a8693a",
+  sail:"#fbfaf6", mast:"#4d3020", fish:"#7fb2d6", fish2:"#4f86b4", eye:"#0a1236", boot:"#5a4636", sole:"#2e241b", crate:"#c9a46a", q:"#b23a2a",
+  gold:"#f0aa2a", gold2:"#f85e0a", paper:"#fbfaf6", tick:"#2f7a55", lineg:"#9aa7b3", red:"#f85e0a", green:"#3d9a6a", hud:"#0a1236", white:"#ffffff" };
+
+// ---------- 3x5 bitmap font
+const F = {A:"010101111101101",B:"110101110101110",C:"011100100100011",D:"110101101101110",E:"111100110100111",F:"111100110100100",G:"011100101101011",
+H:"101101111101101",I:"111010010010111",J:"001001001101010",K:"101101110101101",L:"100100100100111",M:"101111111101101",N:"110101101101101",
+O:"010101101101010",P:"110101110100100",Q:"010101101110011",R:"110101110101101",S:"011100010001110",T:"111010010010010",U:"101101101101111",
+V:"101101101101010",W:"101101111111101",X:"101101010101101",Y:"101101010010010",Z:"111001010100111","0":"111101101101111","1":"010110010010111",
+"2":"110001010100111","3":"110001010001110","4":"101101111001001","5":"111100110001110","6":"011100111101111","7":"111001010010010",
+"8":"111101111101111","9":"111101111001110",":":"000010000010000",".":"000000000000010","!":"010010010000010","-":"000000111000000",
+"/":"001001010100100","?":"110001010000010","+":"000010111010000","%":"101001010100101","'":"010010000000000",",":"000000000010100"," ":"000000000000000"};
+function text(str, x, y, col, s=1, align="left"){
+  str = String(str).toUpperCase(); const w = str.length * 4 * s - s;
+  if (align === "center") x = Math.round(x - w / 2); else if (align === "right") x = x - w;
+  g.fillStyle = col;
+  for (let i = 0; i < str.length; i++) { const gl = F[str[i]] || F["?"];
+    for (let p = 0; p < 15; p++) if (gl[p] === "1") g.fillRect(x + i * 4 * s + (p % 3) * s, y + Math.floor(p / 3) * s, s, s); }
+}
+
+// ---------- sprites (character maps)
+const SC = 2;   // every sprite pixel is drawn as 2x2 game pixels
+function sprite(rows, map){ return {w: rows[0].length * SC, h: rows.length * SC, rows, map}; }
+const S = {
+  boat: sprite(["........M.........","........MSSS......","........MSSSS.....","........MSSSSS....","........MSSSSSS...","........M.........",
+                "HHHHHHHHHHHHHHHHHH",".hhhhhhhhhhhhhhhh.","..HHHHHHHHHHHHHH.."], {M:C.mast,S:C.sail,H:C.hull,h:C.hull2}),
+  fish: sprite(["..XXXX..X",".XXXXXXXX","XEXXxxXX.",".XXXXXXXX","..XXXX..X"], {X:C.fish,x:C.fish2,E:C.eye}),
+  gold: sprite(["..XXXX..X",".XXXXXXXX","XEXXxxXX.",".XXXXXXXX","..XXXX..X"], {X:C.gold,x:C.gold2,E:C.eye}),
+  boot: sprite(["..XXX...","..XXX...","..XXX...","..XXX...","..XXXXX.",".XXXXXXX","XXXXXXXX","SSSSSSSS"], {X:C.boot,S:C.sole}),
+  crate: sprite(["XXXXXXXX","X..QQ..X","X....Q.X","X...Q..X","X......X","X...Q..X","X......X","XXXXXXXX"], {X:C.crate,Q:C.q}),
+  list: sprite(["XXXXXXX","XWWWWWX","XGWLLLX","XWWWWWX","XGWLLLX","XWWWWWX","XGWLLLX","XXXXXXX"], {X:C.ink,W:C.paper,G:C.tick,L:C.lineg}),
+};
+function draw(sp, x, y, alpha=1){
+  g.globalAlpha = alpha;
+  for (let r = 0; r < sp.rows.length; r++) for (let c = 0; c < sp.rows[r].length; c++) { const col = sp.map[sp.rows[r][c]]; if (col) { g.fillStyle = col; g.fillRect(Math.round(x) + c * SC, Math.round(y) + r * SC, SC, SC); } }
+  g.globalAlpha = 1;
+}
+
+// ---------- sound (square-wave blips, after the first key press)
+let ac = null, soundOn = true;
+try { soundOn = localStorage.getItem("qg-sound") !== "off"; } catch(e){}
+function beep(freqs, dur=.07, type="square", vol=.06){
+  if (!soundOn) return;
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return; }
+  let t = ac.currentTime;
+  freqs.forEach(f => { const o = ac.createOscillator(), v = ac.createGain(); o.type = type; o.frequency.value = f; v.gain.setValueAtTime(vol, t); v.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(v).connect(ac.destination); o.start(t); o.stop(t + dur); t += dur * .9; });
+}
+const SFX = { good:()=>beep([880,1320]), gold:()=>beep([660,880,1320,1760],.06), bad:()=>beep([180,120],.12,"sawtooth",.05),
+  miss:()=>beep([300],.06,"triangle",.05), level:()=>beep([523,659,784,1047],.08), gate:()=>beep([392,523,659],.07), over:()=>beep([392,330,262,196],.16,"triangle",.07) };
+
+// ---------- state
+let hi = 0; try { hi = +localStorage.getItem("qg-hi") || 0; } catch(e){}
+const st = { mode:"title", boatX:142, dir:0, items:[], parts:[], floats:[], score:0, trust:100, level:1, good:0, blocked:0, lost:0, badHit:0,
+  spawnT:0, shield:0, t:0, paused:false };
+function reset(){ Object.assign(st, {mode:"play", boatX:142, items:[], parts:[], floats:[], score:0, trust:100, level:1, good:0, blocked:0, lost:0, badHit:0, spawnT:600, shield:0, paused:false}); }
+function spawnEvery(){ return Math.max(330, 900 * Math.pow(.92, st.level - 1)); }
+function spawn(){
+  const r = Math.random();
+  const type = r < .58 ? "fish" : r < .70 ? "crate" : r < .80 ? "dup" : r < .92 ? "boot" : r < .965 ? "gold" : "list";
+  const sp = S[type === "dup" ? "fish" : type];
+  st.items.push({type, x: 4 + Math.random() * (W - 8 - sp.w - 4), y: -10, vy: 30 + st.level * 6 + Math.random() * 16, w: sp.w + (type === "dup" ? 5 : 0), h: sp.h + (type === "dup" ? 5 : 0), wob: Math.random() * 6});
+}
+const isBad = t => t === "crate" || t === "dup" || t === "boot";
+function splash(x, col){ for (let i = 0; i < 8; i++) st.parts.push({x, y: WATER, vx: (Math.random() - .5) * 50, vy: -20 - Math.random() * 40, life: .6, col}); }
+function float(x, y, txt, col){ st.floats.push({x, y, txt, col, life: .9}); }
+
+// ---------- update
+function update(dt){
+  st.t += dt;
+  if (st.mode !== "play" || st.paused) return;
+  st.boatX = Math.max(0, Math.min(W - S.boat.w, st.boatX + st.dir * 165 * dt));
+  st.shield = Math.max(0, st.shield - dt);
+  st.spawnT -= dt * 1000; if (st.spawnT <= 0) { spawn(); st.spawnT = spawnEvery(); }
+  const bx = st.boatX, top = WATER - 6;   // catch line: deck of the hull
+  for (const it of st.items) {
+    it.y += it.vy * dt;
+    const bottom = it.y + it.h;
+    if (!it.done && bottom >= top && bottom <= top + 6 && it.x + it.w > bx + 1 && it.x < bx + S.boat.w - 1) {
+      it.done = true; const cx = it.x + it.w / 2;
+      if (it.type === "fish") { st.score += 10; st.good++; st.trust = Math.min(100, st.trust + 1); float(cx, it.y, "+10", C.green); SFX.good(); }
+      else if (it.type === "gold") { st.score += 50; st.good++; st.trust = Math.min(100, st.trust + 10); float(cx, it.y, "+50", C.gold2); SFX.gold(); }
+      else if (it.type === "list") { st.shield = 6; float(cx, it.y, "GATE ON", C.green); SFX.gate(); }
+      else if (st.shield > 0) { st.blocked++; float(cx, it.y, "BLOCKED", C.green); SFX.gate(); }
+      else { st.trust -= 25; st.badHit++; float(cx, it.y, it.type === "crate" ? "NULL!" : it.type === "dup" ? "DUPLICATE!" : "JUNK!", C.red); SFX.bad(); }
+      if (st.good && st.good % 12 === 0 && (it.type === "fish" || it.type === "gold") && st.level < 1 + Math.floor(st.good / 12)) { st.level++; float(W / 2, 70, "LEVEL " + st.level, C.ink); SFX.level(); }
+    } else if (!it.done && it.y > WATER) {
+      it.done = true; splash(it.x + it.w / 2, isBad(it.type) ? C.foam : C.fish);
+      if (isBad(it.type)) st.blocked++;
+      else if (it.type === "fish" || it.type === "gold") { st.trust -= 5; st.lost++; SFX.miss(); }
+    }
+  }
+  st.items = st.items.filter(i => !i.done);
+  for (const p of st.parts) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 120 * dt; p.life -= dt; }
+  st.parts = st.parts.filter(p => p.life > 0);
+  for (const f of st.floats) { f.y -= 18 * dt; f.life -= dt; }
+  st.floats = st.floats.filter(f => f.life > 0);
+  if (st.trust <= 0) { st.trust = 0; st.mode = "over"; st.overT = st.t; if (st.score > hi) { hi = st.score; try { localStorage.setItem("qg-hi", hi); } catch(e){} } SFX.over(); }
+}
+
+// ---------- render
+function scene(){
+  // sky bands, dithered seams like an old VGA palette
+  const bands = [[0,40,C.skyTop],[40,80,C.skyMid],[80,WATER,C.skyLow]];
+  bands.forEach(([a,b,c]) => { g.fillStyle = c; g.fillRect(0, a, W, b - a); });
+  g.fillStyle = C.skyMid; for (let x = 0; x < W; x += 2) g.fillRect(x + ((x/2)%2), 39, 1, 1);
+  g.fillStyle = C.skyLow; for (let x = 0; x < W; x += 2) g.fillRect(x + ((x/2)%2), 79, 1, 1);
+  // sunrise
+  const sx = 262, sy = 46, R = 15;
+  for (let y = -R; y <= R; y++) for (let x = -R; x <= R; x++) { const d = x*x + y*y; if (d <= R*R) { g.fillStyle = d < (R-5)*(R-5) ? C.sun2 : C.sun; g.fillRect(sx + x, sy + y, 1, 1); } }
+  // distant snowy peak
+  for (let x = 0; x < 120; x++) { const h = Math.max(0, 46 - Math.abs(x - 60) * .8); g.fillStyle = C.mount; g.fillRect(30 + x, WATER - h, 1, h); if (h > 34) { g.fillStyle = C.snow; g.fillRect(30 + x, WATER - h, 1, h - 34); } }
+  // sea: layered bands with stepped foam crests (moves one pixel every 0.4 s, no shimmer)
+  const off = Math.floor(st.t / .4) % 16;
+  g.fillStyle = C.sea1; g.fillRect(0, WATER, W, 8);
+  g.fillStyle = C.sea2; g.fillRect(0, WATER + 8, W, 10);
+  g.fillStyle = C.sea3; g.fillRect(0, WATER + 18, W, 9);
+  g.fillStyle = C.sea4; g.fillRect(0, WATER + 27, W, H - WATER - 27);
+  const crest = [0,0,1,1,2,3,3,2,1,0,0,0,0,0,0,0];
+  for (let x = -16; x < W + 16; x++) {
+    const i = ((x + off) % 16 + 16) % 16, j = ((x - off * 2) % 16 + 16) % 16;
+    g.fillStyle = C.foam; g.fillRect(x, WATER + 6 - crest[i], 1, 1);
+    if (crest[j] > 1) { g.fillStyle = C.sea1; g.fillRect(x, WATER + 16 - crest[j], 1, 1); }
+    if (crest[(i + 5) % 16] === 3) { g.fillStyle = C.foam; g.fillRect(x, WATER + 25, 1, 1); }
+  }
+}
+function hud(){
+  g.fillStyle = "rgba(251,248,241,.85)"; g.fillRect(0, 0, W, 11);
+  text("SCORE " + st.score, 4, 3, C.hud);
+  text("LV " + st.level, 108, 3, C.hud);
+  text("TRUST", 150, 3, C.hud);
+  g.fillStyle = C.ink; g.fillRect(172, 3, 52, 5);
+  g.fillStyle = st.trust > 50 ? C.green : st.trust > 25 ? C.gold2 : C.red; g.fillRect(173, 4, Math.round(50 * st.trust / 100), 3);
+  text("HI " + hi, W - 4, 3, C.hud, 1, "right");
+}
+function render(){
+  scene();
+  if (st.mode === "play" || st.mode === "over") {
+    for (const it of st.items) {
+      const x = it.x + Math.sin(st.t * 3 + it.wob) * .8;
+      if (it.type === "dup") { draw(S.fish, x + 5, it.y + 5, .55); draw(S.fish, x, it.y); }
+      else draw(S[it.type], x, it.y);
+    }
+    // boat bobs gently on a 1-pixel step
+    const bob = Math.floor(st.t * 2) % 2;
+    draw(S.boat, st.boatX, WATER - S.boat.h + 4 + bob);
+    if (st.shield > 0 && !(st.shield < 1.5 && Math.floor(st.t * 4) % 2)) { g.fillStyle = C.green; for (let x = -4; x < S.boat.w + 4; x += 3) g.fillRect(st.boatX + x, WATER - S.boat.h + 1 + bob, 2, 2); }
+    for (const p of st.parts) { g.fillStyle = p.col; g.fillRect(Math.round(p.x), Math.round(p.y), 1, 1); }
+    for (const f of st.floats) text(f.txt, f.x, Math.round(f.y), f.col, 1, "center");
+    hud();
+  }
+  if (st.mode === "title") {
+    panel(40, 20, 240, 128);
+    text("QUALITY GATE", W / 2, 32, C.ink, 3, "center");
+    text("CATCH GOOD DATA. LET THE JUNK SINK.", W / 2, 54, C.indigo || C.sea2, 1, "center");
+    draw(S.fish, 52, 66); text("VALID RECORD +10", 76, 68, C.ink);
+    draw(S.gold, 52, 84); text("GOLDEN RECORD +50", 76, 86, C.ink);
+    draw(S.list, 54, 99); text("CHECKLIST: GATE ON", 76, 104, C.ink);
+    draw(S.crate, 186, 61); text("NULL", 210, 67, C.red);
+    draw(S.fish, 186, 83, .55); draw(S.fish, 182, 80); text("DUPLICATE", 210, 86, C.red);
+    draw(S.boot, 186, 99); text("JUNK", 210, 106, C.red);
+    if (Math.floor(st.t * 1.6) % 2) text("PRESS SPACE OR TAP START", W / 2, 124, C.sea3, 1, "center");
+    text("HI " + hi, W / 2, 136, C.ink, 1, "center");
+  }
+  if (st.mode === "over") {
+    panel(54, 34, 212, 112);
+    text("NOBODY TRUSTS", W / 2, 42, C.red, 2, "center");
+    text("THE REPORT", W / 2, 56, C.red, 2, "center");
+    text("SCORE " + st.score + (st.score >= hi && st.score > 0 ? "  NEW HI!" : ""), W / 2, 76, C.ink, 1, "center");
+    text("RECORDS PASSED " + st.good + "   BAD BLOCKED " + st.blocked, W / 2, 86, C.ink, 1, "center");
+    text("BAD LET THROUGH " + st.badHit + "   FISH LOST " + st.lost, W / 2, 96, C.ink, 1, "center");
+    text("DATA THAT HOLDS.", W / 2, 112, C.sea2, 1, "center");
+    if (st.t - st.overT > .8 && Math.floor(st.t * 1.6) % 2) text("SPACE OR TAP TO TRY AGAIN", W / 2, 130, C.sea3, 1, "center");
+  }
+  if (st.paused && st.mode === "play") { panel(110, 80, 100, 26); text("PAUSED", W / 2, 89, C.ink, 2, "center"); }
+}
+function panel(x, y, w, h){ g.fillStyle = C.ink; g.fillRect(x - 2, y - 2, w + 4, h + 4); g.fillStyle = C.paper; g.fillRect(x, y, w, h); g.fillStyle = C.sun; g.fillRect(x, y, w, 2); }
+
+// ---------- loop
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  update(dt); render(); requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---------- input
+const keys = new Set();
+function setDir(){ st.dir = (keys.has("L") ? -1 : 0) + (keys.has("R") ? 1 : 0); }
+function startOrRestart(){ if (st.mode === "title" || (st.mode === "over" && st.t - st.overT > .8)) { reset(); beep([523,784],.06); } }
+addEventListener("keydown", e => {
+  const k = e.key;
+  if (["ArrowLeft","ArrowRight"," ","Spacebar"].includes(k)) e.preventDefault();
+  if (k === "ArrowLeft" || k === "a" || k === "A") keys.add("L");
+  if (k === "ArrowRight" || k === "d" || k === "D") keys.add("R");
+  if (k === " " || k === "Spacebar" || k === "Enter") startOrRestart();
+  if (k === "p" || k === "P") togglePause();
+  if (k === "m" || k === "M") toggleSound();
+  setDir();
+});
+addEventListener("keyup", e => { const k = e.key;
+  if (k === "ArrowLeft" || k === "a" || k === "A") keys.delete("L");
+  if (k === "ArrowRight" || k === "d" || k === "D") keys.delete("R"); setDir(); });
+function hold(btn, key){
+  const on = e => { e.preventDefault(); keys.add(key); setDir(); if (st.mode !== "play") startOrRestart(); };
+  const off = e => { e.preventDefault(); keys.delete(key); setDir(); };
+  btn.addEventListener("pointerdown", on); ["pointerup","pointerleave","pointercancel"].forEach(ev => btn.addEventListener(ev, off));
+}
+hold(document.getElementById("b-left"), "L"); hold(document.getElementById("b-right"), "R");
+document.getElementById("b-start").addEventListener("click", startOrRestart);
+// touching the canvas: left half / right half
+let touchKey = null;
+cv.addEventListener("pointerdown", e => { cv.focus(); if (st.mode !== "play") { startOrRestart(); return; }
+  const r = cv.getBoundingClientRect(); touchKey = (e.clientX - r.left) < r.width / 2 ? "L" : "R"; keys.add(touchKey); setDir(); });
+["pointerup","pointerleave","pointercancel"].forEach(ev => cv.addEventListener(ev, () => { if (touchKey) { keys.delete(touchKey); touchKey = null; setDir(); } }));
+const bP = document.getElementById("b-pause"), bS = document.getElementById("b-sound");
+function togglePause(){ if (st.mode !== "play") return; st.paused = !st.paused; bP.textContent = st.paused ? "Resume" : "Pause"; }
+function toggleSound(){ soundOn = !soundOn; try { localStorage.setItem("qg-sound", soundOn ? "on" : "off"); } catch(e){} bS.textContent = "Sound: " + (soundOn ? "on" : "off"); bS.setAttribute("aria-pressed", soundOn); }
+bS.textContent = "Sound: " + (soundOn ? "on" : "off"); bS.setAttribute("aria-pressed", soundOn);
+bP.addEventListener("click", togglePause); bS.addEventListener("click", toggleSound);
+document.addEventListener("visibilitychange", () => { if (document.hidden && st.mode === "play" && !st.paused) togglePause(); });
+// for automated checks
+window.__qg = st;
+})();
+</script>
