@@ -1,6 +1,8 @@
 # Solvi in Fabric
 
-One script builds the whole platform in your own Fabric tenant:
+One script builds the whole platform in your own Fabric tenant. Names have no underscores: workspaces like **Solvi Core**, lakehouses like **Core**, notebooks like **Core 1 Bronze**, tables like `factjobrisk`.
+
+It builds:
 - 6 domain workspaces, each with a lakehouse and 3 notebooks
 - 24 shortcuts between the domains
 - one pipeline per domain, plus a nightly pipeline that runs everything
@@ -24,8 +26,8 @@ From the repo root, in PowerShell:
 ```
 pip install azure-identity requests nbformat
 python generator/generate.py
-python notebooks/build_notebooks.py
-python fabric/solvi_fabric.py all
+python notebooks/buildnotebooks.py
+python fabric/solvifabric.py all
 ```
 
 A browser window opens once. Sign in as `una@unadata.dev`. The whole run takes about 30 to 45 minutes, mostly waiting for notebooks.
@@ -36,19 +38,19 @@ You can also run one step at a time. Each step is safe to run again.
 |---|---|
 | `setup` | Workspaces, lakehouses, CSV upload, notebooks |
 | `run` | For each domain in order: shortcuts, then bronze, silver, gold. `run hseq` runs one domain. |
-| `pipelines` | `pl_<domain>` in each workspace, and `pl_solvi_nightly` in Solvi Core |
-| `model` | `lh_consume` with shortcuts to the gold tables, then the semantic model |
+| `pipelines` | **Run Core**, **Run Sales** and so on in each workspace, and **Run all** in Solvi Core |
+| `model` | The **Reporting** lakehouse with shortcuts to the gold tables, then the semantic model |
 
 ## 2. Check it
 
-- Open **Solvi Hseq** > `lh_hseq`. The tables `fact_job_risk` and `silver_dq_log` should be there.
-- Open **Solvi Reporting** > **Solvi** (semantic model). Make a quick table with `risk_level` and `Battery jobs`.
-- Optional: in `pl_solvi_nightly`, add a schedule.
+- Open **Solvi HSEQ** > **HSEQ** (lakehouse). The tables `factjobrisk` and `silverdqlog` should be there.
+- Open **Solvi Reporting** > **Solvi** (semantic model). Make a quick table with **Risk level** and **Battery jobs**.
+- Optional: add a schedule to **Run all**.
 
 ## If something fails
 
 - **A notebook fails:** open it in Fabric and run it there to see the failing cell. Then run `run <domain>` again.
-- **A notebook has no lakehouse:** open it, choose **Add lakehouse** and pick `lh_<domain>`.
+- **A notebook has no lakehouse:** open it, choose **Add lakehouse** and pick the lakehouse with the same name as the workspace, like **Core**.
 - **The model fails:** the SQL endpoint may not have picked up the new shortcuts yet. Wait five minutes and run `model` again.
 - **Something else:** send the error message to Claude.
 

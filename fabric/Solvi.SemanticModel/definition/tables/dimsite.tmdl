@@ -1,0 +1,51 @@
+table Site
+	lineageTag: 13538832-0395-552b-b471-76d9517ffd8b
+
+	column 'Site ID'
+		dataType: string
+		lineageTag: e3d020ba-bb9f-5486-b588-5acacc32c9f1
+		summarizeBy: none
+		sourceColumn: site_id
+
+	column Municipality
+		dataType: string
+		lineageTag: ec10baf8-95dd-5ff7-bacd-b9d91fa66ab9
+		summarizeBy: none
+		sourceColumn: municipality
+
+	column Region
+		dataType: string
+		lineageTag: f4e3f996-eba0-575c-877a-7ae22143f5f3
+		summarizeBy: none
+		sourceColumn: region
+
+	column Country
+		dataType: string
+		lineageTag: f078c0b3-60cd-5146-a91f-1ec2605c99bb
+		summarizeBy: none
+		sourceColumn: country
+
+	column Latitude
+		dataType: double
+		lineageTag: 9095dc77-044f-50c4-abb6-fef5cec1eb3a
+		summarizeBy: none
+		sourceColumn: latitude
+
+	column Longitude
+		dataType: double
+		lineageTag: 3968585e-c008-5b26-8f6c-9aa363ddb0d4
+		summarizeBy: none
+		sourceColumn: longitude
+
+	column 'Station ID'
+		dataType: string
+		lineageTag: eb798d58-e1c2-5339-9e1a-3e694e2671d0
+		summarizeBy: none
+		sourceColumn: station_id
+
+	partition Site = entity
+		mode: directLake
+		source
+			entityName: dimsite
+			schemaName: dbo
+			expressionSource: DatabaseQuery

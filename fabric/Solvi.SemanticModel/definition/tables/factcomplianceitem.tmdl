@@ -1,0 +1,62 @@
+table 'Compliance item'
+	lineageTag: 680aa5bb-4434-5bce-adfb-0a20d1d9bfd5
+
+	measure 'Compliance items' = COUNTROWS ( 'Compliance item' )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 464776e9-5ac2-5805-b5c0-c0ed96bd9267
+
+	measure 'Overdue items' = CALCULATE ( COUNTROWS ( 'Compliance item' ), 'Compliance item'[Status] = "Overdue" )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 5646aeb9-7af5-553a-8401-dc2638438322
+
+	measure 'On-time share' = DIVIDE ( CALCULATE ( COUNTROWS ( 'Compliance item' ), 'Compliance item'[Status] = "On time" ), CALCULATE ( COUNTROWS ( 'Compliance item' ), 'Compliance item'[Status] IN { "On time", "Late" } ) )
+		formatString: 0.0%
+		displayFolder: Compliance
+		lineageTag: ed3fa098-6ffd-5cd3-a0fd-21f00dca56a0
+
+	column 'Item ID'
+		dataType: string
+		lineageTag: 86cff75d-8ad1-5145-ae4f-4e3e19ca91ad
+		summarizeBy: none
+		sourceColumn: item_id
+
+	column 'Installation ID'
+		dataType: string
+		lineageTag: 9401e044-8cfc-59a0-af5d-5a8152bf91b2
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column 'Requirement ID'
+		dataType: string
+		lineageTag: d9e485d9-5091-53da-ad6a-72cf37535e0f
+		summarizeBy: none
+		sourceColumn: requirement_id
+
+	column 'Due date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 22a9a7a0-60e4-5a51-9cad-e1fa9f574a16
+		summarizeBy: none
+		sourceColumn: due_date
+
+	column 'Submitted date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3ebe9cde-5414-5efc-8993-b35b71ed9409
+		summarizeBy: none
+		sourceColumn: submitted_date
+
+	column Status
+		dataType: string
+		lineageTag: e83feff4-63f8-582c-bbf4-2b9d87c8f0fe
+		summarizeBy: none
+		sourceColumn: status
+
+	partition 'Compliance item' = entity
+		mode: directLake
+		source
+			entityName: factcomplianceitem
+			schemaName: dbo
+			expressionSource: DatabaseQuery

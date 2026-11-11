@@ -1,0 +1,45 @@
+table Product
+	lineageTag: 4923a18e-01c5-5a88-8f36-f42b6d361e6f
+
+	column 'Product code'
+		dataType: string
+		lineageTag: b228c92e-58ca-5109-8d5a-33b9b124af55
+		summarizeBy: none
+		sourceColumn: product_code
+
+	column 'Product name'
+		dataType: string
+		lineageTag: 3251fb42-1ef3-51bb-add5-164f0866c2fd
+		summarizeBy: none
+		sourceColumn: product_name
+
+	column Category
+		dataType: string
+		lineageTag: 2dca7d58-8863-5ec1-9e63-12b7d4fea289
+		summarizeBy: none
+		sourceColumn: category
+
+	column Unit
+		dataType: string
+		lineageTag: 53f46385-66f8-5d56-be27-d9268df921c8
+		summarizeBy: none
+		sourceColumn: unit
+
+	column 'List price NOK'
+		dataType: decimal
+		lineageTag: b02d15e6-0e35-5396-bf63-7660e205d579
+		summarizeBy: none
+		sourceColumn: list_price_nok
+
+	column 'ABC class'
+		dataType: string
+		lineageTag: f05427bb-1e1b-5326-9cff-d7ccc04d79d0
+		summarizeBy: none
+		sourceColumn: abc_class
+
+	partition Product = entity
+		mode: directLake
+		source
+			entityName: dimproduct
+			schemaName: dbo
+			expressionSource: DatabaseQuery

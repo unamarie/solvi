@@ -1,0 +1,1106 @@
+{
+ "diminstallation": {
+  "domain": "assets",
+  "rows": 1259,
+  "cols": [
+   [
+    "site_id",
+    "string"
+   ],
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "installed_date",
+    "date"
+   ],
+   [
+    "grid_connected_date",
+    "date"
+   ],
+   [
+    "kwp",
+    "double"
+   ],
+   [
+    "battery_kwh",
+    "double"
+   ],
+   [
+    "orientation",
+    "string"
+   ],
+   [
+    "tilt_deg",
+    "int"
+   ],
+   [
+    "municipality",
+    "string"
+   ],
+   [
+    "country",
+    "string"
+   ],
+   [
+    "station_id",
+    "string"
+   ],
+   [
+    "has_battery",
+    "boolean"
+   ]
+  ]
+ },
+ "factproductiondaily": {
+  "domain": "assets",
+  "rows": 503197,
+  "cols": [
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "date",
+    "date"
+   ],
+   [
+    "kwh",
+    "double"
+   ],
+   [
+    "expected_kwh",
+    "double"
+   ],
+   [
+    "snow_on_panels",
+    "boolean"
+   ],
+   [
+    "ratio_7d",
+    "double"
+   ],
+   [
+    "underperforming",
+    "boolean"
+   ]
+  ]
+ },
+ "factservicevisit": {
+  "domain": "assets",
+  "rows": 632,
+  "cols": [
+   [
+    "visit_id",
+    "string"
+   ],
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "visit_date",
+    "date"
+   ],
+   [
+    "visit_type",
+    "string"
+   ],
+   [
+    "hours",
+    "double"
+   ],
+   [
+    "cost_nok",
+    "decimal(12,2)"
+   ]
+  ]
+ },
+ "dimcustomer": {
+  "domain": "core",
+  "rows": 3200,
+  "cols": [
+   [
+    "site_id",
+    "string"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "customer_name",
+    "string"
+   ],
+   [
+    "segment",
+    "string"
+   ],
+   [
+    "lead_source",
+    "string"
+   ],
+   [
+    "created_date",
+    "date"
+   ],
+   [
+    "municipality",
+    "string"
+   ],
+   [
+    "region",
+    "string"
+   ],
+   [
+    "country",
+    "string"
+   ],
+   [
+    "latitude",
+    "double"
+   ],
+   [
+    "longitude",
+    "double"
+   ],
+   [
+    "station_id",
+    "string"
+   ]
+  ]
+ },
+ "dimdate": {
+  "domain": "core",
+  "rows": 5844,
+  "cols": [
+   [
+    "date_key",
+    "int"
+   ],
+   [
+    "date",
+    "date"
+   ],
+   [
+    "year",
+    "int"
+   ],
+   [
+    "quarter",
+    "int"
+   ],
+   [
+    "month_no",
+    "int"
+   ],
+   [
+    "month",
+    "string"
+   ],
+   [
+    "year_month",
+    "string"
+   ],
+   [
+    "iso_week",
+    "int"
+   ]
+  ]
+ },
+ "dimproduct": {
+  "domain": "core",
+  "rows": 22,
+  "cols": [
+   [
+    "product_code",
+    "string"
+   ],
+   [
+    "product_name",
+    "string"
+   ],
+   [
+    "category",
+    "string"
+   ],
+   [
+    "unit",
+    "string"
+   ],
+   [
+    "list_price_nok",
+    "decimal(12,2)"
+   ],
+   [
+    "abc_class",
+    "string"
+   ]
+  ]
+ },
+ "dimsite": {
+  "domain": "core",
+  "rows": 13,
+  "cols": [
+   [
+    "site_id",
+    "string"
+   ],
+   [
+    "municipality",
+    "string"
+   ],
+   [
+    "region",
+    "string"
+   ],
+   [
+    "country",
+    "string"
+   ],
+   [
+    "latitude",
+    "double"
+   ],
+   [
+    "longitude",
+    "double"
+   ],
+   [
+    "station_id",
+    "string"
+   ]
+  ]
+ },
+ "factweatherdaily": {
+  "domain": "core",
+  "rows": 16800,
+  "cols": [
+   [
+    "station_id",
+    "string"
+   ],
+   [
+    "date",
+    "date"
+   ],
+   [
+    "irradiation_kwh_m2",
+    "double"
+   ],
+   [
+    "temp_c",
+    "double"
+   ],
+   [
+    "precip_mm",
+    "double"
+   ],
+   [
+    "snow_depth_cm",
+    "double"
+   ]
+  ]
+ },
+ "factweatherforecast": {
+  "domain": "core",
+  "rows": 240,
+  "cols": [
+   [
+    "station_id",
+    "string"
+   ],
+   [
+    "issued_date",
+    "date"
+   ],
+   [
+    "date",
+    "date"
+   ],
+   [
+    "temp_min_c",
+    "double"
+   ],
+   [
+    "temp_max_c",
+    "double"
+   ],
+   [
+    "wind_ms",
+    "double"
+   ],
+   [
+    "precip_mm",
+    "double"
+   ]
+  ]
+ },
+ "dimcrew": {
+  "domain": "delivery",
+  "rows": 11,
+  "cols": [
+   [
+    "crew_id",
+    "string"
+   ],
+   [
+    "crew_name",
+    "string"
+   ],
+   [
+    "crew_type",
+    "string"
+   ],
+   [
+    "supplier_id",
+    "string"
+   ]
+  ]
+ },
+ "factjob": {
+  "domain": "delivery",
+  "rows": 571,
+  "cols": [
+   [
+    "job_id",
+    "string"
+   ],
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "delivery_id",
+    "string"
+   ],
+   [
+    "crew_id",
+    "string"
+   ],
+   [
+    "planned_date",
+    "date"
+   ],
+   [
+    "job_date",
+    "date"
+   ],
+   [
+    "status",
+    "string"
+   ],
+   [
+    "location",
+    "string"
+   ],
+   [
+    "ventilation_check_done",
+    "int"
+   ],
+   [
+    "sja_done",
+    "int"
+   ],
+   [
+    "battery_temp_c",
+    "double"
+   ],
+   [
+    "acclimatised",
+    "int"
+   ],
+   [
+    "commissioning_complete",
+    "int"
+   ],
+   [
+    "crew_certified",
+    "boolean"
+   ],
+   [
+    "crew_prior_jobs",
+    "int"
+   ],
+   [
+    "days_late",
+    "int"
+   ]
+  ]
+ },
+ "dimcompliancerequirement": {
+  "domain": "hseq",
+  "rows": 6,
+  "cols": [
+   [
+    "requirement_id",
+    "string"
+   ],
+   [
+    "requirement_name",
+    "string"
+   ],
+   [
+    "applies_to",
+    "string"
+   ],
+   [
+    "due_days",
+    "int"
+   ],
+   [
+    "recurring",
+    "int"
+   ]
+  ]
+ },
+ "factauditreadiness": {
+  "domain": "hseq",
+  "rows": 1259,
+  "cols": [
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "overdue_items",
+    "bigint"
+   ],
+   [
+    "open_high_deviations",
+    "bigint"
+   ],
+   [
+    "audit_ready",
+    "boolean"
+   ]
+  ]
+ },
+ "factcomplianceitem": {
+  "domain": "hseq",
+  "rows": 5838,
+  "cols": [
+   [
+    "item_id",
+    "string"
+   ],
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "requirement_id",
+    "string"
+   ],
+   [
+    "due_date",
+    "date"
+   ],
+   [
+    "submitted_date",
+    "date"
+   ],
+   [
+    "status",
+    "string"
+   ]
+  ]
+ },
+ "facthseaction": {
+  "domain": "hseq",
+  "rows": 42,
+  "cols": [
+   [
+    "action_id",
+    "string"
+   ],
+   [
+    "job_id",
+    "string"
+   ],
+   [
+    "action_date",
+    "date"
+   ],
+   [
+    "risk_level",
+    "string"
+   ],
+   [
+    "action",
+    "string"
+   ],
+   [
+    "completed",
+    "int"
+   ]
+  ]
+ },
+ "facthseevent": {
+  "domain": "hseq",
+  "rows": 45,
+  "cols": [
+   [
+    "event_id",
+    "string"
+   ],
+   [
+    "job_id",
+    "string"
+   ],
+   [
+    "event_date",
+    "date"
+   ],
+   [
+    "event_type",
+    "string"
+   ],
+   [
+    "severity",
+    "string"
+   ],
+   [
+    "description",
+    "string"
+   ],
+   [
+    "reported_by",
+    "string"
+   ]
+  ]
+ },
+ "factinspectiondeviation": {
+  "domain": "hseq",
+  "rows": 319,
+  "cols": [
+   [
+    "deviation_id",
+    "string"
+   ],
+   [
+    "installation_id",
+    "string"
+   ],
+   [
+    "found_date",
+    "date"
+   ],
+   [
+    "source",
+    "string"
+   ],
+   [
+    "category",
+    "string"
+   ],
+   [
+    "severity",
+    "string"
+   ],
+   [
+    "closed_date",
+    "date"
+   ],
+   [
+    "is_open",
+    "boolean"
+   ],
+   [
+    "days_open",
+    "int"
+   ]
+  ]
+ },
+ "factjobrisk": {
+  "domain": "hseq",
+  "rows": 571,
+  "cols": [
+   [
+    "job_id",
+    "string"
+   ],
+   [
+    "job_date",
+    "date"
+   ],
+   [
+    "status",
+    "string"
+   ],
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "municipality",
+    "string"
+   ],
+   [
+    "country",
+    "string"
+   ],
+   [
+    "crew_id",
+    "string"
+   ],
+   [
+    "crew_type",
+    "string"
+   ],
+   [
+    "supplier_id",
+    "string"
+   ],
+   [
+    "subcontractor_id",
+    "string"
+   ],
+   [
+    "location",
+    "string"
+   ],
+   [
+    "risk_score",
+    "bigint"
+   ],
+   [
+    "has_stop_factor",
+    "int"
+   ],
+   [
+    "factors",
+    "string"
+   ],
+   [
+    "risk_level",
+    "string"
+   ]
+  ]
+ },
+ "factjobriskfactor": {
+  "domain": "hseq",
+  "rows": 915,
+  "cols": [
+   [
+    "factor_code",
+    "string"
+   ],
+   [
+    "job_id",
+    "string"
+   ],
+   [
+    "factor",
+    "string"
+   ],
+   [
+    "category",
+    "string"
+   ],
+   [
+    "weight",
+    "int"
+   ],
+   [
+    "stops_work",
+    "int"
+   ]
+  ]
+ },
+ "dimseller": {
+  "domain": "sales",
+  "rows": 9,
+  "cols": [
+   [
+    "seller_id",
+    "string"
+   ],
+   [
+    "seller_name",
+    "string"
+   ],
+   [
+    "sales_area",
+    "string"
+   ]
+  ]
+ },
+ "factinvoice": {
+  "domain": "sales",
+  "rows": 2518,
+  "cols": [
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "invoice_id",
+    "string"
+   ],
+   [
+    "invoice_date",
+    "date"
+   ],
+   [
+    "amount_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "invoice_type",
+    "string"
+   ],
+   [
+    "customer_id",
+    "string"
+   ]
+  ]
+ },
+ "factorderline": {
+  "domain": "sales",
+  "rows": 12950,
+  "cols": [
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "line_no",
+    "int"
+   ],
+   [
+    "proposal_id",
+    "string"
+   ],
+   [
+    "proposal_line_no",
+    "int"
+   ],
+   [
+    "product_code",
+    "string"
+   ],
+   [
+    "qty",
+    "double"
+   ],
+   [
+    "unit_price_nok",
+    "decimal(12,2)"
+   ],
+   [
+    "line_total_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "order_date",
+    "date"
+   ],
+   [
+    "order_status",
+    "string"
+   ]
+  ]
+ },
+ "factproposal": {
+  "domain": "sales",
+  "rows": 3770,
+  "cols": [
+   [
+    "proposal_id",
+    "string"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "seller_id",
+    "string"
+   ],
+   [
+    "created_date",
+    "date"
+   ],
+   [
+    "sent_date",
+    "date"
+   ],
+   [
+    "valid_until",
+    "date"
+   ],
+   [
+    "status",
+    "string"
+   ],
+   [
+    "decided_date",
+    "date"
+   ],
+   [
+    "loss_reason",
+    "string"
+   ],
+   [
+    "proposed_kwp",
+    "double"
+   ],
+   [
+    "proposal_total_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "first_followup_date",
+    "date"
+   ],
+   [
+    "days_to_first_followup",
+    "int"
+   ],
+   [
+    "age_days",
+    "int"
+   ],
+   [
+    "is_signed",
+    "int"
+   ]
+  ]
+ },
+ "factproposalline": {
+  "domain": "sales",
+  "rows": 35923,
+  "cols": [
+   [
+    "proposal_id",
+    "string"
+   ],
+   [
+    "line_no",
+    "int"
+   ],
+   [
+    "product_code",
+    "string"
+   ],
+   [
+    "qty",
+    "double"
+   ],
+   [
+    "unit_price_nok",
+    "decimal(12,2)"
+   ],
+   [
+    "line_total_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "seller_id",
+    "string"
+   ],
+   [
+    "created_date",
+    "date"
+   ],
+   [
+    "status",
+    "string"
+   ],
+   [
+    "loss_reason",
+    "string"
+   ],
+   [
+    "order_status",
+    "string"
+   ],
+   [
+    "ordered_product",
+    "string"
+   ],
+   [
+    "ordered_qty",
+    "double"
+   ],
+   [
+    "ordered_value_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "outcome",
+    "string"
+   ],
+   [
+    "changed_value_nok",
+    "decimal(14,2)"
+   ]
+  ]
+ },
+ "factsaleshistory": {
+  "domain": "sales",
+  "rows": 25089,
+  "cols": [
+   [
+    "source",
+    "string"
+   ],
+   [
+    "order_no",
+    "string"
+   ],
+   [
+    "order_date",
+    "date"
+   ],
+   [
+    "customer_id",
+    "string"
+   ],
+   [
+    "old_customer_no",
+    "string"
+   ],
+   [
+    "product_code",
+    "string"
+   ],
+   [
+    "old_item_no",
+    "string"
+   ],
+   [
+    "description",
+    "string"
+   ],
+   [
+    "category",
+    "string"
+   ],
+   [
+    "qty",
+    "double"
+   ],
+   [
+    "amount_nok",
+    "decimal(14,2)"
+   ],
+   [
+    "customer_mapped",
+    "boolean"
+   ]
+  ]
+ },
+ "dimsupplier": {
+  "domain": "supply",
+  "rows": 7,
+  "cols": [
+   [
+    "supplier_id",
+    "string"
+   ],
+   [
+    "supplier_name",
+    "string"
+   ],
+   [
+    "supplier_type",
+    "string"
+   ],
+   [
+    "country",
+    "string"
+   ]
+  ]
+ },
+ "factbatterydelivery": {
+  "domain": "supply",
+  "rows": 571,
+  "cols": [
+   [
+    "delivery_id",
+    "string"
+   ],
+   [
+    "order_id",
+    "string"
+   ],
+   [
+    "supplier_id",
+    "string"
+   ],
+   [
+    "batch_no",
+    "string"
+   ],
+   [
+    "delivered_date",
+    "date"
+   ],
+   [
+    "packaging_damage",
+    "int"
+   ],
+   [
+    "shock_indicator_tripped",
+    "int"
+   ],
+   [
+    "inspected_at_receipt",
+    "int"
+   ],
+   [
+    "temp_excursion",
+    "int"
+   ],
+   [
+    "storage_days",
+    "int"
+   ]
+  ]
+ },
+ "factsupplierprequal": {
+  "domain": "supply",
+  "rows": 5,
+  "cols": [
+   [
+    "supplier_id",
+    "string"
+   ],
+   [
+    "valid_from",
+    "date"
+   ],
+   [
+    "valid_to",
+    "date"
+   ]
+  ]
+ }
+}

@@ -1,0 +1,146 @@
+table 'Battery job'
+	lineageTag: d45ed398-b7c1-517f-8853-0e4880d0bb14
+
+	measure 'As of date' = DATE ( 2026, 10, 31 )
+		formatString: yyyy-mm-dd
+		displayFolder: Settings
+		lineageTag: cf8d19de-d914-5282-97f0-1366a6676597
+
+	measure 'Battery jobs' = CALCULATE ( COUNTROWS ( 'Battery job' ), 'Battery job'[Status] = "Done" )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 6cc98be7-3bf6-5158-a5b1-e47544903b39
+
+	measure 'Red jobs' = CALCULATE ( [Battery jobs], 'Battery job'[Risk level] = "Red" )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 7c3bdfe1-502a-5b32-a7ce-cc7bdee736c2
+
+	measure 'Yellow jobs' = CALCULATE ( [Battery jobs], 'Battery job'[Risk level] = "Yellow" )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 2535494f-d39f-542f-948f-c3dfbae5aac6
+
+	measure 'Red job share' = DIVIDE ( [Red jobs], [Battery jobs] )
+		formatString: 0.0%
+		displayFolder: Risk
+		lineageTag: 6424b7e5-5395-57dd-9b91-6db2c4a80541
+
+	measure 'Planned jobs' = CALCULATE ( COUNTROWS ( 'Battery job' ), 'Battery job'[Status] = "Planned" )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: a32838ce-ad29-5965-85b7-6db65e2022e6
+
+	measure 'Planned red jobs' = CALCULATE ( [Planned jobs], 'Battery job'[Risk level] = "Red" )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: c5ba05c6-b972-5e53-8a3e-810ce45f7081
+
+	measure 'Average risk score' = AVERAGE ( 'Battery job'[Risk score] )
+		formatString: #,0.0
+		displayFolder: Risk
+		lineageTag: d6aaebde-4302-511c-91ac-3caa83e4e4a7
+
+	column 'Job ID'
+		dataType: string
+		lineageTag: f7b13b58-7b9c-5c57-b281-7b2b9471a683
+		summarizeBy: none
+		sourceColumn: job_id
+
+	column 'Job date'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: d1b468f7-0cdb-505b-a591-d8ad51163249
+		summarizeBy: none
+		sourceColumn: job_date
+
+	column Status
+		dataType: string
+		lineageTag: 3e2cfdd4-2f88-5925-9c39-700d5e5bfc12
+		summarizeBy: none
+		sourceColumn: status
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: be87c00e-6557-5d23-8528-35cd82b8467d
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column 'Customer ID'
+		dataType: string
+		lineageTag: b208d67c-21c3-5d03-b3ed-da63781d13c4
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column Municipality
+		dataType: string
+		lineageTag: 5d53cce8-0d93-57e9-97c4-715a2843043c
+		summarizeBy: none
+		sourceColumn: municipality
+
+	column Country
+		dataType: string
+		lineageTag: bab2b327-41ff-57c6-a821-8436220030fa
+		summarizeBy: none
+		sourceColumn: country
+
+	column 'Crew ID'
+		dataType: string
+		lineageTag: 6f8c02ad-1f12-5a5e-affd-2f817adb0384
+		summarizeBy: none
+		sourceColumn: crew_id
+
+	column 'Crew type'
+		dataType: string
+		lineageTag: 4a5ee8ff-ff2d-56a0-9b2e-8aebc0fb1489
+		summarizeBy: none
+		sourceColumn: crew_type
+
+	column 'Supplier ID'
+		dataType: string
+		lineageTag: 21b29b1a-c66c-5893-8204-5f28c3510a49
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+	column 'Subcontractor ID'
+		dataType: string
+		lineageTag: 7dae23de-35eb-5c9a-ae95-7289a107ecce
+		summarizeBy: none
+		sourceColumn: subcontractor_id
+
+	column Location
+		dataType: string
+		lineageTag: d2ab8320-fb28-5233-94e8-5d08ffedcc09
+		summarizeBy: none
+		sourceColumn: location
+
+	column 'Risk score'
+		dataType: int64
+		lineageTag: 6ebdfa58-2dd7-58f0-b708-41fbb91f6f92
+		summarizeBy: none
+		sourceColumn: risk_score
+
+	column 'Has stop factor'
+		dataType: int64
+		lineageTag: f76a96c8-a627-5cb8-a34b-dc2475f2af8c
+		summarizeBy: none
+		sourceColumn: has_stop_factor
+
+	column Factors
+		dataType: string
+		lineageTag: aae4c55c-7df8-51b9-a6ef-27b42875a891
+		summarizeBy: none
+		sourceColumn: factors
+
+	column 'Risk level'
+		dataType: string
+		lineageTag: 3bf82c29-d96c-5f09-9269-cd84fc2204e7
+		summarizeBy: none
+		sourceColumn: risk_level
+
+	partition 'Battery job' = entity
+		mode: directLake
+		source
+			entityName: factjobrisk
+			schemaName: dbo
+			expressionSource: DatabaseQuery

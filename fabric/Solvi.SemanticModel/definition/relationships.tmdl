@@ -1,95 +1,95 @@
-relationship c4c8ab16-21f7-5084-ad0f-27d30c41d5bd
-	fromColumn: dim_customer.site_id
-	toColumn: dim_site.site_id
+relationship e53766e3-cc21-502b-a792-5dfee4c7901f
+	fromColumn: Customer.'Site ID'
+	toColumn: Site.'Site ID'
 
-relationship f272d819-bf69-5284-b036-17e5f526b0d6
-	fromColumn: dim_installation.site_id
-	toColumn: dim_site.site_id
+relationship e0bf97c9-9966-5287-a7ce-9b43b2dd9926
+	fromColumn: Installation.'Site ID'
+	toColumn: Site.'Site ID'
 
-relationship deb15625-b968-5553-94cc-37b19bb34a9b
-	fromColumn: fact_job_risk.job_date
-	toColumn: dim_date.date
+relationship 9f9ac8f9-a8ac-5d10-80db-b0f68911d8a9
+	fromColumn: 'Battery job'.'Job date'
+	toColumn: Date.Date
 
-relationship e95456d0-7900-56ad-acca-40d38ad097cd
-	fromColumn: fact_job_risk.customer_id
-	toColumn: dim_customer.customer_id
+relationship f091db31-17ee-56bb-9d07-4111333d2e60
+	fromColumn: 'Battery job'.'Customer ID'
+	toColumn: Customer.'Customer ID'
 
-relationship 3e4c9797-b5dc-5e6c-ac23-25bef83fe96f
-	fromColumn: fact_job_risk.crew_id
-	toColumn: dim_crew.crew_id
+relationship 2b3123fe-9edd-5250-9a09-b37d017b8a94
+	fromColumn: 'Battery job'.'Crew ID'
+	toColumn: Crew.'Crew ID'
 
-relationship 90fbf8ed-6ddb-5c7d-8a42-8cbe780135eb
-	fromColumn: fact_job_risk.supplier_id
-	toColumn: dim_supplier.supplier_id
+relationship 69a40685-b1d4-5831-8c43-0e0bf5b020f6
+	fromColumn: 'Battery job'.'Supplier ID'
+	toColumn: Supplier.'Supplier ID'
 
-relationship fda679d0-f272-5244-85ed-ea53479ac0a1
-	fromColumn: fact_job_risk_factor.job_id
-	toColumn: fact_job_risk.job_id
+relationship f634c790-043d-5f97-a7df-e5fd897f839d
+	fromColumn: 'Risk factor'.'Job ID'
+	toColumn: 'Battery job'.'Job ID'
 
-relationship dd880bbb-21cf-5831-b37e-ca1eae2dad10
-	fromColumn: fact_hse_event.job_id
-	toColumn: fact_job_risk.job_id
+relationship 26a36a00-0b06-59ce-9bac-5f3cd6fb67c0
+	fromColumn: 'HSE event'.'Job ID'
+	toColumn: 'Battery job'.'Job ID'
 
-relationship daf062f1-2d0d-5305-a433-bab45ae98cda
-	fromColumn: fact_hse_action.job_id
-	toColumn: fact_job_risk.job_id
+relationship 01fb15fb-4caf-5720-9f78-0055ffd08ba6
+	fromColumn: 'HSE action'.'Job ID'
+	toColumn: 'Battery job'.'Job ID'
 
-relationship d612c594-d788-5177-bf7b-cf80ea472bb1
-	fromColumn: fact_production_daily.date
-	toColumn: dim_date.date
+relationship 4ffa235e-6578-52fd-8e0d-288ec9c62d43
+	fromColumn: Production.Date
+	toColumn: Date.Date
 
-relationship 65854263-2fce-5bf7-b6eb-9d6ba521f41b
-	fromColumn: fact_production_daily.installation_id
-	toColumn: dim_installation.installation_id
+relationship 3af4a3f4-4c19-556b-8b37-e20d779fc76b
+	fromColumn: Production.'Installation ID'
+	toColumn: Installation.'Installation ID'
 
-relationship a624a43f-2723-5e7f-b87b-7a19d57f1064
-	fromColumn: fact_service_visit.visit_date
-	toColumn: dim_date.date
+relationship dd75ace9-e377-5fb4-9aad-fed1d70950f8
+	fromColumn: 'Service visit'.'Visit date'
+	toColumn: Date.Date
 
-relationship 53954626-9cb1-5180-96dd-386e227d0740
-	fromColumn: fact_service_visit.installation_id
-	toColumn: dim_installation.installation_id
+relationship 7704cc95-7a63-55ae-96cb-74a052c86e6d
+	fromColumn: 'Service visit'.'Installation ID'
+	toColumn: Installation.'Installation ID'
 
-relationship 6e18fcd1-1c0c-5d5e-93bb-a8a32caa9e7c
-	fromColumn: fact_compliance_item.due_date
-	toColumn: dim_date.date
+relationship 0f2ea4ca-0377-5841-9871-2515ae04a7df
+	fromColumn: 'Compliance item'.'Due date'
+	toColumn: Date.Date
 
-relationship 660a3ac5-cf7b-5aee-993e-932616a857f0
-	fromColumn: fact_compliance_item.installation_id
-	toColumn: dim_installation.installation_id
+relationship 663a7227-7e17-523d-8505-98e32365c2f0
+	fromColumn: 'Compliance item'.'Installation ID'
+	toColumn: Installation.'Installation ID'
 
-relationship 674d1990-5db1-5b89-bd3d-74cb69be58ad
-	fromColumn: fact_compliance_item.requirement_id
-	toColumn: dim_compliance_requirement.requirement_id
+relationship 8582c188-c168-5892-8b80-301bee193b46
+	fromColumn: 'Compliance item'.'Requirement ID'
+	toColumn: 'Compliance requirement'.'Requirement ID'
 
-relationship 62073c36-51fd-5dcf-a9cd-9ed33a063527
-	fromColumn: fact_inspection_deviation.found_date
-	toColumn: dim_date.date
+relationship f355e015-b5ea-515d-aa18-e8cab30bdb61
+	fromColumn: Deviation.'Found date'
+	toColumn: Date.Date
 
-relationship ae06ea7e-be01-5395-a4e7-39c97f3bfe2c
-	fromColumn: fact_inspection_deviation.installation_id
-	toColumn: dim_installation.installation_id
+relationship 768b5292-d9de-5c57-b674-5074e5628991
+	fromColumn: Deviation.'Installation ID'
+	toColumn: Installation.'Installation ID'
 
-relationship cce78764-d4f6-506a-a4fe-a1ef18780758
-	fromColumn: fact_audit_readiness.installation_id
-	toColumn: dim_installation.installation_id
+relationship b8a15b99-b61a-5d38-b2fa-624cdf982c48
+	fromColumn: 'Audit readiness'.'Installation ID'
+	toColumn: Installation.'Installation ID'
 
-relationship d48c312f-6afe-53a2-8fce-91f8a116a9af
-	fromColumn: fact_proposal.created_date
-	toColumn: dim_date.date
+relationship 54e96dd9-dffa-5a94-8676-8bd9afb1c23a
+	fromColumn: Proposal.'Created date'
+	toColumn: Date.Date
 
-relationship e8be1b4f-1f3f-5cc7-a876-aa6b14ff2cc5
-	fromColumn: fact_proposal.customer_id
-	toColumn: dim_customer.customer_id
+relationship d7432769-d356-5ed1-b1ed-072cb8cd4630
+	fromColumn: Proposal.'Customer ID'
+	toColumn: Customer.'Customer ID'
 
-relationship 8469f9de-5330-57af-8932-71409d1f6a94
-	fromColumn: fact_proposal.seller_id
-	toColumn: dim_seller.seller_id
+relationship c635e21d-d6e2-5a26-ad80-b47987e83386
+	fromColumn: Proposal.'Seller ID'
+	toColumn: Seller.'Seller ID'
 
-relationship 116d0a13-8855-5b04-a297-f14dc7491b76
-	fromColumn: fact_proposal_line.proposal_id
-	toColumn: fact_proposal.proposal_id
+relationship 536feb4f-055a-58ae-ac5b-7ecf25393866
+	fromColumn: 'Proposal line'.'Proposal ID'
+	toColumn: Proposal.'Proposal ID'
 
-relationship 9cd4872a-ec30-5891-91da-b941a53ad59e
-	fromColumn: fact_proposal_line.product_code
-	toColumn: dim_product.product_code
+relationship 01241140-37b4-59a7-a05a-6946ce42ff76
+	fromColumn: 'Proposal line'.'Product code'
+	toColumn: Product.'Product code'

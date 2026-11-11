@@ -1,0 +1,55 @@
+table 'Risk factor'
+	lineageTag: 56d53a22-7db4-580d-b29f-9ca309153f51
+
+	measure 'Risk factors found' = COUNTROWS ( 'Risk factor' )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: 2fa68927-c3be-54f1-a919-85ba3dc3d772
+
+	measure 'Stop factors found' = CALCULATE ( COUNTROWS ( 'Risk factor' ), 'Risk factor'[Stops work] = 1 )
+		formatString: #,0
+		displayFolder: Risk
+		lineageTag: bede21e1-976b-5837-8033-cd9ef5d685e1
+
+	column 'Factor code'
+		dataType: string
+		lineageTag: 4c23635c-40c1-5bfd-9522-2997325cd94f
+		summarizeBy: none
+		sourceColumn: factor_code
+
+	column 'Job ID'
+		dataType: string
+		lineageTag: 7b796e41-3488-5e83-ba8d-3dbb26983a54
+		summarizeBy: none
+		sourceColumn: job_id
+
+	column Factor
+		dataType: string
+		lineageTag: bd585882-f45a-5f84-acdd-54c440c85799
+		summarizeBy: none
+		sourceColumn: factor
+
+	column Category
+		dataType: string
+		lineageTag: fb27209f-c0c8-52fa-9dd6-aaf49732003e
+		summarizeBy: none
+		sourceColumn: category
+
+	column Weight
+		dataType: int64
+		lineageTag: d1010014-a91d-5950-9e48-2f500135d68b
+		summarizeBy: none
+		sourceColumn: weight
+
+	column 'Stops work'
+		dataType: int64
+		lineageTag: 0be5b9c3-d864-54d0-8d53-793c7fa907f1
+		summarizeBy: none
+		sourceColumn: stops_work
+
+	partition 'Risk factor' = entity
+		mode: directLake
+		source
+			entityName: factjobriskfactor
+			schemaName: dbo
+			expressionSource: DatabaseQuery
