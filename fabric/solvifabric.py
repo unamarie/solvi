@@ -12,6 +12,9 @@ Steps (each can be run on its own, and each is safe to run again):
     pipelines  "Run Core" and so on in each workspace, and "Run all" in Solvi Core that runs all 18 notebooks in order
     model      the Reporting lakehouse with shortcuts to the gold tables, and the Direct Lake semantic model "Solvi"
     all        all of the above
+    check      shows your capacities and which one each Solvi workspace uses
+    pause      pauses the solvifabric capacity in Azure (stops the cost)
+    resume     starts it again
 """
 import base64
 import json
@@ -21,7 +24,7 @@ import sys
 import time
 
 import requests
-from azure.identity import InteractiveBrowserCredential
+from azure.identity import DeviceCodeCredential, TokenCachePersistenceOptions
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 API = "https://api.fabric.microsoft.com/v1"
@@ -32,7 +35,13 @@ NAME = {"core": "Core", "sales": "Sales", "supply": "Supply", "delivery": "Deliv
 STEPS = [("01", "bronze"), ("02", "silver"), ("03", "gold")]
 REPORTING = "Solvi Reporting"
 
-cred = InteractiveBrowserCredential()     # opens your browser once; sign in with una@unadata.dev
+def _prompt(url, code, expires):
+    print(f"\nSign in: open {url} and enter the code {code}. Use una@unadata.dev.\n", flush=True)
+
+
+# Prints a short code to type at microsoft.com/devicelogin. The login is remembered, so later runs don't ask again.
+cred = DeviceCodeCredential(tenant_id="organizations", prompt_callback=_prompt, timeout=900,
+                            cache_persistence_options=TokenCachePersistenceOptions(name="solvi-fabric"))
 _tokens = {}
 
 
@@ -88,21 +97,69 @@ def b64(s):
 
 
 # ---- workspaces, lakehouses, items -------------------------------------------------------------------------------
+def capacities():
+    return listing(f"{API}/capacities")
+
+
 def capacity_id():
-    caps = [c for c in listing(f"{API}/capacities") if c.get("state") == "Active"]
+    """The Fabric trial (FT) or a paid Fabric capacity (F, P). Premium Per User (PP) can't hold lakehouses."""
+    caps = [c for c in capacities() if c.get("state") == "Active"]
+    rank = lambda c: 0 if c.get("sku", "").startswith("FT") else 1 if c.get("sku", "").startswith("F") else \
+        2 if re.match(r"P\d", c.get("sku", "")) else 9
+    caps = sorted((c for c in caps if rank(c) < 9), key=rank)
     if not caps:
-        sys.exit("No active Fabric capacity. Start the Fabric trial first (see fabric/README.md).")
-    trial = [c for c in caps if c.get("sku", "").startswith("FT")]
-    return (trial or caps)[0]["id"]
+        sys.exit("No Fabric capacity found. Start the Fabric trial first (see fabric/README.md), "
+                 "then run `py fabric/solvifabric.py check`.")
+    return caps[0]["id"]
 
 
 def workspace(name, cap=None):
+    cap = cap or capacity_id()
     for w in listing(f"{API}/workspaces"):
         if w["displayName"] == name:
+            if w.get("capacityId", "").lower() != cap.lower():
+                call("POST", f"{API}/workspaces/{w['id']}/assignToCapacity", {"capacityId": cap})
+                print(f"  ~ workspace {name} moved to the Fabric capacity")
+                time.sleep(10)
             return w["id"]
-    body = {"displayName": name, "capacityId": cap or capacity_id()}
+    body = {"displayName": name, "capacityId": cap}
     print(f"  + workspace {name}")
     return call("POST", f"{API}/workspaces", body).json()["id"]
+
+
+ARM = "https://management.azure.com"
+ARM_SCOPE = "https://management.azure.com/.default"
+
+
+def azure_capacity(name="solvifabric"):
+    """Finds the Fabric capacity in Azure, so it can be paused and resumed from here."""
+    for sub in call("GET", f"{ARM}/subscriptions?api-version=2022-12-01", scope=ARM_SCOPE).json().get("value", []):
+        url = f"{ARM}/subscriptions/{sub['subscriptionId']}/providers/Microsoft.Fabric/capacities?api-version=2023-11-01"
+        for c in call("GET", url, scope=ARM_SCOPE, ok=(200, 404)).json().get("value", []):
+            if c["name"] == name:
+                return c
+    sys.exit(f"No Fabric capacity called {name} in Azure.")
+
+
+def pause_resume(action):
+    c = azure_capacity()
+    state = c.get("properties", {}).get("state")
+    if (action == "suspend" and state == "Paused") or (action == "resume" and state == "Active"):
+        print(f"solvifabric is already {state.lower()}.")
+        return
+    call("POST", f"{ARM}{c['id']}/{action}?api-version=2023-11-01", scope=ARM_SCOPE, ok=(200, 202))
+    print("solvifabric paused. It costs nothing until you resume it." if action == "suspend" else
+          "solvifabric is starting. Give it a minute before running anything.")
+
+
+def check():
+    print("Capacities you can use:")
+    for c in capacities():
+        print(f"  {c.get('displayName')}  sku={c.get('sku')}  state={c.get('state')}  region={c.get('region')}  id={c.get('id')}")
+    print("Solvi workspaces:")
+    for w in listing(f"{API}/workspaces"):
+        if w["displayName"].startswith("Solvi"):
+            print(f"  {w['displayName']}  capacity={w.get('capacityId')}")
 
 
 def item(ws, kind, name, definition=None, path=None):
@@ -333,7 +390,9 @@ def model():
 
 def main():
     cmd = sys.argv[1] if len(sys.argv) > 1 else "help"
-    if cmd == "setup":
+    if cmd == "check":
+        check()
+    elif cmd == "setup":
         setup()
     elif cmd == "run":
         run(sys.argv[2] if len(sys.argv) > 2 else None)
@@ -343,6 +402,11 @@ def main():
         model()
     elif cmd == "all":
         setup(); run(); pipelines(); model()
+        print("\nDone. Pause the capacity when you are finished: py fabric/solvifabric.py pause")
+    elif cmd == "pause":
+        pause_resume("suspend")
+    elif cmd == "resume":
+        pause_resume("resume")
     else:
         print(__doc__)
 
