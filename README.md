@@ -1,5 +1,7 @@
 # Solvi
 
+[![build](https://github.com/unamarie/solvi/actions/workflows/build.yml/badge.svg)](https://github.com/unamarie/solvi/actions/workflows/build.yml)
+
 A data platform for a fictional solar and battery installer, built for Microsoft Fabric.
 All data is generated. No real customers, companies or people.
 
@@ -57,6 +59,10 @@ python tools/runlocal.py
 ```
 
 The last step needs PySpark. It uses parquet instead of Delta.
+
+`python tools/gatetest.py` feeds the Core domain one impossible value and checks that the quality gate stops it.
+
+GitHub runs all of this on every push. The badge at the top shows the result.
 
 To build it in Fabric with one script, see [fabric/README.md](fabric/README.md).
 
