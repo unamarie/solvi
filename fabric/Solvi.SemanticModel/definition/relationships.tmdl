@@ -1,0 +1,95 @@
+relationship c4c8ab16-21f7-5084-ad0f-27d30c41d5bd
+	fromColumn: dim_customer.site_id
+	toColumn: dim_site.site_id
+
+relationship f272d819-bf69-5284-b036-17e5f526b0d6
+	fromColumn: dim_installation.site_id
+	toColumn: dim_site.site_id
+
+relationship deb15625-b968-5553-94cc-37b19bb34a9b
+	fromColumn: fact_job_risk.job_date
+	toColumn: dim_date.date
+
+relationship e95456d0-7900-56ad-acca-40d38ad097cd
+	fromColumn: fact_job_risk.customer_id
+	toColumn: dim_customer.customer_id
+
+relationship 3e4c9797-b5dc-5e6c-ac23-25bef83fe96f
+	fromColumn: fact_job_risk.crew_id
+	toColumn: dim_crew.crew_id
+
+relationship 90fbf8ed-6ddb-5c7d-8a42-8cbe780135eb
+	fromColumn: fact_job_risk.supplier_id
+	toColumn: dim_supplier.supplier_id
+
+relationship fda679d0-f272-5244-85ed-ea53479ac0a1
+	fromColumn: fact_job_risk_factor.job_id
+	toColumn: fact_job_risk.job_id
+
+relationship dd880bbb-21cf-5831-b37e-ca1eae2dad10
+	fromColumn: fact_hse_event.job_id
+	toColumn: fact_job_risk.job_id
+
+relationship daf062f1-2d0d-5305-a433-bab45ae98cda
+	fromColumn: fact_hse_action.job_id
+	toColumn: fact_job_risk.job_id
+
+relationship d612c594-d788-5177-bf7b-cf80ea472bb1
+	fromColumn: fact_production_daily.date
+	toColumn: dim_date.date
+
+relationship 65854263-2fce-5bf7-b6eb-9d6ba521f41b
+	fromColumn: fact_production_daily.installation_id
+	toColumn: dim_installation.installation_id
+
+relationship a624a43f-2723-5e7f-b87b-7a19d57f1064
+	fromColumn: fact_service_visit.visit_date
+	toColumn: dim_date.date
+
+relationship 53954626-9cb1-5180-96dd-386e227d0740
+	fromColumn: fact_service_visit.installation_id
+	toColumn: dim_installation.installation_id
+
+relationship 6e18fcd1-1c0c-5d5e-93bb-a8a32caa9e7c
+	fromColumn: fact_compliance_item.due_date
+	toColumn: dim_date.date
+
+relationship 660a3ac5-cf7b-5aee-993e-932616a857f0
+	fromColumn: fact_compliance_item.installation_id
+	toColumn: dim_installation.installation_id
+
+relationship 674d1990-5db1-5b89-bd3d-74cb69be58ad
+	fromColumn: fact_compliance_item.requirement_id
+	toColumn: dim_compliance_requirement.requirement_id
+
+relationship 62073c36-51fd-5dcf-a9cd-9ed33a063527
+	fromColumn: fact_inspection_deviation.found_date
+	toColumn: dim_date.date
+
+relationship ae06ea7e-be01-5395-a4e7-39c97f3bfe2c
+	fromColumn: fact_inspection_deviation.installation_id
+	toColumn: dim_installation.installation_id
+
+relationship cce78764-d4f6-506a-a4fe-a1ef18780758
+	fromColumn: fact_audit_readiness.installation_id
+	toColumn: dim_installation.installation_id
+
+relationship d48c312f-6afe-53a2-8fce-91f8a116a9af
+	fromColumn: fact_proposal.created_date
+	toColumn: dim_date.date
+
+relationship e8be1b4f-1f3f-5cc7-a876-aa6b14ff2cc5
+	fromColumn: fact_proposal.customer_id
+	toColumn: dim_customer.customer_id
+
+relationship 8469f9de-5330-57af-8932-71409d1f6a94
+	fromColumn: fact_proposal.seller_id
+	toColumn: dim_seller.seller_id
+
+relationship 116d0a13-8855-5b04-a297-f14dc7491b76
+	fromColumn: fact_proposal_line.proposal_id
+	toColumn: fact_proposal.proposal_id
+
+relationship 9cd4872a-ec30-5891-91da-b941a53ad59e
+	fromColumn: fact_proposal_line.product_code
+	toColumn: dim_product.product_code

@@ -1,0 +1,45 @@
+table dim_product
+	lineageTag: bac81c85-fbd5-5438-a1e0-ae836b0dbc2f
+
+	column product_code
+		dataType: string
+		lineageTag: 7cfda959-2112-5981-b0c5-f475df3471c7
+		summarizeBy: none
+		sourceColumn: product_code
+
+	column product_name
+		dataType: string
+		lineageTag: 2c5a50c3-1eda-50bc-8834-e7e44dc26b52
+		summarizeBy: none
+		sourceColumn: product_name
+
+	column category
+		dataType: string
+		lineageTag: cc99123f-5136-528b-ae1c-828a9c036479
+		summarizeBy: none
+		sourceColumn: category
+
+	column unit
+		dataType: string
+		lineageTag: 4b0263c3-a467-5803-83e2-211b9461bad5
+		summarizeBy: none
+		sourceColumn: unit
+
+	column list_price_nok
+		dataType: decimal
+		lineageTag: ff2a0837-106e-5db8-a941-a67af787faab
+		summarizeBy: none
+		sourceColumn: list_price_nok
+
+	column abc_class
+		dataType: string
+		lineageTag: 116ae216-b50a-5f41-8e60-485843be1260
+		summarizeBy: none
+		sourceColumn: abc_class
+
+	partition dim_product = entity
+		mode: directLake
+		source
+			entityName: dim_product
+			schemaName: dbo
+			expressionSource: DatabaseQuery

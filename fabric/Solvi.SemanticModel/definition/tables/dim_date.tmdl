@@ -1,0 +1,60 @@
+table dim_date
+	lineageTag: 14a6b557-ea7b-5e9b-ac2c-0eaccb95b461
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		lineageTag: 85e84964-a822-5d40-affd-74341aa6647f
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		isKey
+		lineageTag: 3bc93606-1fe8-55e7-8a44-3c0e5a8ce60f
+		summarizeBy: none
+		sourceColumn: date
+
+	column year
+		dataType: int64
+		lineageTag: 6f223b6e-ca22-5b00-9c37-08cd8e849cd1
+		summarizeBy: none
+		sourceColumn: year
+
+	column quarter
+		dataType: int64
+		lineageTag: 252ceb44-f417-598f-b72e-d6359d7498b0
+		summarizeBy: none
+		sourceColumn: quarter
+
+	column month_no
+		dataType: int64
+		lineageTag: f6920bdc-6ff4-5450-aebc-bffabd07209b
+		summarizeBy: none
+		sourceColumn: month_no
+
+	column month
+		dataType: string
+		lineageTag: 8d160429-2f70-5770-b694-5eff02fdd298
+		summarizeBy: none
+		sourceColumn: month
+
+	column year_month
+		dataType: string
+		lineageTag: 5f2f3852-e192-5775-9c52-04344a4e9a5d
+		summarizeBy: none
+		sourceColumn: year_month
+
+	column iso_week
+		dataType: int64
+		lineageTag: 416747e2-f586-5b26-9281-6934cbc8f37e
+		summarizeBy: none
+		sourceColumn: iso_week
+
+	partition dim_date = entity
+		mode: directLake
+		source
+			entityName: dim_date
+			schemaName: dbo
+			expressionSource: DatabaseQuery

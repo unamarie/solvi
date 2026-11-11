@@ -1,0 +1,80 @@
+table fact_inspection_deviation
+	lineageTag: 81460475-af14-54b5-b76c-dc0c7ac6171b
+
+	measure 'Open deviations' = CALCULATE ( COUNTROWS ( fact_inspection_deviation ), fact_inspection_deviation[is_open] = TRUE () )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 5b9b6627-53af-5274-8ed0-2ded52314c33
+
+	measure 'Open high deviations' = CALCULATE ( [Open deviations], fact_inspection_deviation[severity] = "High" )
+		formatString: #,0
+		displayFolder: Compliance
+		lineageTag: 8462ddf1-167b-51fa-9eb8-2d9effcc88a1
+
+	measure 'Average days open' = AVERAGE ( fact_inspection_deviation[days_open] )
+		formatString: #,0.0
+		displayFolder: Compliance
+		lineageTag: e73b76e7-8813-56fe-bc2b-b4418436cf69
+
+	column deviation_id
+		dataType: string
+		lineageTag: e386fbfa-ca26-5d1b-9eb3-487128b5edf4
+		summarizeBy: none
+		sourceColumn: deviation_id
+
+	column installation_id
+		dataType: string
+		lineageTag: 2af60610-57a5-58ef-b772-3a319d0c6654
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column found_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: e4ec0099-d7f7-5196-beac-5efd802a416e
+		summarizeBy: none
+		sourceColumn: found_date
+
+	column source
+		dataType: string
+		lineageTag: 533f44af-a998-534b-a4a3-804af941f673
+		summarizeBy: none
+		sourceColumn: source
+
+	column category
+		dataType: string
+		lineageTag: 79435860-b1ca-51cc-87f7-3fcba37ae5fb
+		summarizeBy: none
+		sourceColumn: category
+
+	column severity
+		dataType: string
+		lineageTag: be47d2a4-1416-5a88-bb07-c41d5d7a2a9b
+		summarizeBy: none
+		sourceColumn: severity
+
+	column closed_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: bc3e8c16-54a2-55e0-892a-56c5387c51b7
+		summarizeBy: none
+		sourceColumn: closed_date
+
+	column is_open
+		dataType: boolean
+		lineageTag: 77260de6-2cfe-5b14-9a9f-b66124dd973b
+		summarizeBy: none
+		sourceColumn: is_open
+
+	column days_open
+		dataType: int64
+		lineageTag: c3dacc83-1bc0-5d42-b7c4-55e759ce8425
+		summarizeBy: none
+		sourceColumn: days_open
+
+	partition fact_inspection_deviation = entity
+		mode: directLake
+		source
+			entityName: fact_inspection_deviation
+			schemaName: dbo
+			expressionSource: DatabaseQuery

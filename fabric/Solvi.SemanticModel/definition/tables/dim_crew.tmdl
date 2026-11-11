@@ -1,0 +1,33 @@
+table dim_crew
+	lineageTag: 27a62174-1ec8-5d75-9ad9-f0872c5b4a9c
+
+	column crew_id
+		dataType: string
+		lineageTag: b747bd0b-1066-5ae6-a655-886035714ec5
+		summarizeBy: none
+		sourceColumn: crew_id
+
+	column crew_name
+		dataType: string
+		lineageTag: 17dc04fc-ec52-5f40-b57f-048b50e93461
+		summarizeBy: none
+		sourceColumn: crew_name
+
+	column crew_type
+		dataType: string
+		lineageTag: b6347a11-3b07-5cac-8ff7-d104352bc7f1
+		summarizeBy: none
+		sourceColumn: crew_type
+
+	column supplier_id
+		dataType: string
+		lineageTag: e810b468-c695-528a-8a3e-d4a921ba2fcc
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+	partition dim_crew = entity
+		mode: directLake
+		source
+			entityName: dim_crew
+			schemaName: dbo
+			expressionSource: DatabaseQuery

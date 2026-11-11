@@ -1,0 +1,38 @@
+table fact_audit_readiness
+	lineageTag: 2c2d7a8f-2094-5b38-b13e-2850e4d496e5
+
+	measure 'Audit-ready share' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_audit_readiness ), fact_audit_readiness[audit_ready] = TRUE () ), COUNTROWS ( fact_audit_readiness ) )
+		formatString: 0.0%
+		displayFolder: Compliance
+		lineageTag: 5b0a7db6-03f8-5774-a8c0-879421926ea4
+
+	column installation_id
+		dataType: string
+		lineageTag: 2a04f40b-6bfc-517f-b97a-420751f4b77b
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column overdue_items
+		dataType: int64
+		lineageTag: e4b606e8-c74b-5a2f-812c-b02da6deaddf
+		summarizeBy: none
+		sourceColumn: overdue_items
+
+	column open_high_deviations
+		dataType: int64
+		lineageTag: a7e69207-02bb-529f-aa7f-9fbd645f5b3b
+		summarizeBy: none
+		sourceColumn: open_high_deviations
+
+	column audit_ready
+		dataType: boolean
+		lineageTag: 820a0469-7372-59de-a189-6cd0bd2d14f2
+		summarizeBy: none
+		sourceColumn: audit_ready
+
+	partition fact_audit_readiness = entity
+		mode: directLake
+		source
+			entityName: fact_audit_readiness
+			schemaName: dbo
+			expressionSource: DatabaseQuery

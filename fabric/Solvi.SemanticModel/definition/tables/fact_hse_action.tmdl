@@ -1,0 +1,56 @@
+table fact_hse_action
+	lineageTag: 5e347554-8bc0-50e1-b785-d2c30c71de5e
+
+	measure 'Required actions' = COUNTROWS ( fact_hse_action )
+		formatString: #,0
+		displayFolder: HSE
+		lineageTag: 97bb11bf-055e-5c77-8c11-64e6dfb00530
+
+	measure 'Actions completed share' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_hse_action ), fact_hse_action[completed] = 1 ), [Required actions] )
+		formatString: 0.0%
+		displayFolder: HSE
+		lineageTag: c3c1434f-e43b-58d1-88ba-ab712a2df737
+
+	column action_id
+		dataType: string
+		lineageTag: b59b324c-55b9-551e-9f83-226fe30b866e
+		summarizeBy: none
+		sourceColumn: action_id
+
+	column job_id
+		dataType: string
+		lineageTag: 1cbac444-f769-530c-a6f3-e5726dc3c1f9
+		summarizeBy: none
+		sourceColumn: job_id
+
+	column action_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 6dfe6890-f09f-50f3-baba-464253831d09
+		summarizeBy: none
+		sourceColumn: action_date
+
+	column risk_level
+		dataType: string
+		lineageTag: c722330c-c64e-56c5-86e2-7e9640d9a12e
+		summarizeBy: none
+		sourceColumn: risk_level
+
+	column action
+		dataType: string
+		lineageTag: b3567b12-e499-5e72-9c0b-ffc450655796
+		summarizeBy: none
+		sourceColumn: action
+
+	column completed
+		dataType: int64
+		lineageTag: f1b9693a-3564-5743-a6f4-d71af9233992
+		summarizeBy: none
+		sourceColumn: completed
+
+	partition fact_hse_action = entity
+		mode: directLake
+		source
+			entityName: fact_hse_action
+			schemaName: dbo
+			expressionSource: DatabaseQuery

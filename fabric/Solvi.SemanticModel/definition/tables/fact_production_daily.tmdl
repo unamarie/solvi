@@ -1,0 +1,72 @@
+table fact_production_daily
+	lineageTag: fdd4c633-bbdd-5652-9997-1b380717bdc7
+
+	measure 'Production kWh' = SUM ( fact_production_daily[kwh] )
+		formatString: #,0 "kWh"
+		displayFolder: Production
+		lineageTag: f2310b05-c407-5ccb-980d-4253ccb78b1f
+
+	measure 'Expected kWh' = SUM ( fact_production_daily[expected_kwh] )
+		formatString: #,0 "kWh"
+		displayFolder: Production
+		lineageTag: 2a297c99-e17e-5b14-bded-fed40cf36fb5
+
+	measure 'Performance ratio' = DIVIDE ( [Production kWh], [Expected kWh] )
+		formatString: 0.0%
+		displayFolder: Production
+		lineageTag: 7fdc2909-2ef4-52a1-adce-23be2ca21050
+
+	measure 'Underperforming installations' = CALCULATE ( DISTINCTCOUNT ( fact_production_daily[installation_id] ), fact_production_daily[underperforming] = TRUE () )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: 0f6c53c1-8976-5f4c-b7de-79f109342cd7
+
+	column installation_id
+		dataType: string
+		lineageTag: ce498fe0-1c12-54dd-ae6b-6a5cd86f3b9d
+		summarizeBy: none
+		sourceColumn: installation_id
+
+	column date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 23c2c78f-b538-52e2-ad5e-d8d4c517b64f
+		summarizeBy: none
+		sourceColumn: date
+
+	column kwh
+		dataType: double
+		lineageTag: 5cb8e454-4340-53db-8845-e3089ee2bb15
+		summarizeBy: none
+		sourceColumn: kwh
+
+	column expected_kwh
+		dataType: double
+		lineageTag: 325c2245-1d4d-5898-821f-5c68072f740e
+		summarizeBy: none
+		sourceColumn: expected_kwh
+
+	column snow_on_panels
+		dataType: boolean
+		lineageTag: 8004f2d9-6363-5297-84f3-0d695b515ffc
+		summarizeBy: none
+		sourceColumn: snow_on_panels
+
+	column ratio_7d
+		dataType: double
+		lineageTag: f7b4bd2d-747e-526e-8dbd-7bf5a9ae28c1
+		summarizeBy: none
+		sourceColumn: ratio_7d
+
+	column underperforming
+		dataType: boolean
+		lineageTag: 4605a377-6e56-5a73-92dc-508215ff3bf4
+		summarizeBy: none
+		sourceColumn: underperforming
+
+	partition fact_production_daily = entity
+		mode: directLake
+		source
+			entityName: fact_production_daily
+			schemaName: dbo
+			expressionSource: DatabaseQuery

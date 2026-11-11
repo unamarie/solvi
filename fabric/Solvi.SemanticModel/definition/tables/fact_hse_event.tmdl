@@ -1,0 +1,77 @@
+table fact_hse_event
+	lineageTag: 14606743-14c8-5f7a-babc-ba57c4666de4
+
+	measure Incidents = CALCULATE ( COUNTROWS ( fact_hse_event ), fact_hse_event[event_type] = "Incident" )
+		formatString: #,0
+		displayFolder: HSE
+		lineageTag: 5f2c5d73-fe9d-50a5-89a1-a146b7afeda1
+
+	measure 'Near misses' = CALCULATE ( COUNTROWS ( fact_hse_event ), fact_hse_event[event_type] = "Near miss" )
+		formatString: #,0
+		displayFolder: HSE
+		lineageTag: 266dd0eb-f24f-5bd3-9675-dbd5d5bfe210
+
+	measure 'Good catches' = CALCULATE ( COUNTROWS ( fact_hse_event ), fact_hse_event[event_type] = "Good catch" )
+		formatString: #,0
+		displayFolder: HSE
+		lineageTag: c42a0897-22d0-5f8e-8ba9-d0b171f664bf
+
+	measure 'Events per 100 jobs' = DIVIDE ( [Incidents] + [Near misses], [Battery jobs] ) * 100
+		formatString: #,0.0
+		displayFolder: HSE
+		lineageTag: 35868556-4496-5322-8364-78cdd5a9f33f
+
+	measure 'Days since last incident' = VAR last_incident = CALCULATE ( MAX ( fact_hse_event[event_date] ), fact_hse_event[event_type] = "Incident", REMOVEFILTERS () ) RETURN IF ( NOT ISBLANK ( last_incident ), DATEDIFF ( last_incident, [As of date], DAY ) )
+		formatString: #,0
+		displayFolder: HSE
+		lineageTag: 8db85744-783f-5802-86ae-c1144761887d
+
+	column event_id
+		dataType: string
+		lineageTag: 6c9f107f-8e68-5d57-a030-6c82e36855e7
+		summarizeBy: none
+		sourceColumn: event_id
+
+	column job_id
+		dataType: string
+		lineageTag: 0bbf1006-9eb6-5a2f-9446-799056e9e547
+		summarizeBy: none
+		sourceColumn: job_id
+
+	column event_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 0a288f2b-bbd4-592a-9952-65d46320c014
+		summarizeBy: none
+		sourceColumn: event_date
+
+	column event_type
+		dataType: string
+		lineageTag: c8fb3258-7e5a-558f-b30b-cdd9c5a1e75f
+		summarizeBy: none
+		sourceColumn: event_type
+
+	column severity
+		dataType: string
+		lineageTag: 232cae1d-afb2-53b6-a91f-b54a5f1954f3
+		summarizeBy: none
+		sourceColumn: severity
+
+	column description
+		dataType: string
+		lineageTag: fcd5f9a1-b295-546d-b33d-60aa2ea72844
+		summarizeBy: none
+		sourceColumn: description
+
+	column reported_by
+		dataType: string
+		lineageTag: 4c14ad13-7519-54a4-9e2d-eb585031540d
+		summarizeBy: none
+		sourceColumn: reported_by
+
+	partition fact_hse_event = entity
+		mode: directLake
+		source
+			entityName: fact_hse_event
+			schemaName: dbo
+			expressionSource: DatabaseQuery

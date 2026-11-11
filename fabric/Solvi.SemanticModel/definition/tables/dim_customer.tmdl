@@ -1,0 +1,82 @@
+table dim_customer
+	lineageTag: 6ebbbb80-7f54-58d4-bce0-bfe68a6f5545
+
+	column site_id
+		dataType: string
+		lineageTag: 5f8f52e1-7fe0-510b-89f2-e53aad94331e
+		summarizeBy: none
+		sourceColumn: site_id
+
+	column customer_id
+		dataType: string
+		lineageTag: 5ddff3b4-b7f1-58ba-9b02-d56a7ad6dc3b
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column customer_name
+		dataType: string
+		lineageTag: ebd51008-f2ed-52f5-b6c9-cdf1fcf86055
+		summarizeBy: none
+		sourceColumn: customer_name
+
+	column segment
+		dataType: string
+		lineageTag: fde952ac-9313-5bdb-b36c-e13b60de020d
+		summarizeBy: none
+		sourceColumn: segment
+
+	column lead_source
+		dataType: string
+		lineageTag: d8ee2280-8503-55e8-8da0-cf1584e17703
+		summarizeBy: none
+		sourceColumn: lead_source
+
+	column created_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 7a5e44d5-cb05-5948-9fd3-f39a6defd001
+		summarizeBy: none
+		sourceColumn: created_date
+
+	column municipality
+		dataType: string
+		lineageTag: 39b0d692-0076-5e03-af65-3eb5ace3beed
+		summarizeBy: none
+		sourceColumn: municipality
+
+	column region
+		dataType: string
+		lineageTag: 36fae1ff-d6cf-5f7b-9a1e-6326b4279f97
+		summarizeBy: none
+		sourceColumn: region
+
+	column country
+		dataType: string
+		lineageTag: af4fa8f3-e8e0-5eac-945d-aabc9d2988cf
+		summarizeBy: none
+		sourceColumn: country
+
+	column latitude
+		dataType: double
+		lineageTag: 73d928aa-9f4d-51ac-90a4-da390e9e8752
+		summarizeBy: none
+		sourceColumn: latitude
+
+	column longitude
+		dataType: double
+		lineageTag: c8f61159-e463-5cce-8ab8-01b1142db686
+		summarizeBy: none
+		sourceColumn: longitude
+
+	column station_id
+		dataType: string
+		lineageTag: dd95cb48-c018-5fed-91b3-3348526c4a3b
+		summarizeBy: none
+		sourceColumn: station_id
+
+	partition dim_customer = entity
+		mode: directLake
+		source
+			entityName: dim_customer
+			schemaName: dbo
+			expressionSource: DatabaseQuery
