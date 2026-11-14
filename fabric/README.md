@@ -8,6 +8,8 @@ It builds:
 - one pipeline per domain, plus a nightly pipeline that runs everything
 - a reporting workspace with the Direct Lake semantic model "Solvi" (20 tables, 38 measures)
 
+**Status:** ready, but not yet run in a real Fabric tenant. The notebooks and quality gates are tested on every push; the Fabric script will be tested when the trial opens.
+
 ## 0. Account and capacity (once)
 
 Fabric needs a work account (a Gmail address won't work) and a Fabric capacity.
