@@ -57,6 +57,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--seal);outline-offse
 .facts{border-left:2px solid var(--prussian);padding-left:20px;display:flex;flex-direction:column;gap:12px;font-size:.95rem}
 .facts b{display:block;font-family:var(--pixel);font-weight:400;font-size:.95rem;color:var(--indigo)}
 .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.links+.links{margin-top:-4px}
+@media (max-width:640px),(min-width:821px) and (max-width:1060px){.links.more{max-width:360px}}
 .btn{display:inline-block;padding:11px 20px;border-radius:3px;font-family:var(--pixel);font-weight:600;text-decoration:none;font-size:1.05rem}
 .btn.primary{background:var(--prussian);color:var(--surface)}
 .btn.ghost{border:1.5px solid var(--prussian);color:var(--prussian)}
@@ -152,9 +154,12 @@ footer .big{font-family:var(--display);font-size:1.4rem;font-weight:700}
       <p class="lede">I made unadata.dev to build, test and show my ideas about data people can trust. <a href="#p2">Freya</a> and <a href="synla/index.html">Synla</a> are real: a booking system in daily use and a time tracker that keeps your data on your own computer. Solvi is fictional, since real company data can't be shown in public, but the work behind it is real: where data is captured, what each number means, and who owns it.</p>
       <div class="links">
         <a class="btn primary" href="solvi/index.html">See a working example</a>
+      </div>
+      <div class="links more">
         <a class="btn ghost" href="#architecture">Architecture</a>
         <a class="btn ghost" href="cv/index.html">CV</a>
         <a class="btn ghost" href="#approach">How I work</a>
+        <a class="btn ghost" href="play/index.html">Play Quality Gate</a>
       </div>
     </div>
     <div class="facts">
