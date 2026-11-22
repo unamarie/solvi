@@ -57,7 +57,7 @@ p{margin:0}
 @page{size:A4;margin:12mm 13mm 11mm}
 @media print{
   :root{--paper:#fff;--surface:#fff;--ink:#0a1236;--muted:#55575c;--line:#e6ded6;--prussian:#0a1236;--indigo:#006690;color-scheme:light}
-  body{font-size:9.2pt;line-height:1.38;background:#fff} .band{padding:0} .top{display:none} .doc{padding:0;max-width:none}
+  body{font-size:9pt;line-height:1.36;background:#fff} .band{padding:0} .top{display:none} .doc{padding:0;max-width:none}
   .sheet{border:0;padding:0} header.cv{padding-bottom:8pt} h1{font-size:21pt} .role{font-size:11pt} .contact{margin-top:5pt;font-size:9pt}
   h2{margin:10pt 0 3pt;font-size:11pt;break-after:avoid} .profile{font-size:9.6pt;max-width:none}
   .item{padding:4pt 0;break-inside:avoid;grid-template-columns:31mm minmax(0,1fr);gap:1pt 10pt}
@@ -87,20 +87,20 @@ p{margin:0}
     </header>
 
     <h2>Profile</h2>
-    <p class="profile">Engineer with twenty years in maritime, construction and the public sector, from the workshop floor to quality management and data architecture. I design how data is captured, connected and checked, so the business can trust its numbers. I start with the problem and the people who need the answer, and I choose the tool after that.</p>
+    <p class="profile">Engineer with twenty years in maritime, construction and the public sector, from the workshop floor to quality management and data architecture. My strength is understanding what the business needs, often from a few sentences, and turning it into something people use. I design how data is captured, connected and checked, so the business can trust its numbers. I start with the problem, choose the tool after that, and learn new tools quickly.</p>
 
     <h2>Experience</h2>
     <div class="item"><div class="when">Aug 2025 – now</div><div class="what">
       <h3>Quality Assurance and Data Analytics Manager</h3><div class="org">Jets Group · Hareid</div>
       <ul>
-        <li>Design the target architecture for data used in analysis: what is captured, where it comes from, and how it is orchestrated, checked and modelled in Microsoft Fabric</li>
-        <li>Find gaps in what the business captures, and close them with new capture points and checks at the source</li>
-        <li>Rebuilt the complete history from the legacy systems, across customers, products, suppliers and vessels, as its own data model with a Power BI report as the user interface. Finding and searching history became faster</li>
-        <li>Harmonised old and new data in shared models for product, purchase and sales history, so figures compare across systems and companies</li>
-        <li>Delivered product breakdown structures and other complex outputs that combine product, customer and supplier data</li>
-        <li>Internal apps that streamline documentation and automate reporting</li>
-        <li>CSRD/ESRS gap analysis, risk assessments and ESG reporting, with a central role in the ESG work</li>
-        <li>Responsible for quality assurance, data governance and data quality, from proposal to implementation and maintenance</li>
+        <li>Design the target architecture for data used in analysis: what is captured, where it comes from, and how it is orchestrated, checked and modelled in Microsoft Fabric. Find gaps in what the business captures, and close them at the source</li>
+        <li>Build vessel data, such as unit history and spare parts supply, from ERP, CRM, PLM, HR and document systems, through Dataverse, GraphQL and other APIs</li>
+        <li>Built a proposal-to-order system for sales and aftermarket, from a few sentences to a finished product: the pipeline by business unit, segment, customer and vessel, the value of what changes from proposal to order, follow-up per proposal, and a customer brief for meetings and fairs</li>
+        <li>Built product health models that track sales and free-of-charge replacements per component, product family, customer and vessel, so business units discuss product quality from the same numbers</li>
+        <li>Rebuilt the complete history from the legacy ERP, across customers, products, suppliers and vessels, as its own data model with a Power BI report as the user interface, and harmonised old and new data so figures compare across systems and companies</li>
+        <li>Delivered product breakdown structures and other complex outputs that combine product, customer and supplier data, and internal apps that automate reporting</li>
+        <li>Manage access with Azure, Entra ID, row-level security and sharing. Every project is in Git, documented and built to be handed over, with jobs split so none stops another</li>
+        <li>Responsible for quality assurance, data governance and data quality, from proposal to implementation and maintenance, and for CSRD/ESRS gap analysis and ESG reporting, with a central role in the ESG work</li>
       </ul></div></div>
     <div class="item"><div class="when">Jan 2021 – Aug 2025</div><div class="what">
       <h3>Quality Manager, Operations</h3><div class="org">Jets Vacuum AS · Hareid</div>
@@ -129,7 +129,7 @@ p{margin:0}
         <li><a href="https://unadata.dev/solvi/architecture/">The plan behind it</a>: current and target state, a KPI tree, new data capture, a roadmap, a business case, security and decision records.</li></ul></div></div>
     <div class="item"><div class="when">2026</div><div class="what">
       <h3>Freya Hundepensjonat · client project</h3><div class="org">freyahundepensjonat.no</div>
-      <ul><li>Booking and operations app for a dog boarding kennel, with separate interfaces for dog owners, the owner and staff. Next.js, Supabase, Vercel and automated tests.</li></ul></div></div>
+      <ul><li>Booking and operations app for a dog boarding kennel, with separate interfaces and access for dog owners, the owner and staff. Next.js, Supabase, Vercel and automated tests.</li></ul></div></div>
     <div class="item"><div class="when">2026</div><div class="what">
       <h3>Synla · open source</h3><div class="org"><a href="https://github.com/unamarie/synla">github.com/unamarie/synla</a></div>
       <ul><li>A time tracker for employees that keeps all data on their own computer. Security and privacy by design: it runs only on the user's computer, every page needs a key, and each week is sealed so later changes show.</li></ul></div></div>
@@ -147,16 +147,16 @@ p{margin:0}
 
     <h2>Skills</h2>
     <div class="skills">
-      <div><b>Data and analytics</b>Microsoft Fabric, Power BI, SQL, Python and PySpark, ETL/ELT, data modelling, data governance and data quality, complex data extracts and reporting from ERP systems</div>
-      <div><b>Architecture and systems</b>Data architecture, target states, interfaces and integrations, scalability, systems engineering, developing and implementing management systems, ERP, CRM, fleet management and quality systems, CAD, documentation, Git</div>
+      <div><b>Data and analytics</b>Microsoft Fabric, Power BI, SQL, Python and PySpark notebooks, ETL/ELT, data modelling, data governance and data quality, complex data extracts and reporting from ERP systems</div>
+      <div><b>Architecture and integration</b>Data architecture, target states, Dataverse, GraphQL and other APIs, interfaces and integrations, scalability, systems engineering, developing and implementing management systems, ERP, CRM, PLM, fleet management and quality systems, CAD, Git</div>
+      <div><b>Security and access</b>Azure and Entra ID access, row-level security, privacy by design, security headers, email authentication</div>
       <div><b>Quality, process and safety</b>Process analysis and improvement, requirements gathering, cross-functional collaboration, quality management, ISO implementation, internal audits, risk management, nonconformity handling, leading indicators, ESG and CSRD</div>
-      <div><b>Apps</b>Next.js, Supabase, Vercel, automated testing</div>
+      <div><b>Applications</b>Power Apps, React and Next.js, Supabase, Vercel, internal apps for data capture and reporting, automated tests</div>
     </div>
 
     <h2>Languages and courses</h2>
     <p>Norwegian (native), English (fluent, written and spoken). Courses in data science, Python and C programming, quality management and auditing, GDPR, ethics and contracts.</p>
 
-    <p class="foot">References available on request.</p>
   </article>
 </div>
 </div>
