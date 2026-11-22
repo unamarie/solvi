@@ -54,6 +54,7 @@ def wrap_app(app, cfg):   # builds the app straight from the template, no tempor
 
 wrap("index.html", "index.html")
 wrap("solvi.html", "solvi/index.html")
+wrap("architecture.html", "solvi/architecture/index.html")
 for app, cfg in APPS.items(): wrap_app(app, cfg)
 wrap("play.html", "play/index.html")
 wrap("cv.html", "cv/index.html")
