@@ -4,7 +4,7 @@ Status: accepted, November 2026
 
 ## Context
 
-Solvi's data sat in an ERP, a CRM, an old ERP, spreadsheets and on paper. Nobody owned it, so nobody fixed it, and the monthly report was built by hand.
+Solvi's data sits in an ERP, a CRM, an old ERP, a quality system and a field app. Each team reads it its own way, nobody owns it across teams, and the same KPI has several numbers.
 
 ## Decision
 

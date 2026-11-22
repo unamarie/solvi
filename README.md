@@ -21,7 +21,7 @@ The gold layer shows the effect. Before the rule, red jobs had about 17 events p
 
 Six domains, each with an owner, its own workspace and lakehouse, and its own quality gate. Shared data is read through OneLake shortcuts, never copied.
 
-The plan behind it, with current and target state, roadmap, business case and security, is at [unadata.dev/solvi/architecture](https://unadata.dev/solvi/architecture/). The design decisions are in [docs/decisions](docs/decisions/README.md).
+The plan behind it, with current and target state, KPI tree, roadmap, business case and security, is at [unadata.dev/solvi/architecture](https://unadata.dev/solvi/architecture/). The design decisions are in [docs/decisions](docs/decisions/README.md).
 
 ![Domains and apps](docs/domains.png)
 

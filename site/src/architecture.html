@@ -1,9 +1,9 @@
 <title>Solvi · The plan</title>
-<meta name="description" content="The plan behind Solvi, a fictional solar and battery installer: current and target state, new data capture, roadmap, business case, security and decision records.">
+<meta name="description" content="The plan behind Solvi, a fictional solar and battery installer: current and target state, KPI tree, new data capture, roadmap, business case, security and decision records.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Una Marie S. Goksøyr">
-<meta property="og:title" content="Solvi · From spreadsheets to six domains">
-<meta property="og:description" content="Current and target state, roadmap, business case, security and decisions for a fictional solar company. Fictional company, generated data, made-up figures.">
+<meta property="og:title" content="Solvi · From local definitions to shared data">
+<meta property="og:description" content="Current and target state, KPI tree, roadmap, business case, security and decisions for a fictional solar company. Fictional company, generated data, made-up figures.">
 <meta property="og:url" content="https://unadata.dev/solvi/architecture/">
 <meta property="og:image" content="https://unadata.dev/og.png">
 <meta property="og:image:width" content="1200">
@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
-/* Layout: the architect's view of Solvi - today, target, gaps, steps, money, access, decisions; one column, read top to bottom */
+/* Layout: the architect's view of Solvi - today, target, KPI tree, gaps, steps, money, access, decisions; one column, read top to bottom */
 :root{
   --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
   --prussian:#0a1236; --indigo:#006690; --wave:#97c4c2; --foam:#fbfaf6; --seal:#b23a2a; --sun2:#f85e0a; --ochre:#b8862f;
@@ -45,21 +45,30 @@ section{display:flex;flex-direction:column;gap:14px}
 .map svg{display:block;width:100%;min-width:700px;height:auto}
 .map text{font-family:var(--body);fill:var(--ink);font-size:13px}
 .map .sub{fill:var(--muted);font-size:11px}
+.map .small{font-size:12px}
 .map .head{font-family:var(--pixel);fill:var(--indigo);font-size:13px}
 .map .box{fill:var(--paper);stroke:var(--line);stroke-width:1.4}
-.map .xl{fill:var(--foam);stroke:var(--muted);stroke-width:1.4;stroke-dasharray:4 3}
-.map .gap{fill:none;stroke:var(--seal);stroke-width:1.6;stroke-dasharray:3 3}
+.map .kpi{fill:var(--surface);stroke:var(--prussian);stroke-width:1.6}
+.map .team{fill:var(--foam);stroke:var(--line);stroke-width:1.4}
+.map .sys{fill:var(--paper);stroke:var(--line);stroke-width:1.2}
 .map .new{fill:var(--surface);stroke:var(--sun2);stroke-width:2}
 .map .dom{fill:var(--foam);stroke:var(--prussian);stroke-width:1.6}
 .map .model{fill:var(--surface);stroke:var(--indigo);stroke-width:2}
 .map .app{fill:var(--surface);stroke:var(--sun2);stroke-width:1.6}
 .map .gate{fill:var(--seal)}
-.map .hand{stroke:var(--muted);stroke-width:1.3;fill:none;stroke-dasharray:4 4}
+.map .ask{stroke:var(--seal);stroke-width:1.4;fill:none;stroke-dasharray:4 4}
+.map .uses{stroke:var(--muted);stroke-width:1.1;fill:none;opacity:.75}
+.map .qdot{fill:var(--seal)}
+.map .qmark{fill:#ffffff;font-weight:700;font-size:12px}
 .map .in{stroke:var(--wave);stroke-width:1.6;fill:none}
 .map .innew{stroke:var(--sun2);stroke-width:1.8;fill:none}
 .map .pub{stroke:var(--indigo);stroke-width:1.6;fill:none}
 .map .feed{stroke:var(--sun2);stroke-width:1.8;fill:none}
-.map .warn{fill:var(--seal)}
+.three{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--seal);padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.threegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 24px}
+.threegrid div{display:flex;flex-direction:column;gap:1px}
+.threegrid .big{font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.threegrid .def{color:var(--muted);font-size:.9rem}
 .problems{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 28px;max-width:none}
 .problems li{position:relative;padding-left:20px;margin:0}
 .problems li::before{content:"";position:absolute;left:2px;top:.5em;width:9px;height:9px;background:var(--seal);transform:rotate(45deg)}
@@ -70,6 +79,12 @@ td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr.sum td{font-weight:700;border-top:2px solid var(--prussian)}
 tr.group td{font-family:var(--pixel);color:var(--indigo);border-bottom:0;padding-top:14px}
+.tree th:nth-child(1){width:20%}.tree th:nth-child(2){width:34%}
+.tree td b{display:block}
+.tree ul{list-style:none;padding:0;margin:0}
+.tree li{margin:0 0 3px}
+.own{font-family:var(--pixel);font-size:.8rem;color:var(--indigo);white-space:nowrap;margin-left:6px}
+.tree td>.own{display:block;margin:2px 0 0}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .step{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--prussian);padding:18px;display:flex;flex-direction:column;gap:10px}
 .step .when{font-family:var(--pixel);color:var(--indigo)}
@@ -89,14 +104,14 @@ tr.group td{font-family:var(--pixel);color:var(--indigo);border-bottom:0;padding
 .status{font-family:var(--pixel);font-size:.85rem;border:1px solid var(--indigo);color:var(--indigo);padding:1px 7px;border-radius:2px}
 .status.proposed{border-color:var(--ochre);color:var(--ochre)}
 footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;color:var(--muted)}
-@media (max-width:860px){.steps,.cols,.problems{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.steps,.cols,.problems,.threegrid{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <header class="band">
   <div class="wrap">
     <a href="../index.html">← Solvi</a>
     <span class="label">Architecture</span>
-    <h1>From spreadsheets to six domains</h1>
+    <h1>From local definitions to shared data</h1>
     <p>The plan behind Solvi: where the company starts, where it is going, in what order, what it costs and saves, who sees what, and why it is built this way.</p>
     <span class="fict">Fictional company · generated data · made-up figures</span>
   </div>
@@ -107,56 +122,87 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
 
 <section aria-labelledby="today-h">
   <span class="label">Today</span>
-  <h2 id="today-h">Six sources, joined by hand</h2>
-  <div class="map" role="img" aria-label="Current state: six sources copied into Excel by hand every month, feeding a monthly report and an office board. The risk factors on each job are not captured anywhere.">
-    <svg viewBox="0 0 900 304" xmlns="http://www.w3.org/2000/svg">
-<text x="20" y="18" class="head">Where data sits</text><text x="360" y="18" class="head">How it is joined</text><text x="690" y="18" class="head">What people see</text>
-<path class="hand" d="M220 52 C290 52, 290 150, 360 150"/>
-<path class="hand" d="M220 96 C290 96, 290 150, 360 150"/>
-<path class="hand" d="M220 140 C290 140, 290 150, 360 150"/>
-<path class="hand" d="M220 184 C290 184, 290 150, 360 150"/>
-<path class="hand" d="M220 228 C290 228, 290 150, 360 150"/>
-<path class="hand" d="M220 272 C290 272, 290 150, 360 150"/>
-<path class="hand" d="M550 150 C620 150, 620 122, 690 122"/>
-<path class="hand" d="M550 150 C620 150, 620 182, 690 182"/>
-<rect x="20" y="34" width="200" height="36" rx="4" class="box"/><text x="32" y="49" font-weight="700">ERP</text><text x="32" y="63" class="sub">orders, invoices</text>
-<rect x="20" y="78" width="200" height="36" rx="4" class="box"/><text x="32" y="93" font-weight="700">CRM</text><text x="32" y="107" class="sub">leads, proposals</text>
-<rect x="20" y="122" width="200" height="36" rx="4" class="box"/><text x="32" y="137" font-weight="700">Old ERP</text><text x="32" y="151" class="sub">customer history, read only</text>
-<rect x="20" y="166" width="200" height="36" rx="4" class="box"/><text x="32" y="181" font-weight="700">Spreadsheets</text><text x="32" y="195" class="sub">suppliers, crews, risk log</text>
-<rect x="20" y="210" width="200" height="36" rx="4" class="box"/><text x="32" y="225" font-weight="700">Paper and photos</text><text x="32" y="239" class="sub">goods receipt, checklists</text>
-<rect x="20" y="254" width="200" height="36" rx="4" class="box"/><text x="32" y="269" font-weight="700">Inverter portal</text><text x="32" y="283" class="sub">production per installation</text>
-<rect x="360" y="124" width="190" height="52" rx="4" class="xl"/><text x="455" y="147" text-anchor="middle" font-weight="700">Excel, by hand</text><text x="455" y="164" text-anchor="middle" class="sub">copied every month</text>
-<rect x="360" y="232" width="190" height="52" rx="4" class="gap"/><text x="455" y="255" text-anchor="middle" font-weight="700">Risk factors on the job</text><text x="455" y="272" text-anchor="middle" class="sub">not captured anywhere</text>
-<rect x="690" y="100" width="190" height="44" rx="4" class="box"/><text x="702" y="118" font-weight="700">Monthly report</text><text x="702" y="134" class="sub">differs by who built it</text>
-<rect x="690" y="160" width="190" height="44" rx="4" class="box"/><text x="702" y="178" font-weight="700">Office board</text><text x="702" y="194" class="sub">days without incident</text>
+  <h2 id="today-h">Shared KPIs, local definitions</h2>
+  <p>Solvi has the usual systems and a few KPIs everyone knows. But sellers, purchasers and product owners each read the data their own way, and nobody has agreed how the KPIs break down to the work that moves them.</p>
+  <div class="map" role="img" aria-label="Current state: four company KPIs at the top. Dashed lines marked with question marks lead to sellers, purchasers, product owners and quality, who each read the KPIs their own way. Below them are the seven systems and lists they use.">
+    <svg viewBox="0 0 960 316" xmlns="http://www.w3.org/2000/svg">
+<text x="16" y="47" class="head">Company KPIs</text><text x="16" y="152" class="head">Teams</text><text x="16" y="261" class="head">Systems</text>
+<path class="ask" d="M242 60 L242 124"/>
+<path class="ask" d="M242 60 C242 92, 445 92, 445 124"/>
+<path class="ask" d="M445 60 C445 92, 242 92, 242 124"/>
+<path class="ask" d="M445 60 L445 124"/>
+<path class="ask" d="M648 60 C648 92, 445 92, 445 124"/>
+<path class="ask" d="M648 60 L648 124"/>
+<path class="ask" d="M648 60 C648 92, 851 92, 851 124"/>
+<path class="ask" d="M851 60 L851 124"/>
+<path class="uses" d="M242 170 C242 203, 204 203, 204 236"/>
+<path class="uses" d="M242 170 C242 203, 318 203, 318 236"/>
+<path class="uses" d="M242 170 C242 203, 432 203, 432 236"/>
+<path class="uses" d="M242 170 C242 203, 546 203, 546 236"/>
+<path class="uses" d="M445 170 C445 203, 318 203, 318 236"/>
+<path class="uses" d="M445 170 C445 203, 432 203, 432 236"/>
+<path class="uses" d="M648 170 C648 203, 660 203, 660 236"/>
+<path class="uses" d="M648 170 C648 203, 774 203, 774 236"/>
+<path class="uses" d="M648 170 C648 203, 888 203, 888 236"/>
+<path class="uses" d="M851 170 C851 203, 660 203, 660 236"/>
+<path class="uses" d="M851 170 C851 203, 774 203, 774 236"/>
+<rect x="150" y="24" width="184" height="36" rx="4" class="kpi"/><text x="242" y="47" text-anchor="middle" font-weight="700">Gross margin</text>
+<rect x="353" y="24" width="184" height="36" rx="4" class="kpi"/><text x="445" y="47" text-anchor="middle" font-weight="700">On-time delivery</text>
+<rect x="556" y="24" width="184" height="36" rx="4" class="kpi"/><text x="648" y="47" text-anchor="middle" font-weight="700">Deviations</text>
+<rect x="759" y="24" width="184" height="36" rx="4" class="kpi"/><text x="851" y="47" text-anchor="middle" font-weight="700">Days without incident</text>
+<circle cx="242" cy="80" r="8" class="qdot"/><text x="242" y="84" text-anchor="middle" class="qmark">?</text>
+<circle cx="445" cy="80" r="8" class="qdot"/><text x="445" y="84" text-anchor="middle" class="qmark">?</text>
+<circle cx="648" cy="80" r="8" class="qdot"/><text x="648" y="84" text-anchor="middle" class="qmark">?</text>
+<circle cx="851" cy="80" r="8" class="qdot"/><text x="851" y="84" text-anchor="middle" class="qmark">?</text>
+<rect x="150" y="124" width="184" height="46" rx="4" class="team"/><text x="162" y="143" font-weight="700">Sellers</text><text x="162" y="160" class="sub">on time: the promised week</text>
+<rect x="353" y="124" width="184" height="46" rx="4" class="team"/><text x="365" y="143" font-weight="700">Purchasers</text><text x="365" y="160" class="sub">on time: the confirmed date</text>
+<rect x="556" y="124" width="184" height="46" rx="4" class="team"/><text x="568" y="143" font-weight="700">Product owners</text><text x="568" y="160" class="sub">own fault codes per product</text>
+<rect x="759" y="124" width="184" height="46" rx="4" class="team"/><text x="771" y="143" font-weight="700">Quality</text><text x="771" y="160" class="sub">some cases registered</text>
+<rect x="150" y="236" width="108" height="40" rx="4" class="sys"/><text x="158" y="253" class="small">CRM</text><text x="158" y="268" class="sub">proposals</text>
+<rect x="264" y="236" width="108" height="40" rx="4" class="sys"/><text x="272" y="253" class="small">Own lists</text><text x="272" y="268" class="sub">per person</text>
+<rect x="378" y="236" width="108" height="40" rx="4" class="sys"/><text x="386" y="253" class="small">ERP</text><text x="386" y="268" class="sub">orders, goods</text>
+<rect x="492" y="236" width="108" height="40" rx="4" class="sys"/><text x="500" y="253" class="small">Old ERP</text><text x="500" y="268" class="sub">history</text>
+<rect x="606" y="236" width="108" height="40" rx="4" class="sys"/><text x="614" y="253" class="small">Quality system</text><text x="614" y="268" class="sub">cases</text>
+<rect x="720" y="236" width="108" height="40" rx="4" class="sys"/><text x="728" y="253" class="small">Field app</text><text x="728" y="268" class="sub">free text</text>
+<rect x="834" y="236" width="108" height="40" rx="4" class="sys"/><text x="842" y="253" class="small">Inverters</text><text x="842" y="268" class="sub">production portal</text>
+<circle cx="158" cy="300" r="8" class="qdot"/><text x="158" y="304" text-anchor="middle" class="qmark">?</text><text x="174" y="304" class="sub">no agreed drill-down: each team links the KPI to its own numbers</text>
 </svg>
   </div>
+  <div class="three" aria-labelledby="three-h">
+    <span class="label" id="three-h">One KPI, three answers</span>
+    <p>On-time delivery last quarter, as each team reports it.</p>
+    <div class="threegrid">
+      <div><span class="big">91 %</span><b>Sales</b><span class="def">by the week promised to the customer</span></div>
+      <div><span class="big">84 %</span><b>Purchasing</b><span class="def">by the date the supplier confirmed</span></div>
+      <div><span class="big">77 %</span><b>Project planning</b><span class="def">by the first planned start</span></div>
+    </div>
+  </div>
   <ul class="problems">
-    <li>The same customer is typed into three systems.</li>
-    <li>Eight risk factors on one battery job were never captured.</li>
-    <li>The monthly report takes days, and the numbers differ by who built it.</li>
-    <li>Nobody owns the data, so nobody fixes it.</li>
+    <li>Everyone knows the KPIs, but nobody can say which jobs, suppliers or sellers move them.</li>
+    <li>The same KPI has several numbers, depending on who made the report.</li>
+    <li>Some cases are registered in the quality system, but not linked to the job, supplier or installation they concern.</li>
+    <li>Checklists from the field are free text, so they can't be counted.</li>
     <li>Customer history is locked in the old ERP.</li>
-    <li>The board counts days without incident, which says nothing about tomorrow.</li>
+    <li>The safety KPI is days without incident, which says nothing about tomorrow.</li>
   </ul>
 </section>
 
 <section aria-labelledby="target-h">
   <span class="label">Target</span>
   <h2 id="target-h">Captured at the source, checked by its owner</h2>
-  <p>New capture points close the gaps. Each domain checks its own data before it publishes, and one shared model feeds every app. A nightly pipeline runs the domains in order, core first and HSEQ last. The <a href="../index.html#map-h">domain map</a> shows how the domains share data with each other.</p>
-  <div class="map" role="img" aria-label="Target state: nine sources, two of them new capture points, feed six domains. Each domain has an owner and a quality gate. All six publish to one shared model, which feeds three apps.">
+  <p>New fields in the systems people already use close the gaps. Each domain checks its own data before it publishes, and one shared model holds every KPI and its drill-down. A nightly pipeline runs the domains in order, core first and HSEQ last. The <a href="../index.html#map-h">domain map</a> shows how the domains share data with each other.</p>
+  <div class="map" role="img" aria-label="Target state: nine sources, two of them with new fields, feed six domains. Each domain has an owner and a quality gate. All six publish to one shared model, which feeds three apps.">
     <svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg">
 <text x="20" y="18" class="head">Where data starts</text><text x="300" y="18" class="head">Domain and owner</text><text x="560" y="18" class="head">Shared model</text><text x="740" y="18" class="head">Apps</text>
-<path class="in" d="M220 49 C260 49, 260 92, 300 92"/>
-<path class="in" d="M220 93 C260 93, 260 92, 300 92"/>
-<path class="in" d="M220 137 C260 137, 260 92, 300 92"/>
-<path class="in" d="M220 181 C260 181, 260 202, 300 202"/>
-<path class="innew" d="M220 225 C260 225, 260 202, 300 202"/>
-<path class="innew" d="M220 269 C260 269, 260 268, 300 268"/>
-<path class="in" d="M220 313 C260 313, 260 312, 300 312"/>
-<path class="in" d="M220 357 C260 357, 260 356, 300 356"/>
-<path class="in" d="M220 401 C260 401, 260 400, 300 400"/>
+<path class="in" d="M244 49 C272 49, 272 92, 300 92"/>
+<path class="in" d="M244 93 C272 93, 272 92, 300 92"/>
+<path class="in" d="M244 137 C272 137, 272 92, 300 92"/>
+<path class="in" d="M244 181 C272 181, 272 202, 300 202"/>
+<path class="innew" d="M244 225 C272 225, 272 202, 300 202"/>
+<path class="innew" d="M244 269 C272 269, 272 268, 300 268"/>
+<path class="in" d="M244 313 C272 313, 272 312, 300 312"/>
+<path class="in" d="M244 357 C272 357, 272 356, 300 356"/>
+<path class="in" d="M244 401 C272 401, 272 400, 300 400"/>
 <path class="pub" d="M470 92 C515 92, 515 244, 560 244"/>
 <path class="pub" d="M470 202 C515 202, 515 244, 560 244"/>
 <path class="pub" d="M470 268 C515 268, 515 244, 560 244"/>
@@ -166,46 +212,62 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
 <path class="feed" d="M700 244 C720 244, 720 120, 740 120"/>
 <path class="feed" d="M700 244 C720 244, 720 244, 740 244"/>
 <path class="feed" d="M700 244 C720 244, 720 368, 740 368"/>
-<rect x="20" y="32" width="200" height="34" rx="4" class="box"/><text x="32" y="46" font-weight="700">ERP</text><text x="32" y="60" class="sub">orders, invoices</text>
-<rect x="20" y="76" width="200" height="34" rx="4" class="box"/><text x="32" y="90" font-weight="700">CRM</text><text x="32" y="104" class="sub">leads, proposals</text>
-<rect x="20" y="120" width="200" height="34" rx="4" class="box"/><text x="32" y="134" font-weight="700">Old ERP</text><text x="32" y="148" class="sub">archive, read only</text>
-<rect x="20" y="164" width="200" height="34" rx="4" class="box"/><text x="32" y="178" font-weight="700">Supplier register</text><text x="32" y="192" class="sub">prequalification dates</text>
-<rect x="20" y="208" width="200" height="34" rx="4" class="new"/><text x="32" y="222" font-weight="700">Goods receipt check</text><text x="32" y="236" class="sub">damage, shock, inspection</text>
-<rect x="20" y="252" width="200" height="34" rx="4" class="new"/><text x="32" y="266" font-weight="700">Job checklist</text><text x="32" y="280" class="sub">temperature, safe job analysis</text>
-<rect x="20" y="296" width="200" height="34" rx="4" class="box"/><text x="32" y="310" font-weight="700">Event reports</text><text x="32" y="324" class="sub">near misses, incidents</text>
-<rect x="20" y="340" width="200" height="34" rx="4" class="box"/><text x="32" y="354" font-weight="700">Inverter portal</text><text x="32" y="368" class="sub">production per installation</text>
-<rect x="20" y="384" width="200" height="34" rx="4" class="box"/><text x="32" y="398" font-weight="700">Weather service</text><text x="32" y="412" class="sub">history and forecasts</text>
+<rect x="20" y="32" width="224" height="34" rx="4" class="box"/><text x="32" y="46" font-weight="700">ERP</text><text x="32" y="60" class="sub">orders, invoices</text>
+<rect x="20" y="76" width="224" height="34" rx="4" class="box"/><text x="32" y="90" font-weight="700">CRM</text><text x="32" y="104" class="sub">leads, proposals</text>
+<rect x="20" y="120" width="224" height="34" rx="4" class="box"/><text x="32" y="134" font-weight="700">Old ERP</text><text x="32" y="148" class="sub">archive, read only</text>
+<rect x="20" y="164" width="224" height="34" rx="4" class="box"/><text x="32" y="178" font-weight="700">Supplier register</text><text x="32" y="192" class="sub">prequalification dates</text>
+<rect x="20" y="208" width="224" height="34" rx="4" class="new"/><text x="32" y="222" font-weight="700">Goods receipt in ERP</text><text x="32" y="236" class="sub">new: damage, shock, inspection</text>
+<rect x="20" y="252" width="224" height="34" rx="4" class="new"/><text x="32" y="266" font-weight="700">Field app checklist</text><text x="32" y="280" class="sub">new: temperature, safe job analysis</text>
+<rect x="20" y="296" width="224" height="34" rx="4" class="box"/><text x="32" y="310" font-weight="700">Quality system</text><text x="32" y="324" class="sub">cases, deviations, events</text>
+<rect x="20" y="340" width="224" height="34" rx="4" class="box"/><text x="32" y="354" font-weight="700">Inverter portal</text><text x="32" y="368" class="sub">production per installation</text>
+<rect x="20" y="384" width="224" height="34" rx="4" class="box"/><text x="32" y="398" font-weight="700">Weather service</text><text x="32" y="412" class="sub">history and forecasts</text>
 <rect x="300" y="74" width="170" height="36" rx="4" class="dom"/><text x="312" y="89" font-weight="700">Sales</text><text x="312" y="103" class="sub">sales lead</text><rect x="458" y="80" width="5" height="24" class="gate"/>
 <rect x="300" y="184" width="170" height="36" rx="4" class="dom"/><text x="312" y="199" font-weight="700">Supply</text><text x="312" y="213" class="sub">purchasing</text><rect x="458" y="190" width="5" height="24" class="gate"/>
 <rect x="300" y="250" width="170" height="36" rx="4" class="dom"/><text x="312" y="265" font-weight="700">Delivery</text><text x="312" y="279" class="sub">project planning</text><rect x="458" y="256" width="5" height="24" class="gate"/>
 <rect x="300" y="294" width="170" height="36" rx="4" class="dom"/><text x="312" y="309" font-weight="700">HSEQ</text><text x="312" y="323" class="sub">quality and HSE</text><rect x="458" y="300" width="5" height="24" class="gate"/>
 <rect x="300" y="338" width="170" height="36" rx="4" class="dom"/><text x="312" y="353" font-weight="700">Assets</text><text x="312" y="367" class="sub">service manager</text><rect x="458" y="344" width="5" height="24" class="gate"/>
 <rect x="300" y="382" width="170" height="36" rx="4" class="dom"/><text x="312" y="397" font-weight="700">Core</text><text x="312" y="411" class="sub">data platform</text><rect x="458" y="388" width="5" height="24" class="gate"/>
-<rect x="560" y="212" width="140" height="64" rx="4" class="model"/><text x="630" y="236" text-anchor="middle" font-weight="700">Solvi model</text><text x="630" y="252" text-anchor="middle" class="sub">Direct Lake,</text><text x="630" y="266" text-anchor="middle" class="sub">one set of measures</text>
+<rect x="560" y="212" width="140" height="64" rx="4" class="model"/><text x="630" y="236" text-anchor="middle" font-weight="700">Solvi model</text><text x="630" y="252" text-anchor="middle" class="sub">Direct Lake,</text><text x="630" y="266" text-anchor="middle" class="sub">KPIs and drill-down</text>
 <rect x="740" y="100" width="150" height="40" rx="4" class="app"/><text x="815" y="125" text-anchor="middle">Sales</text>
 <rect x="740" y="224" width="150" height="40" rx="4" class="app"/><text x="815" y="249" text-anchor="middle">Safety and quality</text>
 <rect x="740" y="348" width="150" height="40" rx="4" class="app"/><text x="815" y="373" text-anchor="middle">Service</text>
-<rect x="20" y="444" width="22" height="14" rx="2" class="new"/><text x="50" y="456" class="sub">new capture point</text>
-<rect x="190" y="442" width="5" height="18" class="gate"/><text x="203" y="456" class="sub">quality gate: nothing is published until the checks pass</text>
+<rect x="20" y="444" width="22" height="14" rx="2" class="new"/><text x="50" y="456" class="sub">new fields in a system people already use</text>
+<rect x="330" y="442" width="5" height="18" class="gate"/><text x="343" y="456" class="sub">quality gate: nothing is published until the checks pass</text>
 </svg>
   </div>
+</section>
+
+<section aria-labelledby="kpi-h">
+  <span class="label">KPI tree</span>
+  <h2 id="kpi-h">Every company KPI drills down to an owner</h2>
+  <p>Each KPI gets one definition, owned by one domain and written once in the shared model. It breaks down into measures the people doing the work can move, and every number opens down to the jobs behind it.</p>
+  <div class="tablewrap"><table class="tree">
+    <thead><tr><th scope="col">Company KPI</th><th scope="col">One definition</th><th scope="col">Drills down to</th></tr></thead>
+    <tbody>
+      <tr><td><b>On-time delivery</b><span class="own">Delivery</span></td><td>Installation finished in the week promised to the customer</td><td><ul><li>Supplier deliveries on the confirmed date<span class="own">Supply</span></li><li>Jobs started on the planned day<span class="own">Delivery</span></li><li>Changes after signing<span class="own">Sales</span></li></ul></td></tr>
+      <tr><td><b>Gross margin</b><span class="own">Sales</span></td><td>Invoiced minus actual cost, per job, when the job is closed</td><td><ul><li>Margin at signing<span class="own">Sales</span></li><li>Extra hours on the job<span class="own">Delivery</span></li><li>Purchase price against the proposal<span class="own">Supply</span></li></ul></td></tr>
+      <tr><td><b>Deviations</b><span class="own">HSEQ</span></td><td>A case in the quality system, linked to a job, a supplier or an installation</td><td><ul><li>Cases per supplier<span class="own">Supply</span></li><li>Cases per crew<span class="own">Delivery</span></li><li>Cases per product<span class="own">Assets</span></li></ul></td></tr>
+      <tr><td><b>Safe battery jobs</b><span class="own">HSEQ</span></td><td>Share of red and yellow jobs with an action before work starts</td><td><ul><li>Damaged deliveries inspected<span class="own">Supply</span></li><li>Safe job analysis done<span class="own">Delivery</span></li><li>Cold batteries acclimatised<span class="own">Delivery</span></li></ul></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Days without incident stays on the board, labelled as a lagging number.</p>
 </section>
 
 <section aria-labelledby="gaps-h">
   <span class="label">New data capture</span>
   <h2 id="gaps-h">Eight risk factors, eight places to catch them</h2>
-  <p>None of the eight factors on the March job was tracked. Each one now has a place where it is captured, an owner, and a check where it is entered.</p>
+  <p>Some of the eight factors on the March job were registered as cases in the quality system, but none were linked to the job, so nobody saw them together before work started. Each one now has a place where it is captured, an owner, and a check where it is entered.</p>
   <div class="tablewrap"><table>
     <thead><tr><th scope="col">Risk factor</th><th scope="col">Captured in</th><th scope="col">Owner</th><th scope="col">Check</th></tr></thead>
     <tbody>
-      <tr><td>Damage signs on delivery, battery not inspected</td><td>Goods receipt check, with photo</td><td>Supply</td><td>Damage ticked means the battery is inspected before storage</td></tr>
-      <tr><td>Packaging damaged on delivery</td><td>Goods receipt check</td><td>Supply</td><td>A photo is required</td></tr>
-      <tr><td>Shock indicator tripped in transport</td><td>Goods receipt check</td><td>Supply</td><td>Must be answered before the receipt closes</td></tr>
-      <tr><td>Not inspected at goods receipt</td><td>Goods receipt check</td><td>Supply</td><td>The gate flags receipts with no inspection</td></tr>
+      <tr><td>Damage signs on delivery, battery not inspected</td><td>Goods receipt in ERP: new damage field, with photo</td><td>Supply</td><td>Damage ticked means the battery is inspected before storage</td></tr>
+      <tr><td>Packaging damaged on delivery</td><td>Goods receipt in ERP</td><td>Supply</td><td>A photo is required</td></tr>
+      <tr><td>Shock indicator tripped in transport</td><td>Goods receipt in ERP</td><td>Supply</td><td>Must be answered before the receipt closes</td></tr>
+      <tr><td>Not inspected at goods receipt</td><td>Goods receipt in ERP</td><td>Supply</td><td>The gate flags receipts with no inspection</td></tr>
       <tr><td>Subcontractor safety prequalification expired</td><td>Supplier register, with valid dates</td><td>Supply</td><td>The gate compares the job date with the valid dates</td></tr>
-      <tr><td>Battery below 5 °C and not acclimatised</td><td>Job checklist: battery temperature at start</td><td>Delivery</td><td>A value between −30 and 60 °C</td></tr>
+      <tr><td>Battery below 5 °C and not acclimatised</td><td>Field app checklist: battery temperature at start</td><td>Delivery</td><td>A value between −30 and 60 °C</td></tr>
       <tr><td>Installed in a garage with combustibles nearby</td><td>Job record: where the battery goes</td><td>Delivery</td><td>Required for every battery job</td></tr>
-      <tr><td>No safe job analysis before start</td><td>Job checklist</td><td>Delivery</td><td>The job can't start without it</td></tr>
+      <tr><td>No safe job analysis before start</td><td>Field app checklist</td><td>Delivery</td><td>The job can't start without it</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -213,14 +275,14 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
 <section aria-labelledby="road-h">
   <span class="label">Roadmap</span>
   <h2 id="road-h">Three steps, each useful on its own</h2>
-  <p>Step 1 cuts a thin slice through four domains to fix the most urgent problem first. Each step switches something old off, and ends with a decision on whether to go on.</p>
+  <p>Step 1 cuts a thin slice through four domains to fix the most urgent problem first. Each step retires something old, and ends with a decision on whether to go on.</p>
   <div class="steps">
     <article class="step">
       <span class="when">Step 1 · months 1 to 3</span>
       <h3>Make battery jobs safe</h3>
       <dl>
-        <dt>Build</dt><dd>Core and HSEQ, plus the battery parts of supply and delivery: the goods receipt check and the job checklist. A risk score before every battery job, in the Safety and quality app.</dd>
-        <dt>Switch off</dt><dd>The risk log spreadsheet and the days without incident board.</dd>
+        <dt>Build</dt><dd>Core and HSEQ, plus the battery parts of supply and delivery: new fields in goods receipt and in the field app checklist. A risk score before every battery job, in the Safety and quality app.</dd>
+        <dt>Retire</dt><dd>Days without incident as the safety KPI.</dd>
         <dt>Go on when</dt><dd class="go">9 of 10 battery jobs have a score before work starts.</dd>
       </dl>
     </article>
@@ -228,8 +290,8 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <span class="when">Step 2 · months 4 to 8</span>
       <h3>One version of the work</h3>
       <dl>
-        <dt>Build</dt><dd>The rest of supply and delivery, and assets, each with a named owner. Shortcuts instead of copies. The Service app: production against what the weather allowed.</dd>
-        <dt>Switch off</dt><dd>Supplier and crew spreadsheets, and production checks by hand.</dd>
+        <dt>Build</dt><dd>The rest of supply and delivery, and assets, each with a named owner. One definition of on-time delivery and of a fault. The Service app: production against what the weather allowed.</dd>
+        <dt>Retire</dt><dd>Purchasers' own supplier lists, and each team's own version of on-time delivery.</dd>
         <dt>Go on when</dt><dd class="go">Owners fix their own gate stops within two working days.</dd>
       </dl>
     </article>
@@ -237,9 +299,9 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <span class="when">Step 3 · months 9 to 14</span>
       <h3>One customer history</h3>
       <dl>
-        <dt>Build</dt><dd>Sales with the old ERP archive. Proposals, follow-up and one search across old and new, in the Sales app.</dd>
-        <dt>Switch off</dt><dd>Monthly reports built by hand.</dd>
-        <dt>Done when</dt><dd class="go">The monthly report builds itself, and sales and finance agree on the numbers.</dd>
+        <dt>Build</dt><dd>Sales with the old ERP archive. Proposals, follow-up and one search across old and new, in the Sales app. Margin drills down from company to job.</dd>
+        <dt>Retire</dt><dd>Reconciling numbers before management meetings.</dd>
+        <dt>Done when</dt><dd class="go">Sales, purchasing and finance show the same margin and on-time numbers, and each KPI opens down to the jobs behind it.</dd>
       </dl>
     </article>
   </div>
@@ -258,7 +320,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <tr><td>Owners' time: six owners, two hours a week each</td><td class="n">0.4</td><td class="n">0.4</td><td class="n">0.4</td></tr>
       <tr class="sum"><td>Total cost</td><td class="n">2.3</td><td class="n">1.3</td><td class="n">1.0</td></tr>
       <tr class="group"><td colspan="4">Savings</td></tr>
-      <tr><td>Monthly reports no longer built by hand, 40 hours a month</td><td class="n">0.1</td><td class="n">0.4</td><td class="n">0.4</td></tr>
+      <tr><td>Less time reconciling numbers before meetings, 40 hours a month</td><td class="n">0.1</td><td class="n">0.4</td><td class="n">0.4</td></tr>
       <tr><td>Fewer emergency service visits, faults found before the customer calls</td><td class="n">0.0</td><td class="n">0.4</td><td class="n">0.6</td></tr>
       <tr><td>Fewer credit notes, changes after signing reach delivery</td><td class="n">0.0</td><td class="n">0.0</td><td class="n">0.4</td></tr>
       <tr><td>Serious battery incidents avoided, expected value</td><td class="n">0.6</td><td class="n">1.2</td><td class="n">1.2</td></tr>
@@ -275,6 +337,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <h3>What has to be true</h3>
       <ul>
         <li>Serious battery incidents fall from about one a year to one every three years, at NOK 1.8 million each.</li>
+        <li>Teams accept one definition per company KPI.</li>
         <li>Crews use the checklist on every battery job.</li>
         <li>Owners spend about two hours a week on their domain.</li>
       </ul>
@@ -334,6 +397,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <li><span class="no">6</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0006-one-direct-lake-model.md">One Direct Lake model over the gold tables</a><span class="status">Accepted</span></li>
     <li><span class="no">7</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0007-row-rules-in-the-model.md">Row-level rules in the semantic model</a><span class="status proposed">Proposed</span></li>
     <li><span class="no">8</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0008-roles-not-names.md">A role, not a name, in HSE events</a><span class="status">Accepted</span></li>
+    <li><span class="no">9</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0009-one-definition-per-kpi.md">One definition per company KPI, with a drill-down</a><span class="status proposed">Proposed</span></li>
   </ul>
 </section>
 
