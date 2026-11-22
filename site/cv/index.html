@@ -54,6 +54,7 @@ p{margin:0}
 .what .org{color:var(--muted);font-size:.95rem}
 .what ul{margin:6px 0 0;padding-left:18px}
 .what li{margin:2px 0}
+.what a{color:var(--indigo)}
 .skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 28px}
 .skills b{display:block}
 .small{font-size:.92rem;color:var(--muted)}
@@ -68,7 +69,7 @@ p{margin:0}
   .item{padding:4pt 0;break-inside:avoid;grid-template-columns:27mm minmax(0,1fr);gap:1pt 10pt}
   .what h3{font-size:9.8pt} .what .org,.when,.small{font-size:8.6pt} .what ul{margin-top:2pt} .what li{margin:0}
   .skills{gap:5pt 16pt} .foot{margin-top:8pt}
-  .contact a{text-decoration:none}
+  .contact a{text-decoration:none} .what a{color:var(--ink)}
 }
 </style>
 </head>
@@ -129,9 +130,9 @@ p{margin:0}
 
     <h2>Selected projects</h2>
     <div class="item"><div class="when">2026</div><div class="what">
-      <h3>Solvi · portfolio project</h3><div class="org">unadata.dev/solvi · fictional company, generated data</div>
+      <h3>Solvi · portfolio project</h3><div class="org"><a href="https://unadata.dev/solvi/">unadata.dev/solvi</a> · fictional company, generated data</div>
       <ul><li>A data platform for a fictional solar and battery installer, split into six domains with owners and quality gates. Includes a battery risk model built on leading indicators, compliance tracking, and apps for safety, service and sales.</li>
-        <li>The plan behind it: current and target state, a KPI tree, new data capture, a roadmap, a business case, security and decision records.</li></ul></div></div>
+        <li><a href="https://unadata.dev/solvi/architecture/">The plan behind it</a>: current and target state, a KPI tree, new data capture, a roadmap, a business case, security and decision records.</li></ul></div></div>
     <div class="item"><div class="when">2026</div><div class="what">
       <h3>Freya Hundepensjonat · client project</h3><div class="org">freyahundepensjonat.no</div>
       <ul><li>Booking and operations app for a dog boarding kennel, with separate interfaces for dog owners, the owner and staff. Next.js, Supabase, Vercel and automated tests.</li></ul></div></div>

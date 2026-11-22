@@ -46,7 +46,11 @@ header{background:var(--sky);padding-block:22px 30px}
 header .wrap{display:flex;flex-direction:column;gap:10px}
 .fict{font-family:var(--pixel);font-size:.9rem;color:var(--seal);border:1px solid var(--seal);padding:3px 8px;border-radius:2px;align-self:flex-start}
 main .wrap{padding-block:32px 56px;display:flex;flex-direction:column;gap:52px}
-section{display:flex;flex-direction:column;gap:14px}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:64px}
+.toc{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.toc .wrap{display:flex;gap:4px 22px;overflow-x:auto;padding-block:11px;scrollbar-width:none}
+.toc a{font-family:var(--pixel);font-size:.95rem;white-space:nowrap;text-decoration:none;color:var(--indigo)}
+.toc a:hover{text-decoration:underline}
 .map{background:var(--surface);border:1px solid var(--line);padding:16px;overflow-x:auto}
 .map svg{display:block;width:100%;min-width:700px;height:auto}
 .map text{font-family:var(--body);fill:var(--ink);font-size:13px}
@@ -110,7 +114,7 @@ tr.group td{font-family:var(--pixel);color:var(--indigo);border-bottom:0;padding
 .status{font-family:var(--pixel);font-size:.85rem;border:1px solid var(--indigo);color:var(--indigo);padding:1px 7px;border-radius:2px}
 .status.proposed{border-color:var(--ochre);color:var(--ochre)}
 footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;color:var(--muted)}
-@media (max-width:860px){.steps,.cols,.problems,.threegrid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.steps,.cols,.problems,.threegrid{grid-template-columns:minmax(0,1fr)}.toc{position:static}}
 </style>
 </head>
 <body>
@@ -124,11 +128,12 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <span class="fict">Fictional company · generated data · made-up figures</span>
   </div>
 </header>
+<nav class="toc band" aria-label="On this page"><div class="wrap"><a href="#today">Today</a><a href="#target">Target</a><a href="#kpi-tree">KPI tree</a><a href="#data-capture">Data capture</a><a href="#roadmap">Roadmap</a><a href="#business-case">Business case</a><a href="#security">Security</a><a href="#decisions">Decisions</a></div></nav>
 
 <main class="band">
 <div class="wrap">
 
-<section aria-labelledby="today-h">
+<section id="today" aria-labelledby="today-h">
   <span class="label">Today</span>
   <h2 id="today-h">Shared KPIs, local definitions</h2>
   <p>Solvi has the usual systems and a few KPIs everyone knows. But sellers, purchasers and product owners each read the data their own way, and nobody has agreed how the KPIs break down to the work that moves them.</p>
@@ -196,7 +201,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </ul>
 </section>
 
-<section aria-labelledby="target-h">
+<section id="target" aria-labelledby="target-h">
   <span class="label">Target</span>
   <h2 id="target-h">Captured at the source, checked by its owner</h2>
   <p>New fields in the systems people already use close the gaps. Each domain checks its own data before it publishes, and one shared model holds every KPI and its drill-down. A nightly pipeline runs the domains in order, core first and HSEQ last. The <a href="../index.html#map-h">domain map</a> shows how the domains share data with each other.</p>
@@ -246,7 +251,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </div>
 </section>
 
-<section aria-labelledby="kpi-h">
+<section id="kpi-tree" aria-labelledby="kpi-h">
   <span class="label">KPI tree</span>
   <h2 id="kpi-h">Every company KPI drills down to an owner</h2>
   <p>Each KPI gets one definition, owned by one domain and written once in the shared model. It breaks down into measures the people doing the work can move, and every number opens down to the jobs behind it.</p>
@@ -262,7 +267,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   <p class="note">Days without incident stays on the board, labelled as a lagging number.</p>
 </section>
 
-<section aria-labelledby="gaps-h">
+<section id="data-capture" aria-labelledby="gaps-h">
   <span class="label">New data capture</span>
   <h2 id="gaps-h">Eight risk factors, eight places to catch them</h2>
   <p>Some of the eight factors on the March job were registered as cases in the quality system, but none were linked to the job, so nobody saw them together before work started. Each one now has a place where it is captured, an owner, and a check where it is entered.</p>
@@ -281,7 +286,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </table></div>
 </section>
 
-<section aria-labelledby="road-h">
+<section id="roadmap" aria-labelledby="road-h">
   <span class="label">Roadmap</span>
   <h2 id="road-h">Three steps, each useful on its own</h2>
   <p>Step 1 cuts a thin slice through four domains to fix the most urgent problem first. Each step retires something old, and ends with a decision on whether to go on.</p>
@@ -316,7 +321,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </div>
 </section>
 
-<section aria-labelledby="case-h">
+<section id="business-case" aria-labelledby="case-h">
   <span class="label">Business case</span>
   <h2 id="case-h">What it costs and what it saves</h2>
   <p class="note">Made-up figures for a fictional company of 120 people. NOK million per year.</p>
@@ -354,7 +359,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </div>
 </section>
 
-<section aria-labelledby="sec-h">
+<section id="security" aria-labelledby="sec-h">
   <span class="label">Security and access</span>
   <h2 id="sec-h">Each group sees what its job needs</h2>
   <div class="tablewrap"><table>
@@ -393,7 +398,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   </div>
 </section>
 
-<section aria-labelledby="adr-h">
+<section id="decisions" aria-labelledby="adr-h">
   <span class="label">Decision records</span>
   <h2 id="adr-h">Decisions, written down</h2>
   <p>Each has a short record in the repo: the context, the choice, what it costs, and what was turned down.</p>
