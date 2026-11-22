@@ -57,6 +57,7 @@ wrap("solvi.html", "solvi/index.html")
 wrap("architecture.html", "solvi/architecture/index.html")
 for app, cfg in APPS.items(): wrap_app(app, cfg)
 wrap("play.html", "play/index.html")
+wrap("synla.html", "synla/index.html")
 wrap("cv.html", "cv/index.html")
 wrap("hi.html", "hi/index.html")
 # old links keep working

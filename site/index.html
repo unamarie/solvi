@@ -149,7 +149,7 @@ footer .big{font-family:var(--display);font-size:1.4rem;font-weight:700}
     <div class="stack">
       <span class="who">Una Marie S. Goksøyr <span>· Data architecture, quality and systems · Norway</span></span>
       <h1>Data that holds.</h1>
-      <p class="lede">I made unadata.dev to build, test and show my ideas about data people can trust. <a href="#p2">Freya</a> and <a href="https://github.com/unamarie/synla">Synla</a> are real: a booking system in daily use and a time tracker that keeps your data on your own computer. Solvi is fictional, since real company data can't be shown in public, but the work behind it is real: where data is captured, what each number means, and who owns it.</p>
+      <p class="lede">I made unadata.dev to build, test and show my ideas about data people can trust. <a href="#p2">Freya</a> and <a href="synla/index.html">Synla</a> are real: a booking system in daily use and a time tracker that keeps your data on your own computer. Solvi is fictional, since real company data can't be shown in public, but the work behind it is real: where data is captured, what each number means, and who owns it.</p>
       <div class="links">
         <a class="btn primary" href="solvi/index.html">See a working example</a>
         <a class="btn ghost" href="#architecture">Architecture</a>
@@ -189,6 +189,7 @@ footer .big{font-family:var(--display);font-size:1.4rem;font-weight:700}
       <tr><td>Business case</td><td><a href="solvi/architecture/index.html#business-case">Costs and savings over three years</a>, and what has to be true</td></tr>
       <tr><td>Security and trade-offs</td><td><a href="solvi/architecture/index.html#security">Who sees what, how, and what it costs</a></td></tr>
       <tr><td>Decisions</td><td><a href="solvi/architecture/index.html#decisions">Nine decision records</a>: context, choice, consequences and what was turned down</td></tr>
+      <tr><td>Privacy and security by design</td><td><a href="synla/index.html#security">Synla</a>: pages only on your own computer, sealed weeks, and <a href="synla/index.html#decisions">the trade-offs behind it</a></td></tr>
       <tr><td>Data, integration and platform</td><td><a href="https://github.com/unamarie/solvi">The Fabric build on GitHub</a>: workspaces, shortcuts, pipelines and a Direct Lake model, tested on every push</td></tr>
     </tbody></table></div>
 </section>
@@ -319,8 +320,41 @@ footer .big{font-family:var(--display);font-size:1.4rem;font-weight:700}
       </div>
       <div class="stack">
         <span class="label">Built with</span>
-        <div class="tags"><span class="tag">Next.js</span><span class="tag">Vercel</span><span class="tag">Supabase</span><span class="tag">Resend</span><span class="tag">GitHub</span><span class="tag">Automated tests</span></div>
+        <div class="tags"><span class="tag">TypeScript</span><span class="tag">Next.js</span><span class="tag">Vercel</span><span class="tag">Supabase</span><span class="tag">Resend</span><span class="tag">GitHub</span><span class="tag">Automated tests</span></div>
         <p><a href="https://freyahundepensjonat.no" target="_blank" rel="noopener">freyahundepensjonat.no</a></p>
+      </div>
+    </div>
+  </article>
+  <article class="project" aria-labelledby="p3">
+    <div class="phead">
+      <div class="stack" style="gap:8px">
+        <span class="label">Open source · Python</span>
+        <h3 id="p3" style="font-size:1.8rem;font-weight:700">Synla: a timesheet that fills itself in</h3>
+      </div>
+      <span class="pill wip">Version 1</span>
+    </div>
+    <p>A time tracker built for the employee. Synla notes which window is in front, asks a few questions, and fills in the timesheet. It shows the unplanned work too, and everything stays on your own computer. Version 1 works and is tested on every change, and it is still a work in progress.</p>
+    <div class="tablewrap"><table class="who-table">
+      <thead><tr><th>Who</th><th>What they need</th><th>What they get</th></tr></thead>
+      <tbody>
+        <tr><td>The employee</td><td>A timesheet without guesswork</td><td>A day that sorts itself, a few questions, and the unplanned work made visible</td></tr>
+        <tr><td>IT</td><td>Something safe to approve</td><td>No server, no network traffic, no admin rights, and one page on what it reads</td></tr>
+        <tr><td>Anyone who checks</td><td>Hours that hold</td><td>Weeks sealed in a record book, so a later change shows</td></tr>
+      </tbody></table></div>
+    <div class="cols">
+      <div class="stack">
+        <span class="label">Security and privacy</span>
+        <ul class="clean">
+          <li>Pages only on your own computer, and only with a key</li>
+          <li>Never keystrokes, screenshots, the clipboard or sound</li>
+          <li>Window names deleted after 14 days, hours kept</li>
+          <li>Private windows stored with no name</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <span class="label">Built with</span>
+        <div class="tags"><span class="tag">Python, standard library only</span><span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">GitHub Actions</span><span class="tag">Automated tests</span></div>
+        <p><a href="synla/index.html">More about Synla</a> · <a href="https://github.com/unamarie/synla">Code on GitHub</a></p>
       </div>
     </div>
   </article>

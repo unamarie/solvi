@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Synla · a timesheet that fills itself in</title>
+<meta name="description" content="Synla fills in your timesheet from what you did on your computer, and keeps all of it on your own computer. Open source, version 1, a work in progress.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Una Marie S. Goksøyr">
+<meta property="og:title" content="Synla · a timesheet that fills itself in">
+<meta property="og:description" content="A time tracker built for the employee: everything stays on your own computer. Open source, version 1, a work in progress.">
+<meta property="og:url" content="https://unadata.dev/synla/">
+<meta property="og:image" content="https://unadata.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Data that holds. Una Marie S. Goksøyr, unadata.dev">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+/* Layout: one product page - what it is, what it does, how it keeps data safe, the trade-offs, how to try it */
+:root{
+  --paper:#f6f6f3; --sky:linear-gradient(180deg,#f8d2b8 0,#f7e6da 140px,#f6f6f3 380px); --surface:#ffffff; --ink:#0a1236; --muted:#585a60; --line:#e6ded6;
+  --prussian:#0a1236; --indigo:#006690; --wave:#97c4c2; --foam:#fbfaf6; --seal:#b23a2a; --sun2:#f85e0a; --ochre:#b8862f;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --pixel:"Pixelify Sans","Atkinson Hyperlegible",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --sun2:#fa7a32; --ochre:#d8a64e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#080f2c; --sky:#0d1638; --surface:#111c44; --ink:#ece5d4; --muted:#9eabb7; --line:#222d5a;
+  --prussian:#97c4c2; --indigo:#5fb3d3; --wave:#006690; --foam:#111c44; --seal:#e46a54; --sun2:#fa7a32; --ochre:#d8a64e; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1100px;margin:0 auto}
+a{color:var(--indigo)}
+a:focus-visible{outline:2px solid var(--seal);outline-offset:2px}
+h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(2rem,5vw,3rem)} h2{font-size:clamp(1.3rem,3vw,1.7rem)} h3{font-size:1.15rem}
+p{margin:0;max-width:68ch}
+ul{margin:0;padding-left:20px;max-width:68ch} li{margin:4px 0}
+.label{font-family:var(--pixel);font-size:1rem;color:var(--indigo)}
+header{background:var(--sky);padding-block:22px 30px}
+header .wrap{display:flex;flex-direction:column;gap:10px}
+.status{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ochre);padding:12px 16px;align-self:flex-start;max-width:72ch;display:flex;flex-direction:column;gap:4px}
+.status b{font-family:var(--pixel);font-weight:600;color:var(--ochre)}
+.links{display:flex;flex-wrap:wrap;gap:10px 18px}
+main .wrap{padding-block:32px 56px;display:flex;flex-direction:column;gap:52px}
+section{display:flex;flex-direction:column;gap:14px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 36px;align-items:start}
+.cols>div{display:flex;flex-direction:column;gap:10px;min-width:0}
+.points{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 36px;max-width:none}
+.points li{margin:0;display:flex;flex-direction:column;gap:2px}
+.points b{font-weight:700}
+.points span{color:var(--muted)}
+figure{margin:0;display:flex;flex-direction:column;gap:8px}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+figure.tall img{max-height:760px;object-fit:cover;object-position:top}
+figure.mid{max-width:720px}
+figcaption{font-size:.85rem;color:var(--muted)}
+.never{background:var(--surface);border:1px solid var(--line);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+.tablewrap{overflow-x:auto}
+th{text-align:left;font-weight:700;font-size:.82rem;color:var(--muted);padding:7px 8px;border-bottom:2px solid var(--prussian)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+pre{margin:0;background:var(--surface);border:1px solid var(--line);padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.9rem}
+.note{color:var(--muted)}
+footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;color:var(--muted)}
+@media (max-width:860px){.cols,.points{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap">
+    <a href="../index.html">← Una Marie S. Goksøyr</a>
+    <span class="label">Open source · Python · Windows</span>
+    <h1>Synla</h1>
+    <p>Synla fills in your timesheet from what you actually did on your computer. It also shows the work that never makes it into a plan: helping colleagues, urgent problems, chasing answers and fixing other people's errors. Everything stays on your own computer.</p>
+    <div class="status"><b>Version 1, a work in progress</b><span>Synla works and is tested on every change, and it runs every day on Windows. It is still young, so expect changes, and use it on a computer you control.</span></div>
+    <div class="links"><a href="https://github.com/unamarie/synla">Code on GitHub</a><a href="https://github.com/unamarie/synla/blob/main/docs/security.md">Every security check</a><a href="https://github.com/unamarie/synla/blob/main/SECURITY.md">Report a problem</a></div>
+  </div>
+</header>
+
+<main class="band">
+<div class="wrap">
+
+<section id="what" aria-labelledby="what-h">
+  <span class="label">What it does</span>
+  <h2 id="what-h">Synla asks, you tap</h2>
+  <div class="cols">
+    <ul class="points" style="grid-template-columns:minmax(0,1fr)">
+      <li><b>Sorts what it is sure of, asks about the rest</b><span>A few questions a day, with its best guess already picked. A number for the project, a letter for the kind of work, Enter to save. Fewer questions every day as it learns.</span></li>
+      <li><b>Keeps things apart when you jump around</b><span>An evening of email, a game install and real work becomes a stretch of each, not one bundle. Open any stretch to see every window in it.</span></li>
+      <li><b>Shows the unplanned work</b><span>Helping someone, urgent problems, chasing answers and fixing others' errors, and what keeps coming back.</span></li>
+      <li><b>Fits your role</b><span>Thirteen roles, from accountant to purchaser, each with its own kinds of work. Rename any of them.</span></li>
+      <li><b>A timesheet ready to report</b><span>A week per project, with codes for your reporting system, and a record book that seals each week.</span></li>
+    </ul>
+    <figure><img src="today.webp" width="1200" height="1125" alt="Synla's Today page: the day as a coloured bar, and a question about an Excel file with project and kind of work to pick"><figcaption>Today, with a question. Screens from the made-up week that comes with Synla.</figcaption></figure>
+  </div>
+</section>
+
+<section id="security" aria-labelledby="sec-h">
+  <span class="label">Privacy and security by design</span>
+  <h2 id="sec-h">Built for the employee, not for monitoring</h2>
+  <p>There is no account, no server and no admin view, so there is nothing to collect or compare across people. <a href="https://github.com/unamarie/synla/blob/main/docs/security.md">The full list of checks</a>, each with a test, is on GitHub.</p>
+  <div class="cols">
+    <div>
+      <h3>Who can open it</h3>
+      <ul>
+        <li>The pages answer on your own computer only, and need a key that Synla gives your browser. Another account on the same computer has no key.</li>
+        <li>Only Synla's own script runs. Everything shown is escaped, so a window name that looks like code stays text.</li>
+        <li>No network traffic. Nothing is sent anywhere.</li>
+      </ul>
+      <h3>What it keeps, and for how long</h3>
+      <ul>
+        <li>Window names are deleted after 14 days. Your hours stay.</li>
+        <li>Other people's names in window titles are hidden before anything is stored.</li>
+        <li>Delete your data from Synla's own page at any time. Deleted window names are overwritten on disk.</li>
+      </ul>
+      <h3>Integrity</h3>
+      <ul>
+        <li>Every file is written whole or not at all, and the last good copy is kept.</li>
+        <li>Each week is sealed in a record book with a fingerprint, so a later change shows.</li>
+      </ul>
+      <div class="never"><b>Never recorded</b><span class="note">Keystrokes, screenshots, the clipboard, file contents, sound and web addresses. Password managers, private browsing, banks, unions, health sites and similar are stored as Private, with no name.</span></div>
+    </div>
+    <figure class="tall"><img src="your-data.webp" width="1200" height="3186" alt="Synla's Your data page: where the files are, what is stored and for how long, what is never recorded, and buttons to delete" loading="lazy"><figcaption>Your data: what Synla keeps, for how long, and how to delete it. Made-up week.</figcaption></figure>
+  </div>
+</section>
+
+<section id="decisions" aria-labelledby="dec-h">
+  <span class="label">Decisions</span>
+  <h2 id="dec-h">The trade-offs behind it</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th scope="col">Choice</th><th scope="col">Gain</th><th scope="col">Price</th></tr></thead>
+    <tbody>
+      <tr><td>Everything stays on your computer</td><td>Nothing to leak, and nothing a manager can see</td><td>No team view and no sync between computers, by design</td></tr>
+      <tr><td>Python's standard library only</td><td>Nothing else to install, and easy for IT to read and approve</td><td>More code written by hand, and a plainer interface</td></tr>
+      <tr><td>Its own recorder on Windows</td><td>Synla decides what is stored and for how long</td><td>On Mac and Linux it reads ActivityWatch instead</td></tr>
+      <tr><td>Window names kept for 14 days</td><td>Less personal data over time</td><td>Older days can't be sorted again window by window</td></tr>
+      <tr><td>A sealed record book</td><td>Anyone can check that a week was not changed later</td><td>A correction after sealing shows as a change</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="mid"><img src="week.webp" width="1200" height="1582" alt="Synla's Week page: hours per day, projects, unplanned work that came back, and the sealed record book" loading="lazy"><figcaption>The week: projects, unplanned work and what came back, sealed in the record book. Made-up week.</figcaption></figure>
+</section>
+
+<section id="try" aria-labelledby="try-h">
+  <span class="label">Try it</span>
+  <h2 id="try-h">A made-up week in one command</h2>
+  <p>You need Python 3.10 or newer, and nothing else. On Windows, type <code>py</code> where it says <code>python</code>.</p>
+  <pre>python -m synla demo</pre>
+  <p>To use it for real on Windows, see the <a href="https://github.com/unamarie/synla#readme">README</a>. IT gets <a href="https://github.com/unamarie/synla/blob/main/docs/for-it.md">one page</a> on what Synla reads, what it never does, and how to remove it. Don't install it on a work computer without written approval.</p>
+</section>
+
+</div>
+</main>
+<footer class="band"><div class="wrap">Synla is open source under the MIT licence. The screens show a made-up week, not real people or work. Built by Una Marie S. Goksøyr.</div></footer>
+
+<button id="theme-toggle" type="button" aria-label="Switch light or dark mode">
+<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+</button>
+<style>
+#theme-toggle{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:50;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(10,18,54,.18);padding:0}
+#theme-toggle:hover{color:var(--stamp,#f85e0a)}
+#theme-toggle:focus-visible{outline:2px solid #f85e0a;outline-offset:2px}
+#theme-toggle .i-sun{display:none}
+:root[data-theme="dark"] #theme-toggle .i-sun{display:block}:root[data-theme="dark"] #theme-toggle .i-moon{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #theme-toggle .i-sun{display:block}:root:not([data-theme="light"]) #theme-toggle .i-moon{display:none}}
+@media print{#theme-toggle{display:none}}
+</style>
+<script>
+(function(){var b=document.getElementById("theme-toggle"),r=document.documentElement;
+function dark(){var t=r.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}
+b.addEventListener("click",function(){var t=dark()?"light":"dark";r.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}});})();
+</script>
+</body>
+</html>
