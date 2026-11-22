@@ -34,7 +34,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--sun2);outline-offse
 h1{font-family:var(--pixel);font-weight:600;font-size:clamp(1.8rem,5vw,2.6rem);margin:0;line-height:1.1}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px}
 .lede{margin:0;max-width:60ch;color:var(--muted)}
-.cabinet{background:#0b1622;border:4px solid var(--prussian);border-radius:6px;padding:10px;box-shadow:0 6px 0 #071019}
+/* the cabinet always fits the screen height: canvas height = screen minus the title row and the touch pad */
+.cabinet{background:#0b1622;border:4px solid var(--prussian);border-radius:6px;padding:10px;box-shadow:0 6px 0 #071019;margin-inline:auto;
+  width:max(240px,min(100%,calc((100vh - 230px) * 1.6 + 28px)));width:max(240px,min(100%,calc((100dvh - 230px) * 1.6 + 28px)))}
 canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;aspect-ratio:320/200;max-width:100%;touch-action:none;outline:none}
 .pad{display:flex;gap:10px;justify-content:space-between;margin-top:10px}
 .pad button,.tools button{font-family:var(--pixel);font-size:1.15rem;background:#16304a;color:#e8f0f6;border:2px solid #006690;border-radius:4px;padding:12px 0;flex:1;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -44,7 +46,8 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rend
 .help{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 24px;font-size:.95rem}
 .help b{font-family:var(--pixel);font-weight:600;color:var(--indigo)}
 footer{color:var(--muted);font-size:.85rem}
-@media (hover:hover) and (pointer:fine){.pad{display:none}}
+@media (hover:hover) and (pointer:fine){.pad{display:none}
+  .cabinet{width:max(240px,min(100%,calc((100vh - 160px) * 1.6 + 28px)));width:max(240px,min(100%,calc((100dvh - 160px) * 1.6 + 28px)))}}
 </style>
 
 <div class="band">
@@ -56,12 +59,11 @@ footer{color:var(--muted);font-size:.85rem}
     </div>
     <div class="tools"><button id="b-sound" type="button" aria-pressed="true">Sound: on</button><button id="b-pause" type="button">Pause</button></div>
   </div>
-  <p class="lede">A small game about data quality, in the spirit of the 90s games I grew up with. Catch the good records, let the junk sink. Every bad record you let pass costs the company's trust in its numbers.</p>
-
   <div class="cabinet">
     <canvas id="game" width="320" height="200" tabindex="0" aria-label="Quality Gate game. Use left and right arrow keys to move the boat, space to start."></canvas>
     <div class="pad" aria-hidden="true"><button id="b-left" type="button">◀</button><button id="b-start" type="button">Start</button><button id="b-right" type="button">▶</button></div>
   </div>
+  <p class="lede">A small game about data quality, in the spirit of the 90s games I grew up with. Catch the good records, let the junk sink. Every bad record you let pass costs the company's trust in its numbers.</p>
 
   <div class="help">
     <div><b>Move</b><br>Arrow keys or A / D. On a phone, hold the buttons or touch the left and right side of the screen.</div>
@@ -76,7 +78,8 @@ footer{color:var(--muted);font-size:.85rem}
 <script>
 (function(){
 "use strict";
-const cv = document.getElementById("game"), g = cv.getContext("2d");
+const cv = document.getElementById("game"), g = cv.getContext("2d"), cab = document.querySelector(".cabinet");
+function showCabinet(){ const r = cab.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) cab.scrollIntoView({block: r.height <= innerHeight ? "center" : "start"}); }
 const W = 320, H = 200, WATER = 166;
 g.imageSmoothingEnabled = false;
 
@@ -271,7 +274,7 @@ requestAnimationFrame(frame);
 // ---------- input
 const keys = new Set();
 function setDir(){ st.dir = (keys.has("L") ? -1 : 0) + (keys.has("R") ? 1 : 0); }
-function startOrRestart(){ if (st.mode === "title" || (st.mode === "over" && st.t - st.overT > .8)) { reset(); beep([523,784],.06); } }
+function startOrRestart(){ if (st.mode === "title" || (st.mode === "over" && st.t - st.overT > .8)) { reset(); beep([523,784],.06); showCabinet(); } }
 addEventListener("keydown", e => {
   const k = e.key;
   if (["ArrowLeft","ArrowRight"," ","Spacebar"].includes(k)) e.preventDefault();
