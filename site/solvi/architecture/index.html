@@ -180,10 +180,11 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <span class="label" id="three-h">One KPI, three answers</span>
     <p>On-time delivery last quarter, as each team reports it.</p>
     <div class="threegrid">
-      <div><span class="big">91 %</span><b>Sales</b><span class="def">by the week promised to the customer</span></div>
-      <div><span class="big">84 %</span><b>Purchasing</b><span class="def">by the date the supplier confirmed</span></div>
-      <div><span class="big">77 %</span><b>Project planning</b><span class="def">by the first planned start</span></div>
+      <div><span class="big">71 %</span><b>Sales</b><span class="def">Finished in the week promised at signing. 29 of 100 jobs were late.</span></div>
+      <div><span class="big">85 %</span><b>Purchasing</b><span class="def">Supplier deliveries on the date the supplier confirmed. This measures suppliers, not the promise to the customer.</span></div>
+      <div><span class="big">92 %</span><b>Project planning</b><span class="def">Started on the latest planned date. 21 of the 29 late jobs were re-planned before the promised week, so they count as on time.</span></div>
     </div>
+    <p>Each number is right by its own rule. But a date that moves with the delay hides it, so the KPI looks green inside the company and red to the customer. Solvi's definition follows the customer: only a change the customer asks for moves the date.</p>
   </div>
   <ul class="problems">
     <li>Everyone knows the KPIs, but nobody can say which jobs, suppliers or sellers move them.</li>
@@ -252,7 +253,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
   <div class="tablewrap"><table class="tree">
     <thead><tr><th scope="col">Company KPI</th><th scope="col">One definition</th><th scope="col">Drills down to</th></tr></thead>
     <tbody>
-      <tr><td><b>On-time delivery</b><span class="own">Delivery</span></td><td>Installation finished in the week promised to the customer</td><td><ul><li>Supplier deliveries on the confirmed date<span class="own">Supply</span></li><li>Jobs started on the planned day<span class="own">Delivery</span></li><li>Changes after signing<span class="own">Sales</span></li></ul></td></tr>
+      <tr><td><b>On-time delivery</b><span class="own">Delivery</span></td><td>Installation finished in the week promised at signing. Only a change the customer asks for moves the week.</td><td><ul><li>Supplier deliveries on the confirmed date<span class="own">Supply</span></li><li>Jobs started on the planned day<span class="own">Delivery</span></li><li>Changes after signing<span class="own">Sales</span></li></ul></td></tr>
       <tr><td><b>Gross margin</b><span class="own">Sales</span></td><td>Invoiced minus actual cost, per job, when the job is closed</td><td><ul><li>Margin at signing<span class="own">Sales</span></li><li>Extra hours on the job<span class="own">Delivery</span></li><li>Purchase price against the proposal<span class="own">Supply</span></li></ul></td></tr>
       <tr><td><b>Deviations</b><span class="own">HSEQ</span></td><td>A case in the quality system, linked to a job, a supplier or an installation</td><td><ul><li>Cases per supplier<span class="own">Supply</span></li><li>Cases per crew<span class="own">Delivery</span></li><li>Cases per product<span class="own">Assets</span></li></ul></td></tr>
       <tr><td><b>Safe battery jobs</b><span class="own">HSEQ</span></td><td>Share of red and yellow jobs with an action before work starts</td><td><ul><li>Damaged deliveries inspected<span class="own">Supply</span></li><li>Safe job analysis done<span class="own">Delivery</span></li><li>Cold batteries acclimatised<span class="own">Delivery</span></li></ul></td></tr>
