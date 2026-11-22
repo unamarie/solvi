@@ -6,7 +6,7 @@ Status: proposed, November 2026
 
 Solvi has a few company KPIs, but sellers, purchasers and product owners each read them their own way. Last quarter on-time delivery was 71, 85 or 92 percent, depending on who made the report. Sales measured against the week promised at signing, purchasing against the date the supplier confirmed, and planning against the latest plan. A date that moves with a delay hides it.
 
-Nobody could say which jobs, suppliers or sellers moved a KPI.
+It was hard to say which jobs, suppliers or sellers moved a KPI.
 
 ## Decision
 

@@ -320,7 +320,7 @@ function renderFollow(){
     rows.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="r">${r[4]} d</td><td class="r">${nf.format(r[5])}</td><td><span class="chip ${r[6]==="Planned"?"plan":"none"}">${r[6]==="Planned"?"Call planned":"No call yet"}</span></td></tr>`).join("") +
     `</tbody></table>` : `<p class="sub">No open proposals waiting for this selection.</p>`;
   const lift = (fuWon/fuDec - no[1]/no[0]) * 100;
-  $("i-follow").textContent = fuDec && no[0] ? `Proposals that got a follow-up were won ${lift.toFixed(0)} percentage points more often. The waiting list is where to start: the biggest proposals that nobody has called yet.` : "Not enough decided proposals for this selection.";
+  $("i-follow").textContent = fuDec && no[0] ? `Proposals that got a follow-up were won ${lift.toFixed(0)} percentage points more often. The waiting list is where to start: the biggest proposals that haven't had a call yet.` : "Not enough decided proposals for this selection.";
 }
 
 function renderProd(){
@@ -450,7 +450,7 @@ function renderRisk(){
   const inc = R.incident;
   $("r-story").innerHTML = `<div><span class="label">What happened</span><p><b>${new Date(inc.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}:</b> ${esc(inc.text)}</p>
     <p>The battery came from ${esc(inc.supplier)} and was installed by a subcontractor crew. When the job was reconstructed, ${inc.factors.length} risk factors had been present on the day. None of them was tracked. The board in the office said <i>days without incident</i>.</p>
-    <p>Management asked for action. Quality's answer: stop counting incidents and start acting on the conditions that cause them, across the whole chain. From 1 April 2026, every red or yellow job needs an action before work starts.</p></div>
+    <p>Management asked for action. Quality's answer: keep counting incidents, but act on the conditions that cause them, across the whole chain. From 1 April 2026, every red or yellow job needs an action before work starts.</p></div>
     <div class="chips">${inc.factors.map(f => `<span class="chip none" title="${esc(rules[f][1])}">${esc(rules[f][0])}</span>`).join("")}</div>`;
   const ev = j => j[8] + j[9];
   const nm = jobs.reduce((t,j)=>t+j[8],0), incs = jobs.reduce((t,j)=>t+j[9],0), gc = jobs.reduce((t,j)=>t+j[10],0);
@@ -462,7 +462,7 @@ function renderRisk(){
     ["Red jobs", pct(red / jobs.length), nf.format(red) + " jobs with a stop factor or high score", "seal"],
     ["Near misses", nf.format(nm), (jobs.length ? (nm / jobs.length * 100).toFixed(1) : "–") + " per 100 jobs"],
     ["Good catches", nf.format(gc), "damage stopped at goods receipt"],
-    ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: says nothing about tomorrow", "muted"],
+    ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: shows the past, not the next job", "muted"],
   ]);
   // events per 100 jobs by level, before/after
   const lv = ["Green","Yellow","Red"], per = (arr) => lv.map(l => { const a = arr.filter(j => j[2] === l); return a.length ? +(a.reduce((t,j)=>t+ev(j),0) / a.length * 100).toFixed(1) : 0; });
@@ -504,7 +504,7 @@ function renderRisk(){
       <td><span class="chip lvl-${p[7].toLowerCase()}">${p[7]}</span></td><td class="issue">${p[9].map(f => esc(rules[f][0])).join("; ") || "–"}</td><td class="issue">${esc(actionFor(p))}</td></tr>`).join("") + `</tbody></table>`
     : '<p class="sub">No planned battery jobs for this selection.</p>';
   const b = per(before), a = per(after);
-  $("i-risk").textContent = before.length && after.length ? `Before the change, red jobs had ${b[2]} events per 100 jobs against ${b[0]} for green ones, so the factors do predict trouble. With an action required before start, red jobs dropped to ${a[2]}. Days since last incident would have shown none of this.` : "Not enough jobs in this selection to compare before and after.";
+  $("i-risk").textContent = before.length && after.length ? `Before the change, red jobs had ${b[2]} events per 100 jobs against ${b[0]} for green ones, so the factors do predict trouble. With an action required before start, red jobs dropped to ${a[2]}. Days since last incident alone would not have shown this.` : "Not enough jobs in this selection to compare before and after.";
 }
 
 // ---------- routing
