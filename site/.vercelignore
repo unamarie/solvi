@@ -1,0 +1,3 @@
+# Not served: the build scripts and the page sources they build from
+*.py
+src/

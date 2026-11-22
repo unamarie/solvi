@@ -49,7 +49,7 @@ APPS = {  # one app per user group; each shows only its own views
 }
 def wrap_app(app, cfg):   # builds the app straight from the template, no temporary files
     s = open(os.path.join(HERE, "src", "demo.html"), encoding="utf-8").read()
-    s = s.replace('<script src="https://cdn.jsdelivr.net', f'<script>window.SOLVI_APP = {json.dumps(cfg)};</script>\n<script src="https://cdn.jsdelivr.net', 1)
+    s = s.replace('<script src="/vendor/chart.umd.js"', f'<script>window.SOLVI_APP = {json.dumps(cfg)};</script>\n<script src="/vendor/chart.umd.js"', 1)
     wrap_text(s, f"solvi/{app}/index.html")
 
 wrap("index.html", "index.html")
