@@ -499,20 +499,43 @@ function renderRisk(){
   const start = dayN(R.jobs.length ? R.jobs[0][0] : "2023-01-01");
   const qFirst = k => dayN(k.slice(0,4) + "-" + String((+k.slice(-1) - 1) * 3 + 1).padStart(2, "0") + "-01");
   const qLast = k => Math.min(dayN(new Date(Date.UTC(+k.slice(0,4), +k.slice(-1) * 3, 0)).toISOString().slice(0,10)), dayN(D.generated));
-  // the highest number the office board showed during the quarter
-  const lag = qk.map(k => { let top = 0;
-    for (let t = qFirst(k); t <= qLast(k); t++) { let prev = start; for (const d of incDates) if (dayN(d) <= t) prev = dayN(d); top = Math.max(top, t - prev); }
-    return top; });
-  const lagMax = Math.max(600, Math.ceil(Math.max(0, ...lag) / 600) * 600);
+  // the office board, day by day: it climbs one a day and drops to 0 on the day of an incident
+  const board = t => { let prev = start; for (const d of incDates) if (dayN(d) <= t) prev = dayN(d); return Math.max(0, t - prev); };
+  const qNext = k => { let y = +k.slice(0,4), q = +k.slice(-1) + 1; if (q > 4) { q = 1; y++; } return dayN(y + "-" + String((q - 1) * 3 + 1).padStart(2, "0") + "-01"); };
+  const pos = t => { for (let i = 0; i < qk.length; i++) if (t < qNext(qk[i])) return i + (t - qFirst(qk[i])) / (qNext(qk[i]) - qFirst(qk[i])); return qk.length; };
+  const pts = [], drops = [];
+  if (qk.length) {
+    const t0 = qFirst(qk[0]), tEnd = qLast(qk[qk.length - 1]);
+    qk.forEach(k => pts.push([pos(qFirst(k)), board(qFirst(k))]));
+    incDates.forEach(d => { const t = dayN(d); if (t > t0 && t <= tEnd) { pts.push([pos(t), board(t - 1) + 1], [pos(t), 0]);
+      drops.push([pos(t), "Incident, " + new Date(t * 864e5).toLocaleDateString("en-GB", {day:"numeric", month:"short", timeZone:"UTC"})]); } });
+    pts.push([pos(tEnd), board(tEnd)]);
+    pts.sort((p, q) => p[0] - q[0]);
+  }
+  // the highest number the board showed in each quarter, for the tooltip
+  const lagQ = qk.map(k => { let top = 0; for (let t = qFirst(k); t <= qLast(k); t++) top = Math.max(top, board(t)); return top; });
+  const lagMax = Math.max(600, Math.ceil(Math.max(0, ...lagQ) / 600) * 600);
   const share = qk.map(k => { const x = qs[k] || [0,0]; return x[0] >= 5 ? Math.round(x[1] / x[0] * 100) : null; });
-  const firstInc = incDates.length ? qOf(incDates[0]) : null, afterInc = firstInc ? qk[qk.indexOf(firstInc) + 1] : null;
+  const boardLine = {id:"board", afterDatasetsDraw(c){
+    const x = c.scales.x, y = c.scales.lag, a = c.chartArea, ctx = c.ctx; if (!pts.length) return;
+    const band = qk.length > 1 ? x.getPixelForValue(1) - x.getPixelForValue(0) : a.right - a.left;
+    const px = v => x.getPixelForValue(0) + (v - .5) * band;
+    ctx.save(); ctx.beginPath(); ctx.rect(a.left, y.top - 3, a.right - a.left, y.bottom - y.top + 6); ctx.clip();
+    ctx.strokeStyle = tok("--muted"); ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.beginPath();
+    pts.forEach(([v, n], i) => { const X = px(v), Y = y.getPixelForValue(n); if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); }); ctx.stroke();
+    ctx.fillStyle = tok("--ink"); ctx.font = "12px " + tok("--body");
+    for (const [v, text] of drops) { const X = px(v), w = ctx.measureText(text).width;
+      if (X + 6 + w <= a.right) { ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillText(text, X + 6, y.top + 2); }
+      else { ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(text, X - 6, y.getPixelForValue(lagMax * .4)); } }
+    ctx.restore(); }};
   chart("c-rlead", {data:{labels:qk, datasets:[
-      {type:"line", label:"Days since last incident", data:lag, yAxisID:"lag", borderColor:tok("--muted"), backgroundColor:tok("--muted"), borderWidth:2, pointRadius:0, pointStyle:"line", tension:0},
+      {type:"line", label:"Days since last incident", data:[], yAxisID:"lag", borderColor:tok("--muted"), backgroundColor:tok("--muted"), borderWidth:2, pointStyle:"line"},
       {type:"bar", label:"Red jobs, % of jobs", data:share, yAxisID:"lead", backgroundColor:tok("--seal"), pointStyle:"rect"}]},
-    plugins: afterInc ? [markers([{at:afterInc, between:true, text:"Incident"}])] : [],
+    plugins:[boardLine],
     options:{interaction:{mode:"index", intersect:false},
-      plugins:{legend:{labels:{usePointStyle:true, pointStyleWidth:18}}, tooltip:{callbacks:{label:c => { const n = (qs[qk[c.dataIndex]] || [0])[0];
-        return c.dataset.yAxisID === "lag" ? "Days since last incident: up to " + nf.format(c.raw) : c.raw == null ? "Too few jobs to show a share (" + n + ")" : c.raw + " % red, of " + n + " jobs"; }}}},
+      plugins:{legend:{labels:{usePointStyle:true, pointStyleWidth:18}}, tooltip:{callbacks:{
+        label:c => { const n = (qs[qk[c.dataIndex]] || [0])[0]; return c.raw == null ? "Too few jobs to show a share (" + n + ")" : c.raw + " % red, of " + n + " jobs"; },
+        afterLabel:c => "Days since last incident: up to " + nf.format(lagQ[c.dataIndex])}}},
       scales:{x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:false, callback:function(v, i){ const l = this.getLabelForValue(v); return l.endsWith("Q1") ? l.slice(0,4) : i === 0 ? l : ""; }}},
         lead:{type:"linear", position:"left", stack:"rl", stackWeight:2, beginAtZero:true, suggestedMax:60, ticks:{callback:v => v + " %", maxTicksLimit:4}},
         gap:{type:"linear", position:"left", stack:"rl", stackWeight:.3, grid:{display:false}, ticks:{display:false}, border:{display:false}},
