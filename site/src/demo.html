@@ -69,6 +69,8 @@ main .wrap{padding-block:22px 48px;display:flex;flex-direction:column;gap:18px}
 .card .sub{font-size:.8rem;color:var(--muted)}
 .chart{position:relative;height:280px}
 .chart.tall{height:340px}
+.chart.xtall{height:400px}
+.grid:has(.tablewrap){align-items:start}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
 th{text-align:left;font-family:var(--body);font-weight:700;font-size:.8rem;color:var(--muted);padding:7px 8px;border-bottom:2px solid var(--prussian);white-space:nowrap}
@@ -149,7 +151,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;colo
   <p class="for"><span>For</span> sellers · <span>Used</span> every morning, a short list to work through</p>
   <div class="kpis" id="k-follow"></div>
   <div class="grid">
-    <div class="card"><h2>Share signed, by days to first contact</h2><span class="sub">Decided proposals. Association, not proof of cause.</span><div class="chart"><canvas id="c-fu"></canvas></div></div>
+    <div class="card"><h2>Share signed, by days to first contact</h2><span class="sub">Decided proposals. A follow-up matters more than how soon it comes. Association, not proof of cause.</span><div class="chart"><canvas id="c-fu"></canvas></div></div>
     <div class="card"><h2>Open proposals waiting for a call</h2><span class="sub">Sent 3+ days ago, no completed follow-up. Highest value first.</span><div class="tablewrap" id="t-open"></div></div>
   </div>
   <p class="insight" id="i-follow"></p>
@@ -174,10 +176,10 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;colo
   <div class="kpis" id="k-risk"></div>
   <div class="grid">
     <div class="card"><h2>Do the risk factors predict trouble?</h2><span class="sub">Near misses and incidents per 100 battery jobs, by the risk level the job had. Before and after actions became required.</span><div class="chart"><canvas id="c-rlevel"></canvas></div></div>
-    <div class="card"><h2>Leading or lagging?</h2><span class="sub">Bars: share of jobs that were red, a warning you can act on. Line: days since the last incident, which looked fine right up to March.</span><div class="chart"><canvas id="c-rlead"></canvas></div></div>
+    <div class="card"><h2>Leading or lagging?</h2><span class="sub">By quarter. Top: days since the last incident, the number on the office board, which looked fine until March 2026. Bottom: share of battery jobs that were red, a warning you can act on.</span><div class="chart"><canvas id="c-rlead"></canvas></div></div>
   </div>
   <div class="grid">
-    <div class="card"><h2>Risk factors found most often</h2><span class="sub">Number of battery jobs where each factor was present</span><div class="chart tall"><canvas id="c-rfact"></canvas></div></div>
+    <div class="card"><h2>Risk factors found most often</h2><span class="sub">Number of battery jobs where each factor was present, coloured by kind of factor</span><div class="chart xtall"><canvas id="c-rfact"></canvas></div></div>
     <div class="card"><h2>Where in the chain</h2><span class="sub">Share of red jobs and events by battery supplier and by who did the work</span><div class="tablewrap" id="t-chain"></div></div>
   </div>
   <div class="card"><h2>Before work starts: the next two weeks</h2><span class="sub">Planned battery jobs, scored on what is known today: delivery, crew, site and the weather forecast</span><div class="tablewrap" id="t-plan"></div></div>
@@ -247,14 +249,26 @@ const charts = {};
 function chart(id, cfg){
   if (charts[id]) charts[id].destroy();
   const ink = tok("--ink"), muted = tok("--muted"), line = tok("--line");
-  Chart.defaults.font.family = tok("--body"); Chart.defaults.color = muted;
-  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, animation:{duration:250},
-    plugins:{legend:{labels:{color:ink, boxWidth:12, boxHeight:12}}, tooltip:{}},
-  }, cfg.options || {});
+  Chart.defaults.font.family = tok("--body"); Chart.defaults.color = muted; Chart.defaults.locale = "en-GB";
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, animation:{duration:250}}, cfg.options || {});
+  // every chart gets the same legend look, whatever it sets itself
+  const p = cfg.options.plugins || {}, lg = p.legend || {};
+  cfg.options.plugins = Object.assign({tooltip:{}}, p, {legend: Object.assign({}, lg, {labels: Object.assign({color:ink, boxWidth:12, boxHeight:12}, lg.labels || {})})});
   const sc = cfg.options.scales || {};
-  for (const a of Object.values(sc)) { a.grid = Object.assign({color:line}, a.grid||{}); a.ticks = Object.assign({color:muted}, a.ticks||{}); a.border = {color:line}; }
+  for (const a of Object.values(sc)) { a.grid = Object.assign({color:line}, a.grid||{}); a.ticks = Object.assign({color:muted}, a.ticks||{}); a.border = Object.assign({color:line}, a.border||{}); }
   charts[id] = new Chart($(id), cfg);
 }
+// a thin vertical line for an event on a category axis: at = label, between = just before that label
+const markers = list => ({id:"markers", afterDatasetsDraw(c){
+  const {ctx, chartArea:a, scales:{x}} = c, labels = c.data.labels.map(String);
+  ctx.save(); ctx.font = "12px " + tok("--body"); ctx.fillStyle = tok("--ink"); ctx.strokeStyle = tok("--ink"); ctx.lineWidth = 1;
+  for (const m of list) {
+    const i = labels.indexOf(m.at); if (i < 0 || (m.between && i === 0)) continue;
+    const px = Math.round(m.between ? (x.getPixelForValue(i - 1) + x.getPixelForValue(i)) / 2 : x.getPixelForValue(i)) + .5;
+    ctx.globalAlpha = .55; ctx.beginPath(); ctx.moveTo(px, a.top); ctx.lineTo(px, a.bottom); ctx.stroke(); ctx.globalAlpha = 1;
+    const low = m.pos === "bottom"; ctx.textBaseline = low ? "bottom" : "top"; ctx.fillText(m.text, px + 5, low ? a.bottom - 4 : a.top + 2);
+  }
+  ctx.restore(); }});
 
 // ---------- views
 function kpis(el, items){
@@ -314,7 +328,7 @@ function renderFollow(){
   chart("c-fu", {type:"bar", data:{labels:order, datasets:[{label:"Signed", data:order.map(k=>+(b[k][1]/b[k][0]*100).toFixed(1)),
       backgroundColor:order.map(k => k === "No follow-up" ? tok("--wave") : tok("--prussian"))}]},
     options:{plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => c.raw + " % of " + nf.format(b[order[c.dataIndex]][0]) + " proposals"}}},
-      scales:{y:{beginAtZero:true, max:60, ticks:{callback:v => v + " %"}}, x:{grid:{display:false}}}}});
+      scales:{y:{beginAtZero:true, suggestedMax:60, ticks:{callback:v => v + " %"}}, x:{grid:{display:false}}}}});
   const rows = open.slice(0, 12);
   $("t-open").innerHTML = rows.length ? `<table><thead><tr><th>Proposal</th><th>Segment</th><th>Location</th><th class="r">Age</th><th class="r">Value</th><th>Status</th></tr></thead><tbody>` +
     rows.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="r">${r[4]} d</td><td class="r">${nf.format(r[5])}</td><td><span class="chip ${r[6]==="Planned"?"plan":"none"}">${r[6]==="Planned"?"Call planned":"No call yet"}</span></td></tr>`).join("") +
@@ -338,9 +352,9 @@ function renderProd(){
     ["To check", nf.format(under.length), "installations flagged, last 60 days", "seal"],
   ]);
   chart("c-prod", {type:"line", data:{labels:keys.map(k => new Date(k+"-01").toLocaleDateString("en-GB",{month:"short", year:"2-digit"})), datasets:[
-      {label:"Expected", data:keys.map(k=>+m[k][1].toFixed(1)), borderColor:tok("--wave"), backgroundColor:tok("--wave"), borderDash:[6,4], pointRadius:0, tension:.3},
-      {label:"Actual", data:keys.map(k=>+m[k][0].toFixed(1)), borderColor:tok("--prussian"), backgroundColor:tok("--prussian"), pointRadius:0, borderWidth:2.5, tension:.3}]},
-    options:{interaction:{mode:"index", intersect:false}, scales:{y:{beginAtZero:true, ticks:{callback:v => nf.format(v)}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12}}}}});
+      {label:"Expected after weather", data:keys.map(k=>+m[k][1].toFixed(1)), borderColor:"transparent", backgroundColor:tok("--wave") + "80", fill:"origin", pointRadius:0, pointStyle:"rect", tension:.3},
+      {label:"Actual", data:keys.map(k=>+m[k][0].toFixed(1)), borderColor:tok("--prussian"), backgroundColor:tok("--prussian"), pointRadius:0, pointStyle:"line", borderWidth:2.5, tension:.3}]},
+    options:{interaction:{mode:"index", intersect:false}, plugins:{legend:{labels:{usePointStyle:true, pointStyleWidth:18}}}, scales:{y:{beginAtZero:true, ticks:{callback:v => nf.format(v)}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12}}}}});
   const y = D.yield.filter(r => c === "All" || r[1] === c).sort((a,b)=>b[2]-a[2]);
   chart("c-yield", {type:"bar", data:{labels:y.map(r=>r[0]), datasets:[{label:"kWh/kWp", data:y.map(r=>r[2]), backgroundColor:tok("--indigo")}]},
     options:{indexAxis:"y", plugins:{legend:{display:false}, tooltip:{callbacks:{label:c2 => c2.raw + " kWh/kWp, " + y[c2.dataIndex][3] + " installations"}}}, scales:{x:{beginAtZero:true}, y:{grid:{display:false}}}}});
@@ -371,6 +385,7 @@ function renderComp(){
   const qk = Object.keys(byQ).filter(k => byQ[k][0] >= 25).sort();
   chart("c-ontime", {type:"line", data:{labels:qk.map(k => k.replace("-", " ")), datasets:[{label:"On time", data:qk.map(k => +(byQ[k][1]/byQ[k][0]*100).toFixed(1)),
       borderColor:tok("--prussian"), backgroundColor:tok("--prussian"), pointRadius:3, borderWidth:2.5, tension:.25}]},
+    plugins:[markers([{at:"2025 Q2", between:true, text:"Handover checklist", pos:"bottom"}])],
     options:{plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => c.raw + " % of " + nf.format(byQ[qk[c.dataIndex]][0]) + " items"}}},
       scales:{y:{min:50, max:100, ticks:{callback:v => v + " %"}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:innerWidth < 600 ? 5 : 10}}}}});
   const ok2 = Object.keys(over).sort((a,b)=>over[b]-over[a]);
@@ -440,7 +455,7 @@ function showHist(){
   chart("c-hist", {type:"bar", data:{labels:yk, datasets:[
       {label:"Old ERP", data:yk.map(y => years[y] ? years[y][0] : 0), backgroundColor:tok("--ochre"), stack:"s"},
       {label:"Current ERP", data:yk.map(y => years[y] ? years[y][1] : 0), backgroundColor:tok("--prussian"), stack:"s"}]},
-    options:{scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true, ticks:{callback:v => nf.format(v/1000) + "k"}}},
+    options:{scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, beginAtZero:true, ticks:{callback:v => v === 0 ? "0" : v >= 1e6 ? nf.format(v/1e6) + "M" : nf.format(v/1000) + "k"}}},
       plugins:{tooltip:{callbacks:{label:c2 => c2.dataset.label + ": NOK " + nf.format(c2.raw)}}}}});
 }
 
@@ -471,23 +486,49 @@ function renderRisk(){
       {label:"Before 1 April 2026", data:per(before), backgroundColor:tok("--wave")},
       {label:"After: action required", data:per(after), backgroundColor:tok("--prussian")}]},
     options:{plugins:{tooltip:{callbacks:{label:c => c.dataset.label + ": " + c.raw + " per 100 jobs"}}}, scales:{y:{beginAtZero:true, title:{display:true, text:"events per 100 jobs", color:tok("--muted")}}, x:{grid:{display:false}}}}});
-  // leading vs lagging by month
-  const months = {}; jobs.forEach(j => { const m = j[0].slice(0,7); const x = months[m] ||= [0,0]; x[0]++; if (j[2] === "Red") x[1]++; });
-  const mk = Object.keys(months).sort();
-  const incDates = R.events.filter(e => e[1] === "Incident").map(e => e[0]);
-  const start = R.jobs.length ? R.jobs[0][0] : "2023-01-01";
-  const lag = mk.map(m => { const end = m + "-28"; const prev = incDates.filter(d => d <= end).sort().pop() || start; return Math.max(0, Math.round((new Date(end) - new Date(prev)) / 864e5)); });
-  chart("c-rlead", {data:{labels:mk.map(k => new Date(k + "-01").toLocaleDateString("en-GB",{month:"short", year:"2-digit"})), datasets:[
-      {type:"bar", label:"Red jobs, % of month", data:mk.map(m => +(months[m][1] / months[m][0] * 100).toFixed(0)), backgroundColor:tok("--seal"), yAxisID:"y"},
-      {type:"line", label:"Days since last incident", data:lag, borderColor:tok("--muted"), backgroundColor:tok("--muted"), borderDash:[5,4], pointRadius:0, yAxisID:"y2"}]},
-    options:{scales:{y:{beginAtZero:true, max:100, ticks:{callback:v => v + " %"}}, y2:{position:"right", beginAtZero:true, grid:{display:false}}, x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:innerWidth < 600 ? 5 : 10}}}}});
+  // leading vs lagging, by quarter: two panels on one time axis, not two scales on one plot.
+  // Every quarter is shown, so time runs evenly, and a share needs at least 5 jobs behind it.
+  const qOf = d => d.slice(0,4) + " Q" + (Math.floor((+d.slice(5,7) - 1) / 3) + 1);
+  const qs = {}; jobs.forEach(j => { const x = qs[qOf(j[0])] ||= [0,0]; x[0]++; if (j[2] === "Red") x[1]++; });
+  const qk = [], qs0 = Object.keys(qs).sort();
+  if (qs0.length) { let y = +qs0[0].slice(0,4), q = +qs0[0].slice(-1); const last = qs0[qs0.length - 1];
+    for (;;) { const k = y + " Q" + q; qk.push(k); if (k === last) break; if (++q > 4) { q = 1; y++; } } }
+  while (qk.length > 1 && (qs[qk[0]] || [0])[0] < 5) qk.shift();
+  const incDates = R.events.filter(e => e[1] === "Incident").map(e => e[0]).sort();
+  const dayN = d => Date.parse(d + "T00:00:00Z") / 864e5;
+  const start = dayN(R.jobs.length ? R.jobs[0][0] : "2023-01-01");
+  const qFirst = k => dayN(k.slice(0,4) + "-" + String((+k.slice(-1) - 1) * 3 + 1).padStart(2, "0") + "-01");
+  const qLast = k => Math.min(dayN(new Date(Date.UTC(+k.slice(0,4), +k.slice(-1) * 3, 0)).toISOString().slice(0,10)), dayN(D.generated));
+  // the highest number the office board showed during the quarter
+  const lag = qk.map(k => { let top = 0;
+    for (let t = qFirst(k); t <= qLast(k); t++) { let prev = start; for (const d of incDates) if (dayN(d) <= t) prev = dayN(d); top = Math.max(top, t - prev); }
+    return top; });
+  const lagMax = Math.max(600, Math.ceil(Math.max(0, ...lag) / 600) * 600);
+  const share = qk.map(k => { const x = qs[k] || [0,0]; return x[0] >= 5 ? Math.round(x[1] / x[0] * 100) : null; });
+  const firstInc = incDates.length ? qOf(incDates[0]) : null, afterInc = firstInc ? qk[qk.indexOf(firstInc) + 1] : null;
+  chart("c-rlead", {data:{labels:qk, datasets:[
+      {type:"line", label:"Days since last incident", data:lag, yAxisID:"lag", borderColor:tok("--muted"), backgroundColor:tok("--muted"), borderWidth:2, pointRadius:0, pointStyle:"line", tension:0},
+      {type:"bar", label:"Red jobs, % of jobs", data:share, yAxisID:"lead", backgroundColor:tok("--seal"), pointStyle:"rect"}]},
+    plugins: afterInc ? [markers([{at:afterInc, between:true, text:"Incident"}])] : [],
+    options:{interaction:{mode:"index", intersect:false},
+      plugins:{legend:{labels:{usePointStyle:true, pointStyleWidth:18}}, tooltip:{callbacks:{label:c => { const n = (qs[qk[c.dataIndex]] || [0])[0];
+        return c.dataset.yAxisID === "lag" ? "Days since last incident: up to " + nf.format(c.raw) : c.raw == null ? "Too few jobs to show a share (" + n + ")" : c.raw + " % red, of " + n + " jobs"; }}}},
+      scales:{x:{grid:{display:false}, ticks:{maxRotation:0, autoSkip:false, callback:function(v, i){ const l = this.getLabelForValue(v); return l.endsWith("Q1") ? l.slice(0,4) : i === 0 ? l : ""; }}},
+        lead:{type:"linear", position:"left", stack:"rl", stackWeight:2, beginAtZero:true, suggestedMax:60, ticks:{callback:v => v + " %", maxTicksLimit:4}},
+        gap:{type:"linear", position:"left", stack:"rl", stackWeight:.3, grid:{display:false}, ticks:{display:false}, border:{display:false}},
+        lag:{type:"linear", position:"left", stack:"rl", stackWeight:1, min:0, max:lagMax, ticks:{stepSize:lagMax / 2}}}}});
   // factor frequency
   const cnt = {}; jobs.forEach(j => j[4].forEach(f => cnt[f] = (cnt[f]||0) + 1));
   const fk = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a]).slice(0, 10);
   const catCol = {Supply:tok("--ochre"), Chain:tok("--sun2"), People:tok("--indigo"), Handling:tok("--seal"), Site:tok("--prussian"), Planning:tok("--wave")};
-  chart("c-rfact", {type:"bar", data:{labels:fk.map(f => rules[f][0]), datasets:[{label:"Jobs", data:fk.map(f => cnt[f]), backgroundColor:fk.map(f => catCol[rules[f][1]] || tok("--wave"))}]},
-    options:{indexAxis:"y", plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => rules[fk[c.dataIndex]][1] + ": " + c.raw + " jobs"}}},
-      scales:{x:{beginAtZero:true}, y:{grid:{display:false}, ticks:{autoSkip:false, font:{size:11}, callback:function(v){ const t = this.getLabelForValue(v); return t.length > 34 ? t.slice(0, 33) + "…" : t; }}}}}});
+  // long factor names wrap onto two lines instead of being cut, and the legend names the kinds of factor
+  const wrapL = t => { if (t.length <= 26) return t; let i = -1; for (let k = 0; k < t.length; k++) if (t[k] === " " && (i < 0 || Math.abs(k - t.length / 2) < Math.abs(i - t.length / 2))) i = k;
+    return i > 0 ? [t.slice(0, i), t.slice(i + 1)] : t; };
+  const kinds = [...new Set(fk.map(f => rules[f][1]))];
+  chart("c-rfact", {type:"bar", data:{labels:fk.map(f => wrapL(rules[f][0])), datasets:[{label:"Jobs", data:fk.map(f => cnt[f]), backgroundColor:fk.map(f => catCol[rules[f][1]] || tok("--wave"))}]},
+    options:{indexAxis:"y", plugins:{legend:{onClick:() => {}, labels:{generateLabels:() => kinds.map(k => ({text:k, fillStyle:catCol[k] || tok("--wave"), strokeStyle:"transparent", lineWidth:0, fontColor:tok("--ink")}))}},
+      tooltip:{callbacks:{title:items => rules[fk[items[0].dataIndex]][0], label:c => rules[fk[c.dataIndex]][1] + ": " + c.raw + " jobs"}}},
+      scales:{x:{beginAtZero:true}, y:{grid:{display:false}, ticks:{autoSkip:false, font:{size:11}}}}}});
   // chain table
   const groups = {};
   jobs.forEach(j => { [[R.suppliers[j[6]] || j[6], "Battery supplier"], [j[7] ? (R.suppliers[j[7]] || j[7]) : "Own crews", "Installed by"]].forEach(([k, kind]) => {
