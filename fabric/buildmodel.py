@@ -83,7 +83,7 @@ PCT, NUM, DEC, KWH, NOK, DATE = "0.0%", "#,0", "#,0.0", "#,0 \"kWh\"", "#,0 \"kr
 # table: [(name, DAX, format, folder)]
 MEASURES = {
     "factjobrisk": [
-        ("As of date", 'DATE ( 2026, 10, 31 )', DATE, "Settings"),
+        ("As of date", 'DATE ( 2026, 11, 23 )', DATE, "Settings"),
         ("Battery jobs", 'CALCULATE ( COUNTROWS ( factjobrisk ), factjobrisk[status] = "Done" )', NUM, "Risk"),
         ("Red jobs", 'CALCULATE ( [Battery jobs], factjobrisk[risk_level] = "Red" )', NUM, "Risk"),
         ("Yellow jobs", 'CALCULATE ( [Battery jobs], factjobrisk[risk_level] = "Yellow" )', NUM, "Risk"),

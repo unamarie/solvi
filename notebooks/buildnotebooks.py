@@ -18,7 +18,7 @@ DOMAIN = "{domain}"
 LANDING_PATH = f"Files/landing/{{DOMAIN}}"   # upload this domain's CSV files here
 TABLE_FORMAT = "delta"
 LOCAL_PREFIX = ""                            # local testing sets this to the domain name
-AS_OF = "2026-10-31"                         # demo data ends here; use the current date with live data
+AS_OF = "2026-11-23"                         # demo data ends here; use the current date with live data
 
 from pyspark.sql import functions as F, Window as W
 

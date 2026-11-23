@@ -175,7 +175,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;colo
   <div class="story" id="r-story"></div>
   <div class="kpis" id="k-risk"></div>
   <div class="grid">
-    <div class="card"><h2>Do the risk factors predict trouble?</h2><span class="sub">Near misses and incidents per 100 battery jobs, by the risk level the job had. Before and after actions became required.</span><div class="chart"><canvas id="c-rlevel"></canvas></div></div>
+    <div class="card"><h2>Do the risk factors predict trouble?</h2><span class="sub">Near misses and incidents per 100 battery jobs: by risk level before actions became required on 1 April 2026, and for all jobs before and after.</span><div class="chart"><canvas id="c-rlevel"></canvas></div></div>
     <div class="card"><h2>Leading or lagging?</h2><span class="sub">By quarter. Top: days since the last incident, the number on the office board, which looked fine until March 2026. Bottom: share of battery jobs that were red, a warning you can act on.</span><div class="chart"><canvas id="c-rlead"></canvas></div></div>
   </div>
   <div class="grid">
@@ -232,6 +232,10 @@ const nf = new Intl.NumberFormat("en-GB");
 const mNOK = v => "NOK " + (v/1e6).toLocaleString("en-GB",{maximumFractionDigits: v >= 1e8 ? 0 : 1}) + "M";
 const pct = v => isFinite(v) ? (v*100).toFixed(1) + " %" : "–";
 const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+// the data's last day, so period labels follow the data instead of being written by hand
+const asOf = new Date(D.generated + "T00:00:00Z");
+const fmtD = (t, o) => t.toLocaleDateString("en-GB", Object.assign({timeZone:"UTC"}, o));
+const thru = "2023 – " + fmtD(asOf, {month:"short", year:"numeric"});
 
 // ---------- filters
 const F = {year:"All", country:"All", segment:"All"};
@@ -281,7 +285,7 @@ function renderProposals(){
   const proposals = s(3), decided = s(4), won = s(5), proposed = s(6), wonQ = s(7), ordered = s(8);
   const lostAfter = s(9) + s(10) + s(11);
   kpis("k-proposals", [
-    ["Proposals", nf.format(proposals), F.year === "All" ? "2023 – Oct 2026" : F.year],
+    ["Proposals", nf.format(proposals), F.year === "All" ? thru : F.year],
     ["Signed", pct(won/decided), nf.format(won) + " of " + nf.format(decided) + " decided"],
     ["Proposed value", mNOK(proposed), "all proposals"],
     ["Installed as signed", pct(ordered/wonQ), "value delivered ÷ value signed"],
@@ -347,7 +351,7 @@ function renderProd(){
   kpis("k-prod", [
     ["Installations", nf.format(pk.installs), "grid connected"],
     ["Installed capacity", (pk.kwp/1000).toFixed(1) + " MWp", "solar panels"],
-    ["Production, 12 months", nf.format(Math.round(a12)) + " MWh", "Nov 2025 – Oct 2026"],
+    ["Production, 12 months", nf.format(Math.round(a12)) + " MWh", "to " + fmtD(asOf, {day:"numeric", month:"short", year:"numeric"})],
     ["Of expected output", pct(a12/e12), "after weather and snow"],
     ["To check", nf.format(under.length), "installations flagged, last 60 days", "seal"],
   ]);
@@ -473,19 +477,26 @@ function renderRisk(){
   const lastInc = R.events.filter(e => e[1] === "Incident").map(e => e[0]).sort().pop();
   const since = lastInc ? Math.round((new Date(D.generated) - new Date(lastInc)) / 864e5) : null;
   kpis("k-risk", [
-    ["Battery jobs", nf.format(jobs.length), F.year === "All" ? "2023 – Oct 2026" : F.year],
+    ["Battery jobs", nf.format(jobs.length), F.year === "All" ? thru : F.year],
     ["Red jobs", pct(red / jobs.length), nf.format(red) + " jobs with a stop factor or high score", "seal"],
     ["Near misses", nf.format(nm), (jobs.length ? (nm / jobs.length * 100).toFixed(1) : "–") + " per 100 jobs"],
     ["Good catches", nf.format(gc), "damage stopped at goods receipt"],
     ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: shows the past, not the next job", "muted"],
   ]);
-  // events per 100 jobs by level, before/after
-  const lv = ["Green","Yellow","Red"], per = (arr) => lv.map(l => { const a = arr.filter(j => j[2] === l); return a.length ? +(a.reduce((t,j)=>t+ev(j),0) / a.length * 100).toFixed(1) : 0; });
+  // events per 100 jobs: by risk level before the rule, and for all jobs before and after it.
+  // After the rule few jobs are red, so a rate per level after it would rest on one or two events.
+  const lv = ["Green","Yellow","Red"];
+  const rate = arr => { const n = arr.length, e = arr.reduce((t,j)=>t+ev(j),0); return {n, e, r: n ? +(e / n * 100).toFixed(1) : null}; };
   const before = jobs.filter(j => j[0] < rd), after = jobs.filter(j => j[0] >= rd);
-  chart("c-rlevel", {type:"bar", data:{labels:lv, datasets:[
-      {label:"Before 1 April 2026", data:per(before), backgroundColor:tok("--wave")},
-      {label:"After: action required", data:per(after), backgroundColor:tok("--prussian")}]},
-    options:{plugins:{tooltip:{callbacks:{label:c => c.dataset.label + ": " + c.raw + " per 100 jobs"}}}, scales:{y:{beginAtZero:true, title:{display:true, text:"events per 100 jobs", color:tok("--muted")}}, x:{grid:{display:false}}}}});
+  const bl = lv.map(l => rate(before.filter(j => j[2] === l))), ba = rate(before), aa = rate(after);
+  const bS = [...bl, ba], aS = [null, null, null, aa];
+  const f1 = v => v == null ? "–" : v.toFixed(1);
+  chart("c-rlevel", {type:"bar", data:{labels:[...lv, "All jobs"], datasets:[
+      {label:"Before 1 April 2026", data:bS.map(x => x.r), backgroundColor:tok("--wave"), skipNull:true},
+      {label:"After: action required", data:aS.map(x => x ? x.r : null), backgroundColor:tok("--prussian"), skipNull:true}]},
+    options:{plugins:{tooltip:{callbacks:{label:c => { const x = (c.datasetIndex ? aS : bS)[c.dataIndex];
+        return c.dataset.label + ": " + c.raw + " per 100 jobs (" + x.e + " events in " + nf.format(x.n) + " jobs)"; }}}},
+      scales:{y:{beginAtZero:true, title:{display:true, text:"events per 100 jobs", color:tok("--muted")}}, x:{grid:{display:false}}}}});
   // leading vs lagging, by quarter: two panels on one time axis, not two scales on one plot.
   // Every quarter is shown, so time runs evenly, and a share needs at least 5 jobs behind it.
   const qOf = d => d.slice(0,4) + " Q" + (Math.floor((+d.slice(5,7) - 1) / 3) + 1);
@@ -567,8 +578,7 @@ function renderRisk(){
     pl.slice(0, 14).map(p => `<tr><td>${new Date(p[1]).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</td><td>${esc(p[2])}<br><span class="sub">${esc(p[6])}</span></td><td>${esc(p[4])}</td>
       <td><span class="chip lvl-${p[7].toLowerCase()}">${p[7]}</span></td><td class="issue">${p[9].map(f => esc(rules[f][0])).join("; ") || "–"}</td><td class="issue">${esc(actionFor(p))}</td></tr>`).join("") + `</tbody></table>`
     : '<p class="sub">No planned battery jobs for this selection.</p>';
-  const b = per(before), a = per(after);
-  $("i-risk").textContent = before.length && after.length ? `Before the change, red jobs had ${b[2]} events per 100 jobs against ${b[0]} for green ones, so the factors do predict trouble. With an action required before start, red jobs dropped to ${a[2]}. Days since last incident alone would not have shown this.` : "Not enough jobs in this selection to compare before and after.";
+  $("i-risk").textContent = before.length && after.length ? `Before the change, red jobs had ${f1(bl[2].r)} events per 100 jobs against ${f1(bl[0].r)} for green ones, so the factors do predict trouble. Since an action has been required before start, events across all jobs fell from ${f1(ba.r)} to ${f1(aa.r)} per 100 jobs. Days since last incident alone would not have shown this.` : "Not enough jobs in this selection to compare before and after.";
 }
 
 // ---------- routing

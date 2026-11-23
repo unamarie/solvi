@@ -12,7 +12,7 @@ random.seed(2026)
 OUT = os.path.join(os.path.dirname(__file__), "..", "data")
 os.makedirs(OUT, exist_ok=True)
 
-START, END = dt.date(2023, 1, 1), dt.date(2026, 10, 31)
+START, END = dt.date(2023, 1, 1), dt.date(2026, 11, 23)
 DAYS = (END - START).days + 1
 
 def d(x): return x.isoformat() if x else ""
@@ -152,6 +152,74 @@ for i in range(1, 3201):
     created = rand_date(START - dt.timedelta(days=200), END - dt.timedelta(days=20))
     customers.append([cid, name, seg, site[0], pick(SRC), d(created)])
     site_of[cid] = (site, seg, created)
+# ---------------------------------------------------------------- legacy ERP (2013–2022), frozen archive
+# Solvi switched ERP on 1 Jan 2023. Old numbers differ from new ones; crosswalk tables map what can be mapped.
+LEG_START, LEG_END = dt.date(2013, 1, 1), dt.date(2022, 12, 31)
+LEG_PRODUCTS = [  # old item no, description, category, maps to current product (None = discontinued)
+    ("100250","SOLARPANEL 250W POLY","Panel",None), ("100300","SOLARPANEL 300W MONO","Panel",None),
+    ("100365","SOLARPANEL 365W MONO","Panel","PV-410"), ("200030","VEKSELRETTER 3KW","Inverter",None),
+    ("200050","VEKSELRETTER 5KW HYBRID","Inverter","INV-5"), ("200150","VEKSELRETTER 15KW","Inverter","INV-15"),
+    ("300048","BATTERI 4.8KWH","Battery",None), ("300100","BATTERI 10KWH","Battery","BAT-10"),
+    ("400010","TAKFESTE TEGL","Mounting","MNT-TIL"), ("400020","TAKFESTE STÅL","Mounting","MNT-STL"),
+    ("500001","KABELSETT DC","Electrical","CBL-KIT"), ("500010","ENERGIMÅLER","Electrical","MTR-1"),
+    ("900001","MONTØR TIME","Service","LAB-INST"), ("900002","ELEKTRIKER TIME","Service","LAB-ELEC"),
+    ("900010","SERVICEBESØK","Service","SVC-ANN"), ("910000","DIVERSE","Other",None),
+]
+LP = {p[0]: p for p in LEG_PRODUCTS}
+write("legacy_product", ["old_item_no","description","category"], [[p[0], p[1], p[2]] for p in LEG_PRODUCTS])
+write("product_xref", ["old_item_no","product_code"], [[p[0], p[3]] for p in LEG_PRODUCTS if p[3]])
+
+leg_cust, cust_xref, leg_lines, old_system = [], [], [], {}
+old_no, lo_no = 40000, 100000
+def leg_customer_history(oldid, seg, lat):
+    """Writes one old customer's orders and returns (kWp of their system, whether they ever bought a battery)."""
+    global lo_no
+    first = rand_date(LEG_START, LEG_END - dt.timedelta(days=200))
+    kwp = random.choice([4,5,6,8]) if seg == "Residential" else random.choice([15,20,30,50])
+    panel = "100250" if first.year < 2016 else ("100300" if first.year < 2019 else "100365")
+    lo_no += 1; ono = f"{lo_no}"
+    n_pan = max(6, round(kwp * 1000 / int(LP[panel][1].split()[1][:-1])))
+    unit = {"100250":1900,"100300":2300,"100365":2400}[panel] * (1.25 if first.year < 2016 else 1.0)
+    rows = [(panel, n_pan, unit), ("200050" if kwp <= 6 and first.year >= 2017 else ("200030" if kwp <= 6 else "200150"), 1, 18000),
+            ("400010" if random.random() < .6 else "400020", n_pan, 450), ("500001", 1, 4200), ("500010", 1, 3600),
+            ("900001", round(6 + kwp * 1.2), 820), ("900002", round(4 + kwp * .4), 980)]
+    if first.year >= 2018 and random.random() < .25: rows.append(("300048" if first.year < 2020 else "300100", 1, 52000 if first.year < 2020 else 68000))
+    had_bat = rows[-1][0] in ("300048", "300100")
+    for ln, (item, q, u) in enumerate(rows, 1):
+        leg_lines.append([ono, ln, oldid, d(first), item, q, round(u * q, 2)])
+    # follow-up business: service visits and small add-ons
+    y = first.year + 1
+    while y <= 2022:
+        if random.random() < 0.45:
+            dd = dt.date(y, random.randint(3, 10), random.randint(1, 28)); lo_no += 1
+            items = [("900010", 1, 2400)] + ([("910000", 1, random.randint(300, 2500))] if random.random() < .4 else [])
+            if random.random() < .08 and y >= 2019: items.append(("300100", 1, 66000)); had_bat = True
+            for ln, (item, q, u) in enumerate(items, 1):
+                leg_lines.append([f"{lo_no}", ln, oldid, d(dd), item, q, round(u * q, 2)])
+        y += 1
+    return kwp, had_bat
+# existing customers who were also customers in the old system
+for c in customers:
+    cid, name, seg, sid = c[0], c[1], c[2], c[3]
+    if random.random() < 0.30:
+        old_no += 1; oldid = f"K-{old_no}"
+        site = next(s for s in SITES if s[0] == sid)
+        leg_cust.append([oldid, name.upper().replace(" (DEMO)", ""), site[1]])
+        mapped = random.random() < 0.96                                # a few could not be matched
+        if mapped: cust_xref.append([oldid, cid])
+        kwp_old, had_bat = leg_customer_history(oldid, seg, site[4])
+        if mapped:   # moved to the new system at the switch on 1 January 2023, with their old solar system
+            old_system[cid] = (kwp_old, had_bat)
+            c[5] = d(START); site_of[cid] = (site_of[cid][0], site_of[cid][1], START)
+# old customers who never moved to the new system
+for _ in range(260):
+    old_no += 1; oldid = f"K-{old_no}"; site = random.choices(SITES, [s[7] for s in SITES])[0]
+    seg = random.choices(["Residential","Farm","Commercial"], [80, 10, 10])[0]
+    leg_cust.append([oldid, f"PRIVATKUNDE {oldid}" if seg == "Residential" else f"{random.choice(B1).upper()}{random.choice(['LI','VIK','DAL'])} AS (DEMO)", site[1]])
+    leg_customer_history(oldid, seg, site[4])
+write("legacy_customer", ["old_customer_no","name","municipality"], leg_cust)
+write("customer_xref", ["old_customer_no","customer_id"], cust_xref)
+write("legacy_order_line", ["legacy_order_no","line_no","old_customer_no","order_date","old_item_no","qty","amount_nok"], leg_lines)
 write("customer", ["customer_id","customer_name","segment","site_id","lead_source","created_date"], customers)
 
 # ---------------------------------------------------------------- proposals, orders, invoices, installs
@@ -278,6 +346,34 @@ for cid, (site, seg, created) in site_of.items():
         inv_no += 1; invoices.append([f"IV-{inv_no}", oid, d(od), round(o_total * 0.3, 2), "Deposit"])
         inv_no += 1; invoices.append([f"IV-{inv_no}", oid, d(inst_d + dt.timedelta(days=3)), round(o_total * 0.7, 2), "Final"])
 
+# ---- battery retrofits: customers with an older solar system from the old ERP add a battery and a hybrid inverter.
+# Sold as a direct order, without a proposal. The system joins the new asset register when the battery goes in,
+# and is monitored from then on, so it gets production, compliance items and a battery job like any installation.
+for cid, (kwp_old, had_bat) in sorted(old_system.items()):
+    site, seg, created = site_of[cid]
+    if had_bat or random.random() >= (0.6 if seg == "Residential" else 0.25): continue
+    od = rand_date(START, END)
+    o_no += 1; oid = f"SO-{o_no}"
+    bat = ("BAT-10", 1) if random.random() < 0.6 else ("BAT-5", random.choice([1, 2]))
+    lines = [bat, ("INV-5" if kwp_old <= 6 else "INV-8" if kwp_old <= 10 else "INV-15", 1), ("LAB-INST", 6), ("LAB-ELEC", 5)]
+    if random.random() < 0.5: lines.append(("MTR-1", 1))
+    if random.random() < 0.6: lines.append(("APP-MON", 1))
+    disc = random.choice([0, 0, 0.03, 0.05]); o_total = 0
+    for ln, (code, qty) in enumerate(lines, 1):
+        unit = round(PROD[code][4] * (price_index(od) if PROD[code][2] in ("Inverter", "Battery") else 1) * (1 - disc), 2)
+        o_total += unit * qty
+        olines.append([oid, ln, "", "", code, qty, unit, round(unit * qty, 2)])
+    orders.append([oid, "", cid, d(od), "Delivered", round(o_total, 2)])
+    bkwh = 10 if bat[0] == "BAT-10" else 5 * bat[1]
+    inst_d = od + dt.timedelta(days=random.randint(10, 35))
+    if inst_d > END:
+        pending_battery.append((oid, cid, site[0], bkwh, inst_d)); continue
+    grid_d = inst_d + dt.timedelta(days=random.randint(1, 7))
+    inst_no += 1; iid = f"IN-{inst_no}"
+    installs.append([iid, oid, cid, site[0], d(inst_d), d(grid_d), float(kwp_old), bkwh, random.choice(["S","S","SE","SW","E/W"]), random.randint(15, 45)])
+    inv_no += 1; invoices.append([f"IV-{inv_no}", oid, d(od), round(o_total * 0.3, 2), "Deposit"])
+    inv_no += 1; invoices.append([f"IV-{inv_no}", oid, d(inst_d + dt.timedelta(days=3)), round(o_total * 0.7, 2), "Final"])
+
 write("proposal", ["proposal_id","customer_id","seller_id","created_date","sent_date","valid_until","status","decided_date","loss_reason","proposed_kwp","proposal_total_nok"], proposals)
 write("proposal_line", ["proposal_id","line_no","product_code","qty","unit_price_nok","line_total_nok"], qlines)
 write("sales_order", ["order_id","proposal_id","customer_id","order_date","order_status","order_total_nok"], orders)
@@ -383,67 +479,6 @@ for iid, oid, cid, sid, inst_d, grid_d, kwp, bat, orient, tilt in installs:
 write("compliance_item", ["item_id","installation_id","requirement_id","due_date","submitted_date"], items)
 write("inspection_deviation", ["deviation_id","installation_id","found_date","source","category","severity","closed_date"], devs)
 
-# ---------------------------------------------------------------- legacy ERP (2013–2022), frozen archive
-# Solvi switched ERP on 1 Jan 2023. Old numbers differ from new ones; crosswalk tables map what can be mapped.
-LEG_START, LEG_END = dt.date(2013, 1, 1), dt.date(2022, 12, 31)
-LEG_PRODUCTS = [  # old item no, description, category, maps to current product (None = discontinued)
-    ("100250","SOLARPANEL 250W POLY","Panel",None), ("100300","SOLARPANEL 300W MONO","Panel",None),
-    ("100365","SOLARPANEL 365W MONO","Panel","PV-410"), ("200030","VEKSELRETTER 3KW","Inverter",None),
-    ("200050","VEKSELRETTER 5KW HYBRID","Inverter","INV-5"), ("200150","VEKSELRETTER 15KW","Inverter","INV-15"),
-    ("300048","BATTERI 4.8KWH","Battery",None), ("300100","BATTERI 10KWH","Battery","BAT-10"),
-    ("400010","TAKFESTE TEGL","Mounting","MNT-TIL"), ("400020","TAKFESTE STÅL","Mounting","MNT-STL"),
-    ("500001","KABELSETT DC","Electrical","CBL-KIT"), ("500010","ENERGIMÅLER","Electrical","MTR-1"),
-    ("900001","MONTØR TIME","Service","LAB-INST"), ("900002","ELEKTRIKER TIME","Service","LAB-ELEC"),
-    ("900010","SERVICEBESØK","Service","SVC-ANN"), ("910000","DIVERSE","Other",None),
-]
-LP = {p[0]: p for p in LEG_PRODUCTS}
-write("legacy_product", ["old_item_no","description","category"], [[p[0], p[1], p[2]] for p in LEG_PRODUCTS])
-write("product_xref", ["old_item_no","product_code"], [[p[0], p[3]] for p in LEG_PRODUCTS if p[3]])
-
-leg_cust, cust_xref, leg_lines = [], [], []
-old_no, lo_no = 40000, 100000
-def leg_customer_history(oldid, seg, lat):
-    global lo_no
-    first = rand_date(LEG_START, LEG_END - dt.timedelta(days=200))
-    kwp = random.choice([4,5,6,8]) if seg == "Residential" else random.choice([15,20,30,50])
-    panel = "100250" if first.year < 2016 else ("100300" if first.year < 2019 else "100365")
-    lo_no += 1; ono = f"{lo_no}"
-    n_pan = max(6, round(kwp * 1000 / int(LP[panel][1].split()[1][:-1])))
-    unit = {"100250":1900,"100300":2300,"100365":2400}[panel] * (1.25 if first.year < 2016 else 1.0)
-    rows = [(panel, n_pan, unit), ("200050" if kwp <= 6 and first.year >= 2017 else ("200030" if kwp <= 6 else "200150"), 1, 18000),
-            ("400010" if random.random() < .6 else "400020", n_pan, 450), ("500001", 1, 4200), ("500010", 1, 3600),
-            ("900001", round(6 + kwp * 1.2), 820), ("900002", round(4 + kwp * .4), 980)]
-    if first.year >= 2018 and random.random() < .25: rows.append(("300048" if first.year < 2020 else "300100", 1, 52000 if first.year < 2020 else 68000))
-    for ln, (item, q, u) in enumerate(rows, 1):
-        leg_lines.append([ono, ln, oldid, d(first), item, q, round(u * q, 2)])
-    # follow-up business: service visits and small add-ons
-    y = first.year + 1
-    while y <= 2022:
-        if random.random() < 0.45:
-            dd = dt.date(y, random.randint(3, 10), random.randint(1, 28)); lo_no += 1
-            items = [("900010", 1, 2400)] + ([("910000", 1, random.randint(300, 2500))] if random.random() < .4 else [])
-            if random.random() < .08 and y >= 2019: items.append(("300100", 1, 66000))
-            for ln, (item, q, u) in enumerate(items, 1):
-                leg_lines.append([f"{lo_no}", ln, oldid, d(dd), item, q, round(u * q, 2)])
-        y += 1
-# existing customers who were also customers in the old system
-for c in customers:
-    cid, name, seg, sid = c[0], c[1], c[2], c[3]
-    if random.random() < 0.30:
-        old_no += 1; oldid = f"K-{old_no}"
-        site = next(s for s in SITES if s[0] == sid)
-        leg_cust.append([oldid, name.upper().replace(" (DEMO)", ""), site[1]])
-        if random.random() < 0.96: cust_xref.append([oldid, cid])      # a few could not be matched
-        leg_customer_history(oldid, seg, site[4])
-# old customers who never moved to the new system
-for _ in range(260):
-    old_no += 1; oldid = f"K-{old_no}"; site = random.choices(SITES, [s[7] for s in SITES])[0]
-    seg = random.choices(["Residential","Farm","Commercial"], [80, 10, 10])[0]
-    leg_cust.append([oldid, f"PRIVATKUNDE {oldid}" if seg == "Residential" else f"{random.choice(B1).upper()}{random.choice(['LI','VIK','DAL'])} AS (DEMO)", site[1]])
-    leg_customer_history(oldid, seg, site[4])
-write("legacy_customer", ["old_customer_no","name","municipality"], leg_cust)
-write("customer_xref", ["old_customer_no","customer_id"], cust_xref)
-write("legacy_order_line", ["legacy_order_no","line_no","old_customer_no","order_date","old_item_no","qty","amount_nok"], leg_lines)
 
 # ---------------------------------------------------------------- battery chain: supply, delivery and HSEQ risk
 # Story: on 11 March 2026 a battery with transport damage, not inspected at goods receipt, was installed cold in a
@@ -555,6 +590,7 @@ def make_job(order_id, inst_id, cust, site_id, job_day, status):
         crew, crew_rec, sup, pkg, shock, inspected, loc, indoor, vent, sja = "CR-21", next(c for c in CREWS if c[0] == "CR-21"), "SUP-B3", True, True, False, "Garage", True, True, False
         bat_temp, acclim, storage = -3.5, False, 1
         delivered = job_day - dt.timedelta(days=storage)
+        planned, excursion = job_day, False
     dl_no += 1; did = f"DL-{dl_no}"
     deliveries.append([did, order_id, sup, f"B{sup[-1]}-{delivered.strftime('%y%m')}-{random.randint(10,99)}", d(delivered), int(pkg), int(shock), int(inspected), int(excursion), storage])
     jb_no += 1; jid = f"JB-{jb_no}"

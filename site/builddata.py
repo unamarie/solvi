@@ -7,7 +7,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 import glob
 def D(n, **kw):   # tables live in data/<domain>/<table>.csv
     return pd.read_csv(glob.glob(os.path.join(ROOT, "data", "*", f"{n}.csv"))[0], **kw)
-END = pd.Timestamp("2026-10-31")
+END = pd.Timestamp("2026-11-23")
 
 site, cust, prod = D("site"), D("customer"), D("product")
 q = D("proposal", parse_dates=["created_date", "sent_date", "decided_date"])
@@ -192,7 +192,7 @@ risk = {"rule_date": "2026-04-01", "rules": {r.factor_code: [r.factor, r.categor
         "suppliers": sname, "jobs": risk_jobs, "planned": planned, "incident": incident, "events": events_list}
 print("risk jobs", len(risk_jobs), "planned", len(planned), "red planned", sum(1 for p_ in planned if p_[7] == "Red"))
 
-out = {"generated": "2026-10-31", "years": sorted(q.year.unique().tolist()), "countries": sorted(q.country.unique().tolist()),
+out = {"generated": END.strftime("%Y-%m-%d"), "years": sorted(q.year.unique().tolist()), "countries": sorted(q.country.unique().tolist()),
        "segments": sorted(q.segment.unique().tolist()),
        "qo": qo, "monthly": monthly, "cat": cat_rows, "reasons": reasons, "fu": fu_rows, "open": open_list,
        "prod_m": prod_m, "yield": yield_rows, "under": under_rows, "prod_kpi": prod_kpi,

@@ -1,7 +1,7 @@
 table 'Battery job'
 	lineageTag: d45ed398-b7c1-517f-8853-0e4880d0bb14
 
-	measure 'As of date' = DATE ( 2026, 10, 31 )
+	measure 'As of date' = DATE ( 2026, 11, 23 )
 		formatString: yyyy-mm-dd
 		displayFolder: Settings
 		lineageTag: cf8d19de-d914-5282-97f0-1366a6676597
