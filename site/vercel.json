@@ -1,10 +1,10 @@
 {
   "trailingSlash": true,
   "redirects": [
-    { "source": "/quality/:path*", "destination": "/solvi/quality/", "permanent": true },
-    { "source": "/sales/:path*", "destination": "/solvi/sales/", "permanent": true },
-    { "source": "/service/:path*", "destination": "/solvi/service/", "permanent": true },
-    { "source": "/architecture/:path*", "destination": "/solvi/architecture/", "permanent": true }
+    { "source": "/quality/(.*)", "destination": "/solvi/quality/", "permanent": true },
+    { "source": "/sales/(.*)", "destination": "/solvi/sales/", "permanent": true },
+    { "source": "/service/(.*)", "destination": "/solvi/service/", "permanent": true },
+    { "source": "/architecture/(.*)", "destination": "/solvi/architecture/", "permanent": true }
   ],
   "headers": [
     {
