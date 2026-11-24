@@ -1,4 +1,4 @@
-# 5. Leading indicators, not days without incident
+# 5. Leading indicators replace days without incident
 
 Status: accepted, November 2026
 
@@ -12,7 +12,7 @@ Measure the conditions before incidents: risk factors per job, red and yellow jo
 
 ## Consequences
 
-- Action happens before the job, not after the incident.
+- Action happens before the job, while it can still prevent an incident.
 - More numbers to explain. Each one says what it is for.
 
 ## Considered

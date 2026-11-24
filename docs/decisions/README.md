@@ -10,10 +10,10 @@ The plan they belong to, with current and target state, KPI tree, roadmap, busin
 | 2 | [Shared data lives once, in core, read through shortcuts](0002-shared-data-in-core.md) | Accepted |
 | 3 | [A quality gate in every domain](0003-quality-gate-in-every-domain.md) | Accepted |
 | 4 | [Risk rules are a table owned by quality](0004-risk-rules-as-data.md) | Accepted |
-| 5 | [Leading indicators, not days without incident](0005-leading-indicators.md) | Accepted |
+| 5 | [Leading indicators replace days without incident](0005-leading-indicators.md) | Accepted |
 | 6 | [One Direct Lake model over the gold tables](0006-one-direct-lake-model.md) | Accepted |
 | 7 | [Row-level rules in the semantic model](0007-row-rules-in-the-model.md) | Proposed |
-| 8 | [A role, not a name, in HSE events](0008-roles-not-names.md) | Accepted |
+| 8 | [HSE events record a role](0008-roles-not-names.md) | Accepted |
 | 9 | [One definition per company KPI, with a drill-down](0009-one-definition-per-kpi.md) | Proposed |
 
 A new decision gets the next number. A decision that is replaced keeps its record, with a line saying which one replaced it.

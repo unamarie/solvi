@@ -151,7 +151,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;colo
   <p class="for"><span>For</span> sellers · <span>Used</span> every morning, a short list to work through</p>
   <div class="kpis" id="k-follow"></div>
   <div class="grid">
-    <div class="card"><h2>Share signed, by days to first contact</h2><span class="sub">Decided proposals. A follow-up matters more than how soon it comes. Association, not proof of cause.</span><div class="chart"><canvas id="c-fu"></canvas></div></div>
+    <div class="card"><h2>Share signed, by days to first contact</h2><span class="sub">Decided proposals. A follow-up matters more than how soon it comes. The chart shows a link and can't prove cause.</span><div class="chart"><canvas id="c-fu"></canvas></div></div>
     <div class="card"><h2>Open proposals waiting for a call</h2><span class="sub">Sent 3+ days ago, no completed follow-up. Highest value first.</span><div class="tablewrap" id="t-open"></div></div>
   </div>
   <p class="insight" id="i-follow"></p>
@@ -212,7 +212,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.82rem;colo
     <div id="h-results" class="results"></div>
   </div>
   <div id="h-detail" class="stackd"></div>
-  <p class="insight">Solvi changed ERP on 1 January 2023. The old system's history was loaded once into a frozen archive and mapped to the new customer and product numbers. Lines that could not be mapped keep their old numbers and are shown, not hidden.</p>
+  <p class="insight">Solvi changed ERP on 1 January 2023. The old system's history was loaded once into a frozen archive and mapped to the new customer and product numbers. Lines that could not be mapped keep their old numbers and are still shown.</p>
 </section>
 
 </div>
@@ -481,7 +481,7 @@ function renderRisk(){
     ["Red jobs", pct(red / jobs.length), nf.format(red) + " jobs with a stop factor or high score", "seal"],
     ["Near misses", nf.format(nm), (jobs.length ? (nm / jobs.length * 100).toFixed(1) : "–") + " per 100 jobs"],
     ["Good catches", nf.format(gc), "damage stopped at goods receipt"],
-    ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: shows the past, not the next job", "muted"],
+    ["Days since last incident", since === null ? "–" : nf.format(since), "lagging: it only looks back", "muted"],
   ]);
   // events per 100 jobs: by risk level before the rule, and for all jobs before and after it.
   // After the rule few jobs are red, so a rate per level after it would rest on one or two events.
@@ -497,7 +497,7 @@ function renderRisk(){
     options:{plugins:{tooltip:{callbacks:{label:c => { const x = (c.datasetIndex ? aS : bS)[c.dataIndex];
         return c.dataset.label + ": " + c.raw + " per 100 jobs (" + x.e + " events in " + nf.format(x.n) + " jobs)"; }}}},
       scales:{y:{beginAtZero:true, title:{display:true, text:"events per 100 jobs", color:tok("--muted")}}, x:{grid:{display:false}}}}});
-  // leading vs lagging, by quarter: two panels on one time axis, not two scales on one plot.
+  // leading vs lagging, by quarter: two panels share one time axis, so there is no second scale.
   // Every quarter is shown, so time runs evenly, and a share needs at least 5 jobs behind it.
   const qOf = d => d.slice(0,4) + " Q" + (Math.floor((+d.slice(5,7) - 1) / 3) + 1);
   const qs = {}; jobs.forEach(j => { const x = qs[qOf(j[0])] ||= [0,0]; x[0]++; if (j[2] === "Red") x[1]++; });

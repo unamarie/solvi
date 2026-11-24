@@ -182,7 +182,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <p>On-time delivery last quarter, as each team reports it.</p>
     <div class="threegrid">
       <div><span class="big">71 %</span><b>Sellers</b><span class="def">Finished in the week promised at signing. 29 of 100 jobs were late.</span></div>
-      <div><span class="big">85 %</span><b>Purchasers</b><span class="def">Supplier deliveries on the date the supplier confirmed. This measures suppliers, not the promise to the customer.</span></div>
+      <div><span class="big">85 %</span><b>Purchasers</b><span class="def">Supplier deliveries on the date the supplier confirmed. It measures the suppliers and leaves out the promise to the customer.</span></div>
       <div><span class="big">92 %</span><b>Project planning</b><span class="def">Started on the latest planned date. 21 of the 29 late jobs were re-planned before the promised week, so they count as on time.</span></div>
     </div>
     <p>Each number is right by its own rule. But a date that moves with the delay hides it, so the KPI looks green inside the company and red to the customer. Solvi's definition follows the customer: only a change the customer asks for moves the date.</p>
@@ -193,7 +193,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <li>Some cases are registered in the quality system, but not linked to the job, supplier or installation they concern.</li>
     <li>Checklists from the field are free text, so they can't be counted.</li>
     <li>Customer history is locked in the old ERP.</li>
-    <li>The safety KPI is days without incident, which shows the past, not the next job.</li>
+    <li>The safety KPI is days without incident. It looks back and can't warn about the next job.</li>
   </ul>
 </section>
 
@@ -374,7 +374,7 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <ul>
         <li>One workspace per domain. The owner is admin. Others read only the published gold tables, through shortcuts.</li>
         <li>Row-level rules in the semantic model: sellers see their own area.</li>
-        <li>Pipelines run as a service principal, not as a person. Secrets live in Key Vault.</li>
+        <li>Pipelines run as a service principal, so no job depends on one person's account. Secrets live in Key Vault.</li>
         <li>Customer names and addresses live only in core, so a deletion request is handled in one place.</li>
         <li>Development and tests use generated data. Real data never leaves production.</li>
       </ul>
@@ -384,10 +384,10 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
       <div class="tablewrap"><table>
         <thead><tr><th scope="col">Choice</th><th scope="col">Gain</th><th scope="col">Price</th></tr></thead>
         <tbody>
-          <tr><td>Row rules in the model, not the SQL endpoint</td><td>Reports stay in Direct Lake and stay fast</td><td>SQL users bypass the rules, so only the data team gets SQL access</td></tr>
+          <tr><td>Row rules in the semantic model</td><td>Reports stay in Direct Lake and stay fast</td><td>SQL users bypass the rules, so only the data team gets SQL access</td></tr>
           <tr><td>One workspace per domain</td><td>Access follows ownership</td><td>Six workspaces and 24 shortcuts to run</td></tr>
-          <tr><td>Shortcuts, not copies</td><td>One version of every customer and site</td><td>A change in one domain can break a reader, so the gate checks what readers depend on</td></tr>
-          <tr><td>A role, not a name, in HSE events</td><td>People report more, and GDPR is simpler</td><td>Follow-up of a person goes through their manager</td></tr>
+          <tr><td>Shortcuts to shared data</td><td>One version of every customer and site</td><td>A change in one domain can break a reader, so the gate checks what readers depend on</td></tr>
+          <tr><td>HSE events record a role</td><td>People report more, and GDPR is simpler</td><td>Follow-up of a person goes through their manager</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -403,10 +403,10 @@ footer{border-top:1px solid var(--line);padding-block:18px;font-size:.85rem;colo
     <li><span class="no">2</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0002-shared-data-in-core.md">Shared data lives once, in core, read through shortcuts</a><span class="status">Accepted</span></li>
     <li><span class="no">3</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0003-quality-gate-in-every-domain.md">A quality gate in every domain</a><span class="status">Accepted</span></li>
     <li><span class="no">4</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0004-risk-rules-as-data.md">Risk rules are a table owned by quality</a><span class="status">Accepted</span></li>
-    <li><span class="no">5</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0005-leading-indicators.md">Leading indicators, not days without incident</a><span class="status">Accepted</span></li>
+    <li><span class="no">5</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0005-leading-indicators.md">Leading indicators replace days without incident</a><span class="status">Accepted</span></li>
     <li><span class="no">6</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0006-one-direct-lake-model.md">One Direct Lake model over the gold tables</a><span class="status">Accepted</span></li>
     <li><span class="no">7</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0007-row-rules-in-the-model.md">Row-level rules in the semantic model</a><span class="status proposed">Proposed</span></li>
-    <li><span class="no">8</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0008-roles-not-names.md">A role, not a name, in HSE events</a><span class="status">Accepted</span></li>
+    <li><span class="no">8</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0008-roles-not-names.md">HSE events record a role</a><span class="status">Accepted</span></li>
     <li><span class="no">9</span><a href="https://github.com/unamarie/solvi/blob/main/docs/decisions/0009-one-definition-per-kpi.md">One definition per company KPI, with a drill-down</a><span class="status proposed">Proposed</span></li>
   </ul>
 </section>

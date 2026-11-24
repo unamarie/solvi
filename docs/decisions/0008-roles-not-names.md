@@ -1,4 +1,4 @@
-# 8. A role, not a name, in HSE events
+# 8. HSE events record a role
 
 Status: accepted, November 2026
 
