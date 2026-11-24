@@ -1,4 +1,11 @@
 {
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/quality/:path*", "destination": "/solvi/quality/", "permanent": true },
+    { "source": "/sales/:path*", "destination": "/solvi/sales/", "permanent": true },
+    { "source": "/service/:path*", "destination": "/solvi/service/", "permanent": true },
+    { "source": "/architecture/:path*", "destination": "/solvi/architecture/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
